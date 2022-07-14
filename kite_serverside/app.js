@@ -1,12 +1,17 @@
 const express = require('express');
+const morgan = require('morgan');
 
+//call express
 const app = express();
 
+//middleware checking route status
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+//testing route api
 app.get('/', (req, res) => {
   res.status(200).send('HELLO BACKEND');
 });
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
+module.exports = app;
