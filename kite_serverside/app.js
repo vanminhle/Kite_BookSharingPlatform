@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 
 //testing route api
 app.get('/', (req, res) => {
-  res.status(200).send('HELLO BACKEND');
+  res.status(200).send('HELLO BACKEND! TESTING BRANCH');
 });
 
 module.exports = app;
