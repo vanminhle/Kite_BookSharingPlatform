@@ -9,7 +9,14 @@ router.post('/login', authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
+router.post('/sendEmailVerification', authController.sendEmailVerification);
 router.get('/emailVerify/:verifyToken', authController.emailVerification);
+
+router.patch(
+  '/updateMyPassword',
+  authController.protect,
+  authController.updatePassword
+);
 
 //test route
 router.get('/test', authController.protect, authController.test);
