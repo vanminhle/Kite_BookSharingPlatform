@@ -32,8 +32,37 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+const createSendVerificationRequest = async (req, res, next, user) => {
+  const verifyToken = user.createEmailVerificationToken();
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    const verifyURL = `${req.protocol}://${req.get(
+      'host'
+    )}/http/api/users/emailVerify/${verifyToken}`;
+    await new Email(user, verifyURL).sendVerificationEmail();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Verification email have been sent to your email address!',
+    });
+  } catch (err) {
+    user.emailVerificationToken = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError(
+        'There was an error when sending the verification email. Try again later!'
+      ),
+      500
+    );
+  }
+};
+
+//FUNCTIONALITY
+
 exports.register = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
+  await User.create({
     fullName: req.body.fullName,
     email: req.body.email,
     password: req.body.password,
@@ -51,33 +80,7 @@ exports.register = catchAsync(async (req, res, next) => {
 
   //email verification
   const user = await User.findOne({ email: req.body.email });
-  const verifyToken = user.createEmailVerificationToken();
-  await user.save({ validateBeforeSave: false });
-
-  try {
-    const verifyURL = `${req.protocol}://${req.get(
-      'host'
-    )}/http/api/users/emailVerify/${verifyToken}`;
-    await new Email(user, verifyURL).sendVerificationEmail();
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Verification email have been sent to your email address!',
-      data: {
-        user: newUser,
-      },
-    });
-  } catch (err) {
-    user.emailVerificationToken = undefined;
-    await user.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError(
-        'There was an error when sending the verification email. Try again later!'
-      ),
-      500
-    );
-  }
+  createSendVerificationRequest(req, res, next, user);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -93,7 +96,7 @@ exports.login = catchAsync(async (req, res, next) => {
     !(await user.correctPassword(password, user.password)) ||
     user.isConfirmed === false
   ) {
-    return next(new AppError('Your email or password is incorrect!', 401));
+    return next(new AppError('Incorrect Email or Password!', 401));
   }
 
   createSendToken(user, 200, res);
@@ -242,10 +245,15 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
   user.emailVerificationToken = undefined;
   await user.save({ validateBeforeSave: false });
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Your account email address successfully verified!',
-  });
+  //ENVIRONMENT
+  let redirectUrl = '';
+  if (process.env.NODE_ENV === 'development') {
+    redirectUrl = 'http://localhost:3000/emailVerification/Success';
+  } else if (process.env.NODE_ENV === 'production') {
+    redirectUrl = 'http://localhost:3000/emailVerification/Success';
+  }
+
+  res.redirect(301, redirectUrl);
 });
 
 //send email verification
@@ -261,31 +269,7 @@ exports.sendEmailVerification = catchAsync(async (req, res, next) => {
     );
   }
 
-  // Generate the random reset token and send it to the user email
-  const verifyToken = user.createEmailVerificationToken();
-  await user.save({ validateBeforeSave: false });
-
-  try {
-    const verifyURL = `${req.protocol}://${req.get(
-      'host'
-    )}/http/api/users/emailVerify/${verifyToken}`;
-    await new Email(user, verifyURL).sendVerificationEmail();
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Verification email have been sent to your email address!',
-    });
-  } catch (err) {
-    user.emailVerificationToken = undefined;
-    await user.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError(
-        'There was an error when sending the verification email. Try again later!'
-      ),
-      500
-    );
-  }
+  createSendVerificationRequest(req, res, next, user);
 });
 
 //update user password (still have problem in jwt)
