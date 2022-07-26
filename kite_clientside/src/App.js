@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
 import {
   Landing,
   Error,
@@ -6,6 +6,8 @@ import {
   Home,
   VerificationOK,
   NeedHelp,
+  Helper,
+  ResetPassword,
 } from './pages';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,14 +20,18 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/authentication" element={<Authentication />} />
+
+          <Route path="/need-help" element={<NeedHelp />} />
+          <Route path="/helper" element={<Helper />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+
           <Route
-            path="/emailVerification/Success"
+            path="/email-verification/success"
             element={<VerificationOK />}
           />
-          <Route path="/needHelp" element={<NeedHelp />} />
           <Route path="*" element={<Error />} />
         </Routes>
-        <ToastContainer position="top-center" />
+        <ToastContainer position="top-right" />
       </BrowserRouter>
     </div>
   );

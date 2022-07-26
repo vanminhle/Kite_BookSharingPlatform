@@ -40,5 +40,22 @@ const Wrapper = styled.section`
     border-top: 1px solid var(--grey-200);
     text-align: center;
   }
+  .help-quote {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 15px;
+  }
+  .validation-popup {
+    margin-bottom: 1.3rem;
+    margin-top: -0.5rem;
+    opacity: 1;
+    transition: opacity ease 400ms;
+    background-color: #d10000;
+    color: white;
+    font-size: 13px;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--borderRadius);
+  }
 `;
 export default Wrapper;

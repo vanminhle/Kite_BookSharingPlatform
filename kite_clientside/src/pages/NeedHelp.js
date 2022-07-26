@@ -14,7 +14,7 @@ const NeedHelp = () => {
 
       <Row className="card-helper">
         <Col sm="4">
-          <Card className="text-center card-padding-style" body>
+          <Card className="form-helper text-center card-padding-style" body>
             <div style={{ textAlign: 'center' }}>
               <img
                 src={forgotPassword}
@@ -27,13 +27,13 @@ const NeedHelp = () => {
               You are not remember the password used to login Kite? Reset your
               password here!
             </CardText>
-            <Link to="/authentication">
+            <Link to={'/helper'} state={{ setIsForgotPassword: true }}>
               <Button>Reset Password</Button>
             </Link>
           </Card>
         </Col>
         <Col sm="4">
-          <Card className="text-center card-padding-style" body>
+          <Card className="form-helper text-center card-padding-style" body>
             <div style={{ textAlign: 'center' }}>
               <img
                 src={forgotVerifyEmail}
@@ -46,7 +46,7 @@ const NeedHelp = () => {
               You didn't receive the account verification email? Resending new
               verification email here!
             </CardText>
-            <Link to="/authentication">
+            <Link to={'/helper'} state={{ setIsForgotPassword: false }}>
               <Button>Resend Verification</Button>
             </Link>
           </Card>

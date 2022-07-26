@@ -12,5 +12,12 @@ const Wrapper = styled.main`
   .card-padding-style {
     padding: 2rem;
   }
+  .form-helper {
+    box-shadow: var(--shadow-1);
+    transition: var(--transition);
+  }
+  .form-helper:hover {
+    box-shadow: var(--shadow-4);
+  }
 `;
 export default Wrapper;

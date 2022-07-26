@@ -6,6 +6,7 @@ const initialState = {
   isLoading: false,
   user: null,
   emailSendingModal: false,
+  isError: false,
 };
 
 export const registerUser = createAsyncThunk(
@@ -48,10 +49,12 @@ const userSlice = createSlice({
     },
     [registerUser.fulfilled]: (state) => {
       state.isLoading = false;
+      state.isError = false;
       state.emailSendingModal = true;
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
+      state.isError = true;
       toast.error(payload);
     },
     //LOGIN
@@ -61,12 +64,14 @@ const userSlice = createSlice({
     [loginUser.fulfilled]: (state, { payload }) => {
       console.log(payload.data.user);
       const { user } = payload.data;
+      state.isError = false;
       state.isLoading = false;
       state.user = user;
       toast.success(`Welcome Back! ${user.fullName}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
+      state.isError = true;
       toast.error(payload);
     },
   },

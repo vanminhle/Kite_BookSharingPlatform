@@ -1,8 +1,23 @@
 import Landing from './Landing';
-import Error from './Error';
 import Authentication from './Authentication';
 import Home from './Home';
-import VerificationOK from './VerificationOK';
-import NeedHelp from './NeedHelp';
 
-export { Landing, Error, Authentication, Home, VerificationOK, NeedHelp };
+//HELPER (FORGOT PASS, EMAIL VERIFIED)
+import NeedHelp from './NeedHelp';
+import Helper from './NeedHelp/Helper';
+import ResetPassword from './NeedHelp/ResetPassword';
+
+//NOTIFY PAGE (SUCCESS EMAIL VERIFY, ERROR, ETC)
+import VerificationOK from './VerificationOK';
+import Error from './Error';
+
+export {
+  Landing,
+  Authentication,
+  Home,
+  NeedHelp,
+  Helper,
+  ResetPassword,
+  VerificationOK,
+  Error,
+};

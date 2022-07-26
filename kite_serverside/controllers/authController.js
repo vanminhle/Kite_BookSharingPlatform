@@ -171,10 +171,18 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
+  let resetURL = '';
+  if (process.env.NODE_ENV === 'development') {
+    resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+  } else if (process.env.NODE_ENV === 'production') {
+    resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+  }
+
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      'host'
-    )}/http/api/users/resetPassword/${resetToken}`;
+    // const resetURLLocal = `${req.protocol}://${req.get(
+    //   'host'
+    // )}/http/api/users/resetPassword/${resetToken}`;
+
     await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
@@ -227,6 +235,28 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
+//send email verification
+exports.sendEmailVerification = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  //console.log(user);
+  if (user && user.isConfirmed) {
+    return res.status(200).json({
+      status: 'success',
+    });
+  }
+
+  if (!user) {
+    return next(
+      new AppError(
+        'There is no user account with that email need to be verified!',
+        404
+      )
+    );
+  }
+
+  createSendVerificationRequest(req, res, next, user);
+});
+
 //email verification
 exports.emailVerification = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
@@ -248,28 +278,12 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
   //ENVIRONMENT
   let redirectUrl = '';
   if (process.env.NODE_ENV === 'development') {
-    redirectUrl = 'http://localhost:3000/emailVerification/Success';
+    redirectUrl = 'http://localhost:3000/email-verification/success';
   } else if (process.env.NODE_ENV === 'production') {
-    redirectUrl = 'http://localhost:3000/emailVerification/Success';
+    redirectUrl = 'http://localhost:3000/email-verification/success';
   }
 
   res.redirect(301, redirectUrl);
-});
-
-//send email verification
-exports.sendEmailVerification = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  //console.log(user);
-  if (!user || user.isConfirmed === true) {
-    return next(
-      new AppError(
-        'There is no user with that email address need to be verified!',
-        404
-      )
-    );
-  }
-
-  createSendVerificationRequest(req, res, next, user);
 });
 
 //update user password (still have problem in jwt)
