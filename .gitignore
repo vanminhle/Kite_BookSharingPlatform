@@ -15,8 +15,6 @@ kite_clientside/build
 
 # misc
 kite_clientside/.DS_Store
-kite_clientside/.env.development
-kite_clientside/.env.production
 kite_clientside/.env.local
 kite_clientside/.env.development.local
 kite_clientside/.env.test.local
@@ -28,3 +26,5 @@ kite_serverside/.cache/
 kite_clientside/npm-debug.log*
 kite_clientside/yarn-debug.log*
 kite_clientside/yarn-error.log*
+kite_clientside/.env.development
+kite_clientside/.env.production
