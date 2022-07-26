@@ -15,6 +15,8 @@ kite_clientside/build
 
 # misc
 kite_clientside/.DS_Store
+kite_clientside/.env.development
+kite_clientside/.env.production
 kite_clientside/.env.local
 kite_clientside/.env.development.local
 kite_clientside/.env.test.local
