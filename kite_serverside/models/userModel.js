@@ -95,7 +95,10 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   socialProvider: String,
-  socialId: String,
+  socialId: {
+    type: String,
+    select: false,
+  },
   createdAt: { type: Date, default: Date.now() },
   emailVerificationToken: String,
 });

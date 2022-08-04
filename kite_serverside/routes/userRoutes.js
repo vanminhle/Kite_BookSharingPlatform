@@ -48,6 +48,12 @@ router.patch(
   authController.UpdateEmail
 );
 
+router.put(
+  '/deactivateAccount',
+  authController.protect,
+  userController.deactivateAccount
+);
+
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 

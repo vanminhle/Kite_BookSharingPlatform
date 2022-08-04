@@ -82,17 +82,26 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect Email or Password!', 401));
   }
 
+  if (user.active === false) {
+    return next(
+      new AppError(
+        'Your account have been deactivated! please sent an email to support@kite.io for reactivate your account'
+      ),
+      403
+    );
+  }
+
   const token = createToken(user._id);
 
-  //sendCookie
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.cookie('jwt', token, cookieOptions);
+  // //sendCookie
+  // const cookieOptions = {
+  //   expires: new Date(
+  //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  //   ),
+  //   httpOnly: true,
+  // };
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
   user.passwordChangedAt = undefined;

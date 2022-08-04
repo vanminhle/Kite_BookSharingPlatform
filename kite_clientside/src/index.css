@@ -327,5 +327,8 @@ ul {
 }
 
 .Toastify__toast {
-  text-transform: capitalize;
+  text-transform: none;
+  width: 600px;
+  text-align: center;
+  right: 44%;
 }

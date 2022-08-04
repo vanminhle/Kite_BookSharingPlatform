@@ -106,3 +106,14 @@ exports.updateMyInfo = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+//deactivate account
+exports.deactivateAccount = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'User account is deactivated successfully!',
+    data: null,
+  });
+});
