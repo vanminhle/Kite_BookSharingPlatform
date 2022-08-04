@@ -1,0 +1,124 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+import customFetch from '../../utils/axios';
+import {
+  addUserToLocalStorage,
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+} from '../../utils/localStorage';
+
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+
+const initialState = {
+  isLoading: false,
+  user: getUserFromLocalStorage(),
+  emailSendingModal: false,
+  isError: false,
+};
+
+export const registerUser = createAsyncThunk(
+  'user/register',
+  async (user, thunkAPI) => {
+    try {
+      const resp = await customFetch.post('http/api/users/register', user);
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  'user/login',
+  async (user, thunkAPI) => {
+    try {
+      const resp = await customFetch.post('http/api/users/login', user);
+      return resp.data;
+    } catch (error) {
+      //console.log(error.response.data.message);
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const loginSocial = createAsyncThunk(
+  'user/loginSocial',
+  async (thunkAPI) => {
+    try {
+      const resp = customFetch.get('http/api/users/');
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    closeModal: (state) => {
+      state.emailSendingModal = false;
+    },
+    logoutUser: (state) => {
+      state.user = null;
+      removeUserFromLocalStorage();
+    },
+  },
+  extraReducers: {
+    //REGISTER
+    [registerUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [registerUser.fulfilled]: (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.emailSendingModal = true;
+    },
+    [registerUser.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      toast.error(payload);
+    },
+    //LOGIN
+    [loginUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [loginUser.fulfilled]: (state, { payload }) => {
+      console.log(payload.data.user);
+      const { user } = payload.data;
+      state.isError = false;
+      state.isLoading = false;
+      state.user = user;
+      addUserToLocalStorage(user);
+      toast.success(`Welcome Back! ${user.fullName}`);
+    },
+    [loginUser.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      toast.error(payload);
+    },
+    //LOGIN WITH GOOGLE
+    [loginSocial.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [loginSocial.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+      const { user } = payload.data;
+      state.isError = false;
+      state.isLoading = false;
+      state.user = user;
+      addUserToLocalStorage(user);
+      toast.success(`Welcome Back! ${user.fullName}`);
+    },
+    [loginSocial.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      toast.error(payload);
+    },
+  },
+});
+
+export const { closeModal, logoutUser } = userSlice.actions;
+
+export default userSlice.reducer;

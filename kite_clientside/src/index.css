@@ -5,7 +5,7 @@
 }
 
 /* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
 
 html {
   font-size: 100%;
@@ -25,6 +25,8 @@ html {
   --primary-900: #1e3a8a;
 
   /* grey */
+  --grey-10: #f7f9fb;
+  --grey-30: #f6f8fa;
   --grey-50: #f0f4f8;
   --grey-100: #d9e2ec;
   --grey-200: #bcccdc;
@@ -45,11 +47,11 @@ html {
 
   /* fonts  */
   --headingFont: 'Roboto Condensed', Sans-Serif;
-  --bodyFont: 'Cabin', Sans-Serif;
+  --bodyFont: 'Roboto', Sans-Serif;
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
   /* rest of the vars */
-  --backgroundColor: var(--grey-50);
+  --backgroundColor: var(--grey-30);
   --textColor: var(--grey-900);
   --borderRadius: 0.25rem;
   --letterSpacing: 1px;
@@ -161,6 +163,7 @@ ul {
 .btn:hover {
   background: var(--primary-700);
   box-shadow: var(--shadow-3);
+  color: var(--white);
 }
 .btn-hipster {
   color: var(--primary-500);
@@ -174,8 +177,10 @@ ul {
   width: 100%;
 }
 .btn-hero {
-  font-size: 1.25rem;
-  padding: 0.5rem 1.25rem;
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  color: var(--white);
+  padding: 0.4rem 1rem;
 }
 .btn-danger {
   background: var(--red-light);
@@ -213,7 +218,7 @@ ul {
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
   padding: 2rem 2.5rem;
-  margin: 3rem auto;
+  margin: 2rem auto;
   transition: var(--transition);
 }
 .form:hover {
@@ -322,5 +327,8 @@ ul {
 }
 
 .Toastify__toast {
-  text-transform: capitalize;
+  text-transform: none;
+  width: 600px;
+  text-align: center;
+  right: 44%;
 }
