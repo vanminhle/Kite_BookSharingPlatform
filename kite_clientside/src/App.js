@@ -3,12 +3,13 @@ import {
   Landing,
   Error,
   Authentication,
-  Home,
   VerificationOK,
   NeedHelp,
   Helper,
   ResetPassword,
+  ProtectedRoute,
 } from './pages';
+import { SharedLayout, Stats } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,7 +18,17 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SharedLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Stats />} />
+          </Route>
+
           <Route path="/landing" element={<Landing />} />
           <Route path="/authentication" element={<Authentication />} />
 
@@ -29,9 +40,10 @@ function App() {
             path="/email-verification/success"
             element={<VerificationOK />}
           />
+
           <Route path="*" element={<Error />} />
         </Routes>
-        <ToastContainer position="top-right" />
+        <ToastContainer position="top-center" />
       </BrowserRouter>
     </div>
   );

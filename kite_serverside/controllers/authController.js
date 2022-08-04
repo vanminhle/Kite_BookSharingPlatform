@@ -1,35 +1,18 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
 
-const createSendToken = (user, statusCode, res) => {
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+const createToken = (payload) => {
+  const token = jwt.sign({ id: payload }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
-
-  //sendCookie
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.cookie('jwt', token, cookieOptions);
-
-  user.password = undefined;
-
-  res.status(statusCode).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
+  return token;
 };
 
 const createSendVerificationRequest = async (req, res, next, user) => {
@@ -60,9 +43,11 @@ const createSendVerificationRequest = async (req, res, next, user) => {
 };
 
 //FUNCTIONALITY
-
 exports.register = catchAsync(async (req, res, next) => {
-  await User.create({
+  const user = await User.findOne({ email: req.body.email });
+  if (user) return next(new AppError('User is already registered!', 409));
+
+  const newUser = await User.create({
     fullName: req.body.fullName,
     email: req.body.email,
     password: req.body.password,
@@ -78,9 +63,7 @@ exports.register = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
 
-  //email verification
-  const user = await User.findOne({ email: req.body.email });
-  createSendVerificationRequest(req, res, next, user);
+  createSendVerificationRequest(req, res, next, newUser);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -99,7 +82,30 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect Email or Password!', 401));
   }
 
-  createSendToken(user, 200, res);
+  const token = createToken(user._id);
+
+  //sendCookie
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+
+  user.password = undefined;
+  user.passwordChangedAt = undefined;
+  user.createdAt = undefined;
+  user.__v = undefined;
+
+  res.status(200).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
 });
 
 //protected routes
@@ -300,8 +306,104 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
 
-  createSendToken(user, 200, res);
+  //should logout user after their account password has been updated
+  const token = createToken(user._id);
+
+  res.status(200).json({
+    success: true,
+    token,
+    data: {
+      user,
+    },
+  });
 });
+
+//update user email
+exports.UpdateEmail = catchAsync(async (req, res, next) => {
+  const isExistingEmail = await User.findOne({ email: req.body.email });
+  if (isExistingEmail) {
+    return next(
+      new AppError(
+        'That email have been already used by another user or duplicate with the old one in your account',
+        401
+      )
+    );
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      email: req.body.email,
+      isConfirmed: false,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  createSendVerificationRequest(req, res, next, user);
+});
+
+//Google oAuth
+passport.use(
+  new GoogleStrategy(
+    {
+      callbackURL: `http://localhost:8000/http/api/users/google/redirect`,
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const userGoogleId = profile.id;
+        const userEmail = profile.emails && profile.emails[0].value;
+        const userDisplayName = profile.displayName;
+        const userPhoto = profile.photos[0].value;
+        const userSocialProvider = profile.provider;
+
+        const isExistingUser = await User.findOne({ email: userEmail });
+        if (!isExistingUser) {
+          const user = new User({
+            socialId: userGoogleId,
+            email: userEmail,
+            fullName: userDisplayName,
+            photo: userPhoto,
+            socialProvider: userSocialProvider,
+            isConfirmed: true,
+          });
+          await user.save({ validateBeforeSave: false });
+          return done(null, user);
+        }
+        if (isExistingUser) {
+          return done(null, isExistingUser);
+        }
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
+
+exports.googleLogin = catchAsync(async (req, res, next) => {
+  //console.log(req.user);
+  if (req.user) {
+    const { user } = req;
+    const token = createToken(user._id);
+    res.status(200).json({
+      success: true,
+      token,
+      data: {
+        user,
+      },
+    });
+  } else {
+    return next(
+      new AppError('You must be logged in to access this application!')
+    );
+  }
+});
+
+//Microsoft oAuth
 
 //FOR TESTING ONLY
 exports.test = function (req, res, next) {

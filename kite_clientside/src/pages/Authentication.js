@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Logo } from '../components';
 import { useForm, Controller } from 'react-hook-form';
@@ -12,6 +12,7 @@ import {
   ModalHeader,
   Input,
 } from 'reactstrap';
+import { FaGoogle, FaMicrosoft } from 'react-icons/fa';
 import { yupResolver } from '@hookform/resolvers/yup';
 import yup from '../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +20,7 @@ import {
   loginUser,
   registerUser,
   closeModal,
+  loginSocial,
 } from '../features/user/userSlice';
 
 const Authentication = () => {
@@ -83,10 +85,11 @@ const Authentication = () => {
     resolver: yupResolver(schema),
   });
 
-  const { isLoading, emailSendingModal, isError } = useSelector(
+  const { user, isLoading, emailSendingModal, isError } = useSelector(
     (store) => store.user
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = (values) => {
     const { fullName, email, password, passwordConfirm } = values;
@@ -97,6 +100,16 @@ const Authentication = () => {
       return;
     }
     dispatch(registerUser({ fullName, email, password, passwordConfirm }));
+  };
+
+  const loginGoogle = () => {
+    const googleLoginURL =
+      process.env.REACT_APP_API_ENDPOINT + 'http/api/users/google';
+    const newWindow = window.open(
+      googleLoginURL,
+      '_blank',
+      'width=500,height=600'
+    );
   };
 
   const toggleMember = () => {
@@ -121,7 +134,13 @@ const Authentication = () => {
         });
       }
     }
-  }, [isLoading, isError]);
+
+    if (user) {
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
+    }
+  }, [isLoading, isError, user]);
 
   return (
     <Wrapper className="full-page">
@@ -246,6 +265,21 @@ const Authentication = () => {
         <Button type="submit" className="btn btn-block" disabled={isLoading}>
           {isMember ? 'Login' : 'Register'}
         </Button>
+
+        {isMember && (
+          <div className="social-login">
+            <div className="divider">
+              <p className="text-divider">OR</p>
+            </div>
+            <Button className="btn-block google-login" onClick={loginGoogle}>
+              <FaGoogle /> <p className="google-text">Continue with Google</p>
+            </Button>
+            <Button className="btn-block microsoft-login">
+              <FaMicrosoft />
+              <p className="microsoft-text">Continue with Microsoft</p>
+            </Button>
+          </div>
+        )}
 
         <div className="member-section">
           <p>

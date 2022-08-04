@@ -1,10 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import customFetch from '../../utils/axios';
+import {
+  addUserToLocalStorage,
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+} from '../../utils/localStorage';
+
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 
 const initialState = {
   isLoading: false,
-  user: null,
+  user: getUserFromLocalStorage(),
   emailSendingModal: false,
   isError: false,
 };
@@ -34,12 +41,28 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const loginSocial = createAsyncThunk(
+  'user/loginSocial',
+  async (thunkAPI) => {
+    try {
+      const resp = customFetch.get('http/api/users/');
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     closeModal: (state) => {
       state.emailSendingModal = false;
+    },
+    logoutUser: (state) => {
+      state.user = null;
+      removeUserFromLocalStorage();
     },
   },
   extraReducers: {
@@ -67,6 +90,7 @@ const userSlice = createSlice({
       state.isError = false;
       state.isLoading = false;
       state.user = user;
+      addUserToLocalStorage(user);
       toast.success(`Welcome Back! ${user.fullName}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
@@ -74,9 +98,27 @@ const userSlice = createSlice({
       state.isError = true;
       toast.error(payload);
     },
+    //LOGIN WITH GOOGLE
+    [loginSocial.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [loginSocial.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+      const { user } = payload.data;
+      state.isError = false;
+      state.isLoading = false;
+      state.user = user;
+      addUserToLocalStorage(user);
+      toast.success(`Welcome Back! ${user.fullName}`);
+    },
+    [loginSocial.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      state.isError = true;
+      toast.error(payload);
+    },
   },
 });
 
-export const { closeModal } = userSlice.actions;
+export const { closeModal, logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -25,6 +25,8 @@ html {
   --primary-900: #1e3a8a;
 
   /* grey */
+  --grey-10: #f7f9fb;
+  --grey-30: #f6f8fa;
   --grey-50: #f0f4f8;
   --grey-100: #d9e2ec;
   --grey-200: #bcccdc;
@@ -45,11 +47,11 @@ html {
 
   /* fonts  */
   --headingFont: 'Roboto Condensed', Sans-Serif;
-  --bodyFont: 'Cabin', Sans-Serif;
+  --bodyFont: 'Roboto', Sans-Serif;
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
   /* rest of the vars */
-  --backgroundColor: var(--grey-50);
+  --backgroundColor: var(--grey-30);
   --textColor: var(--grey-900);
   --borderRadius: 0.25rem;
   --letterSpacing: 1px;
@@ -216,7 +218,7 @@ ul {
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
   padding: 2rem 2.5rem;
-  margin: 3rem auto;
+  margin: 2rem auto;
   transition: var(--transition);
 }
 .form:hover {
