@@ -9,7 +9,7 @@ import {
   ResetPassword,
   ProtectedRoute,
 } from './pages';
-import { SharedLayout, Stats } from './pages/Application';
+import { SharedLayout, Stats, UserAccount } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,6 +27,7 @@ function App() {
             }
           >
             <Route index element={<Stats />} />
+            <Route path="/my-account" element={<UserAccount />} />
           </Route>
 
           <Route path="/landing" element={<Landing />} />
@@ -43,7 +44,7 @@ function App() {
 
           <Route path="*" element={<Error />} />
         </Routes>
-        <ToastContainer position="top-center" />
+        <ToastContainer position="top-center" autoClose={3000} />
       </BrowserRouter>
     </div>
   );

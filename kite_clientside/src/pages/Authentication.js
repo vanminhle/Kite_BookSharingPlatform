@@ -21,9 +21,15 @@ import {
   registerUser,
   closeModal,
   loginSocial,
+  hideError,
 } from '../features/user/userSlice';
 
 const Authentication = () => {
+  const { user, isLoading, emailSendingModal, isError } = useSelector(
+    (store) => store.user
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isMember, setIsMember] = useState(true);
 
   const schema = yup.object().shape({
@@ -72,7 +78,6 @@ const Authentication = () => {
     handleSubmit,
     formState,
     formState: { errors },
-    formState: { isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       fullName: '',
@@ -85,16 +90,8 @@ const Authentication = () => {
     resolver: yupResolver(schema),
   });
 
-  const { user, isLoading, emailSendingModal, isError } = useSelector(
-    (store) => store.user
-  );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const onSubmit = (values) => {
     const { fullName, email, password, passwordConfirm } = values;
-
-    //dispatch
     if (isMember) {
       dispatch(loginUser({ email, password }));
       return;
@@ -110,10 +107,6 @@ const Authentication = () => {
       '_blank',
       'width=500,height=600'
     );
-  };
-
-  const toggleMember = () => {
-    setIsMember(!isMember);
   };
 
   useEffect(() => {
@@ -140,21 +133,15 @@ const Authentication = () => {
         navigate('/');
       }, 3000);
     }
-  }, [isLoading, isError, user]);
+  }, [isLoading, isError, isMember, user]);
 
   return (
     <Wrapper className="full-page">
       <Modal isOpen={emailSendingModal} toggle={() => dispatch(closeModal())}>
-        <ModalHeader
-          style={{ alignSelf: 'center', borderBottom: '0', marginTop: '1rem' }}
-        >
+        <ModalHeader className="modal-header">
           Please Verify Your Email Address
         </ModalHeader>
-        <ModalBody
-          style={{
-            textAlign: 'center',
-          }}
-        >
+        <ModalBody className="modal-body">
           <div>
             <img
               style={{ width: '70%', margin: '2rem 0' }}
@@ -173,13 +160,7 @@ const Authentication = () => {
             Kite!
           </div>
         </ModalBody>
-        <ModalFooter
-          style={{
-            alignSelf: 'center',
-            borderTop: '0',
-            marginBottom: '1rem',
-          }}
-        >
+        <ModalFooter className="modal-footer">
           <Button color="primary" onClick={() => dispatch(closeModal())}>
             Understood
           </Button>
@@ -200,7 +181,12 @@ const Authentication = () => {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <Input type="text" className="form-input" {...field} />
+                <Input
+                  type="text"
+                  className="form-input"
+                  {...field}
+                  invalid={errors?.fullName?.message}
+                />
               )}
             />
           </div>
@@ -216,7 +202,12 @@ const Authentication = () => {
             name="email"
             control={control}
             render={({ field }) => (
-              <Input type="email" className="form-input" {...field} />
+              <Input
+                type="email"
+                className="form-input"
+                {...field}
+                invalid={isError || errors?.email?.message}
+              />
             )}
           />
         </div>
@@ -233,7 +224,12 @@ const Authentication = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input type="password" className="form-input" {...field} />
+              <Input
+                type="password"
+                className="form-input"
+                {...field}
+                invalid={errors?.password?.message}
+              />
             )}
           />
         </div>
@@ -251,7 +247,12 @@ const Authentication = () => {
               name="passwordConfirm"
               control={control}
               render={({ field }) => (
-                <Input type="password" className="form-input" {...field} />
+                <Input
+                  type="password"
+                  className="form-input"
+                  {...field}
+                  invalid={errors?.passwordConfirm?.message}
+                />
               )}
             />
           </div>
@@ -262,7 +263,12 @@ const Authentication = () => {
           </div>
         )}
 
-        <Button type="submit" className="btn btn-block" disabled={isLoading}>
+        <Button
+          color="primary"
+          type="submit"
+          className="btn btn-block"
+          disabled={isLoading}
+        >
           {isMember ? 'Login' : 'Register'}
         </Button>
 
@@ -283,7 +289,11 @@ const Authentication = () => {
 
         <div className="member-section">
           <p>
-            <button type="button" onClick={toggleMember} className="member-btn">
+            <button
+              type="button"
+              onClick={() => setIsMember(!isMember)}
+              className="member-btn"
+            >
               {isMember ? 'Register' : 'Already Have An Account !'}
             </button>
             <button type="button" className="member-btn">

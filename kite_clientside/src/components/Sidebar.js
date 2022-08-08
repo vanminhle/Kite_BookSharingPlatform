@@ -1,41 +1,48 @@
-import Wrapper from '../assets/wrappers/Navbar';
+import NavLinks from './NavLinks';
 import Logo from './Logo';
+import Wrapper from '../assets/wrappers/Sidebar';
 import noProfilePicture from '../assets/images/noProfilePicture.svg';
 import { MdManageAccounts, MdLogout, MdTour } from 'react-icons/md';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/user/userSlice';
+import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Sidebar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
   return (
     <Wrapper>
-      <div className="nav-center">
-        <div>
-          <Logo />
-          <h3 className="logo-text">Hi! {user.fullName}</h3>
+      <div className="sidebar-container">
+        <div className="content">
+          <header>
+            <Logo className="logo-sidebar" />
+          </header>
+          <NavLinks />
         </div>
-        <div className="btn-container">
-          {/* <button type="button" className="btn"></button> */}
 
+        <div
+          className="btn-container"
+          onClick={() => setShowLogout(!showLogout)}
+        >
           <img
             src={user.photo ? user.photo : noProfilePicture}
             className="avatar-circle"
-            alt="Avatar"
-            onClick={() => setShowLogout(!showLogout)}
+            alt="avatar"
           />
+          <h4 className="btn-container-text">
+            {user.fullName.split(' ').pop()}
+          </h4>
+
           <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
-            <button
-              type="button"
-              className="dropdown-btn"
-              onClick={() => dispatch(logoutUser())}
-            >
-              <MdManageAccounts />
-              My Account
-            </button>
+            <Link to="/my-account">
+              <button type="button" className="dropdown-btn">
+                <MdManageAccounts />
+                My Account
+              </button>
+            </Link>
+
             <button
               type="button"
               className="dropdown-btn"
@@ -44,6 +51,7 @@ const Navbar = () => {
               <MdTour />
               <div>Terms</div>
             </button>
+
             <button
               type="button"
               className="dropdown-btn"
@@ -58,4 +66,4 @@ const Navbar = () => {
     </Wrapper>
   );
 };
-export default Navbar;
+export default Sidebar;

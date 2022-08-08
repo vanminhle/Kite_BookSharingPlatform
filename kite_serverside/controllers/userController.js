@@ -8,6 +8,15 @@ const AppError = require('../utils/appError');
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
+  }
+  if (file.mimetype.startsWith('image/gif')) {
+    cb(
+      new AppError(
+        'Animated .gif image is not supported! Please upload another image',
+        400
+      ),
+      false
+    );
   } else {
     cb(new AppError('Not an image! Please upload only images.', 400), false);
   }
@@ -83,14 +92,14 @@ exports.updateMyInfo = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(
     req.body,
     'fullName',
-    'address',
-    'phoneNumber',
-    'zipCode',
-    'dateOfBirth',
     'gender',
-    'state',
+    'dateOfBirth',
+    'phoneNumber',
+    'country',
+    'address',
     'city',
-    'region'
+    'zipCode',
+    'specialization'
   );
   if (req.file) filteredBody.photo = req.profileImageUrl;
 
@@ -111,9 +120,16 @@ exports.updateMyInfo = catchAsync(async (req, res, next) => {
 exports.deactivateAccount = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, { active: false });
 
+  const cookieOptions = {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+    sameSite: 'none',
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', 'loggedout', cookieOptions);
+
   res.status(200).json({
     status: 'success',
     message: 'User account is deactivated successfully!',
-    data: null,
   });
 });

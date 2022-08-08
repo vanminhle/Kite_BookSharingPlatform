@@ -28,7 +28,7 @@ const NeedHelp = () => {
               password here!
             </CardText>
             <Link to={'/helper'} state={{ setIsForgotPassword: true }}>
-              <Button>Reset Password</Button>
+              <Button color="primary">Reset Password</Button>
             </Link>
           </Card>
         </Col>
@@ -47,7 +47,7 @@ const NeedHelp = () => {
               verification email here!
             </CardText>
             <Link to={'/helper'} state={{ setIsForgotPassword: false }}>
-              <Button>Resend Verification</Button>
+              <Button color="primary">Resend Verification</Button>
             </Link>
           </Card>
         </Col>
