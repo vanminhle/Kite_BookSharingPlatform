@@ -5,22 +5,29 @@ import {
   UserPassword,
   UserEmail,
 } from '../../components';
+import { useSelector } from 'react-redux';
 
 const UserAccount = () => {
+  const { user } = useSelector((store) => store.user);
+
   return (
     <Wrapper>
       <div className="user-information">
         <UserInformation />
       </div>
       <hr />
-      <div className="user-password">
-        <UserPassword />
-      </div>
-      <hr />
-      <div className="user-email">
-        <UserEmail />
-      </div>
-      <hr />
+      {!user.socialProvider && (
+        <>
+          <div className="user-password">
+            <UserPassword />
+          </div>
+          <hr />
+          <div className="user-email">
+            <UserEmail />
+          </div>
+          <hr />
+        </>
+      )}
       <div className="user-deactivate">
         <UserDeactivate />
       </div>

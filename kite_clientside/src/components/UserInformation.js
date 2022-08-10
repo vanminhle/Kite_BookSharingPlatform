@@ -34,28 +34,49 @@ const UserInformation = () => {
       .string()
       .phoneNumber('Phone Number is Invalid')
       .max(10, 'Phone Number is Invalid')
-      .min(10, 'Phone Number is Invalid'),
+      .test('min', 'Phone Number is Invalid', (value) =>
+        value.trim().length > 0 ? value.length >= 10 : true
+      ),
+    dateOfBirth: yup
+      .date()
+      .test(
+        'Is date greater',
+        "DoB cannot be greater than today's",
+        (value) => {
+          if (!value) return true;
+          return moment().diff(value) > 0;
+        }
+      ),
     address: yup
       .string()
-      .min(5, 'Address is Invalid')
-      .max(40, 'Address is Invalid'),
+      .max(40, 'Address is Invalid')
+      .test('min', 'Address is Invalid', (value) =>
+        value.trim().length > 0 ? value.length >= 3 : true
+      ),
     country: yup
       .string()
-      .min(3, 'Country is Invalid')
-      .max(40, 'Country is Invalid'),
-    city: yup.string().min(3, 'City is Invalid').max(40, 'City is Invalid'),
+      .max(40, 'Country is Invalid')
+      .test('min', 'Country is Invalid', (value) =>
+        value.trim().length > 0 ? value.length >= 3 : true
+      ),
+    city: yup.string().nullable().notRequired().max(40, 'City is Invalid'),
     zipCode: yup
       .number()
       .typeError('Invalid Zip Code')
       .max(99999, 'Invalid Zip Code')
-      .min(10000, 'Invalid Zip Code'),
-    specialization: yup.string().min(5, 'Specialization is Invalid'),
+      .min(10000, 'Invalid Zip Code')
+      .nullable()
+      .transform((_, val) => (val !== '' ? Number(val) : null)),
+    specialization: yup
+      .string()
+      .test('min', 'Specialization is Invalid', (value) =>
+        value.trim().length > 0 ? value.length >= 5 : true
+      )
+      .max(40, 'Specialization is Invalid'),
     photo: yup
       .mixed()
-      .test(
-        'fileFormat',
-        'Unsupported Format',
-        (value) => value && SUPPORTED_PHOTO_FORMATS.includes(value.type)
+      .test('fileFormat', 'Unsupported Format', (value) =>
+        value ? SUPPORTED_PHOTO_FORMATS.includes(value.type) : true
       ),
   });
 
@@ -159,7 +180,7 @@ const UserInformation = () => {
                     type="text"
                     {...field}
                     disabled={!edit}
-                    invalid={errors?.fullName?.message}
+                    invalid={errors?.fullName?.message === true}
                   />
                 )}
               />
@@ -202,7 +223,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Phone Number"
-                    invalid={errors?.phoneNumber?.message}
+                    invalid={errors?.phoneNumber?.message === true}
                   />
                 )}
               />
@@ -221,9 +242,19 @@ const UserInformation = () => {
                 name="dateOfBirth"
                 control={control}
                 render={({ field }) => (
-                  <Input type="date" {...field} disabled={!edit} />
+                  <Input
+                    type="date"
+                    {...field}
+                    disabled={!edit}
+                    invalid={errors?.dateOfBirth?.message === true}
+                  />
                 )}
               />
+              {errors?.dateOfBirth?.message && (
+                <div className="validation-popup">
+                  {errors.dateOfBirth.message}
+                </div>
+              )}
             </FormGroup>
           </Col>
         </Row>
@@ -242,7 +273,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Address"
-                    invalid={errors?.address?.message}
+                    invalid={errors?.address?.message === true}
                   />
                 )}
               />
@@ -265,7 +296,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Country"
-                    invalid={errors?.country?.message}
+                    invalid={errors?.country?.message === true}
                   />
                 )}
               />
@@ -290,7 +321,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="City"
-                    invalid={errors?.city?.message}
+                    invalid={errors?.city?.message === true}
                   />
                 )}
               />
@@ -313,7 +344,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Zip Code"
-                    invalid={errors?.zipCode?.message}
+                    invalid={errors?.zipCode?.message === true}
                   />
                 )}
               />
@@ -336,7 +367,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Specialization"
-                    invalid={errors?.specialization?.message}
+                    invalid={errors?.specialization?.message === true}
                   />
                 )}
               />

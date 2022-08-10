@@ -60,7 +60,9 @@ const UserEmail = () => {
                 type="email"
                 {...field}
                 disabled={!edit}
-                invalid={(edit && isErrorEmail) || errors?.email?.message}
+                invalid={
+                  (edit && isErrorEmail) || errors?.email?.message === true
+                }
               />
             )}
           />

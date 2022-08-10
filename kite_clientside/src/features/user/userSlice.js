@@ -84,18 +84,18 @@ export const deactivateAccount = createAsyncThunk(
   }
 );
 
-export const loginSocial = createAsyncThunk(
-  'user/loginSocial',
-  async (thunkAPI) => {
-    try {
-      const resp = customFetch.get('http/api/users/');
-      console.log(resp);
-      return resp.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data.message);
-    }
-  }
-);
+// export const loginSocial = createAsyncThunk(
+//   'user/loginSocial',
+//   async (thunkAPI) => {
+//     try {
+//       const resp = customFetch.get('http/api/users/google/redirect/success');
+//       console.log(resp);
+//       return resp.data;
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.response.data.message);
+//     }
+//   }
+// );
 
 const userSlice = createSlice({
   name: 'user',
@@ -230,23 +230,12 @@ const userSlice = createSlice({
       state.user = null;
       toast.error(payload);
     },
-    //LOGIN WITH GOOGLE
-    [loginSocial.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [loginSocial.fulfilled]: (state, { payload }) => {
-      const { user } = payload.data;
-      state.isError = false;
-      state.isLoading = false;
-      state.user = user;
-      addUserToLocalStorage(user);
-      toast.success(`Welcome Back! ${user.fullName}`);
-    },
-    [loginSocial.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      state.isError = true;
-      toast.error(payload);
-    },
+    // //LOGIN WITH GOOGLE
+    // [loginSocial.pending]: (state) => {},
+    // [loginSocial.fulfilled]: (state, { payload }) => {},
+    // [loginSocial.rejected]: (state, { payload }) => {
+    //   toast.error(payload);
+    // },
   },
 });
 

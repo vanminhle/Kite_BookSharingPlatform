@@ -21,11 +21,8 @@ const Wrapper = styled.section`
   .user-password,
   .user-email,
   .user-deactivate {
-    margin-top: 5rem;
-  }
-
-  .user-deactivate {
-    margin-bottom: 5rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
   }
 
   .button-group {

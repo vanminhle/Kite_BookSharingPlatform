@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Logo } from '../components';
 import { useForm, Controller } from 'react-hook-form';
@@ -20,9 +20,9 @@ import {
   loginUser,
   registerUser,
   closeModal,
-  loginSocial,
-  hideError,
 } from '../features/user/userSlice';
+import { Buffer } from 'buffer';
+import { addUserToLocalStorage } from '../utils/localStorage';
 
 const Authentication = () => {
   const { user, isLoading, emailSendingModal, isError } = useSelector(
@@ -30,6 +30,14 @@ const Authentication = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { data } = useParams();
+  if (data) {
+    let base64ToString = Buffer.from(data, 'base64').toString();
+    base64ToString = JSON.parse(base64ToString);
+    addUserToLocalStorage(base64ToString);
+  }
+
   const [isMember, setIsMember] = useState(true);
 
   const schema = yup.object().shape({
@@ -102,11 +110,7 @@ const Authentication = () => {
   const loginGoogle = () => {
     const googleLoginURL =
       process.env.REACT_APP_API_ENDPOINT + 'http/api/users/google';
-    const newWindow = window.open(
-      googleLoginURL,
-      '_blank',
-      'width=500,height=600'
-    );
+    window.location.replace(googleLoginURL);
   };
 
   useEffect(() => {
@@ -185,7 +189,7 @@ const Authentication = () => {
                   type="text"
                   className="form-input"
                   {...field}
-                  invalid={errors?.fullName?.message}
+                  invalid={errors?.fullName?.message === true}
                 />
               )}
             />
@@ -206,7 +210,7 @@ const Authentication = () => {
                 type="email"
                 className="form-input"
                 {...field}
-                invalid={isError || errors?.email?.message}
+                invalid={isError || errors?.email?.message === true}
               />
             )}
           />
@@ -228,7 +232,7 @@ const Authentication = () => {
                 type="password"
                 className="form-input"
                 {...field}
-                invalid={errors?.password?.message}
+                invalid={errors?.password?.message === true}
               />
             )}
           />
@@ -251,7 +255,7 @@ const Authentication = () => {
                   type="password"
                   className="form-input"
                   {...field}
-                  invalid={errors?.passwordConfirm?.message}
+                  invalid={errors?.passwordConfirm?.message === true}
                 />
               )}
             />

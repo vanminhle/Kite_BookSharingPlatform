@@ -20,8 +20,8 @@ const createLogoutCookie = (res) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
     sameSite: 'none',
+    secure: true,
   };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', 'logged out', cookieOptions);
 };
 
@@ -110,8 +110,8 @@ exports.login = catchAsync(async (req, res, next) => {
     ),
     httpOnly: true,
     sameSite: 'none',
+    secure: true,
   };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -397,7 +397,6 @@ passport.use(
         const userGoogleId = profile.id;
         const userEmail = profile.emails && profile.emails[0].value;
         const userDisplayName = profile.displayName;
-        const userPhoto = profile.photos[0].value;
         const userSocialProvider = profile.provider;
 
         const isExistingUser = await User.findOne({ email: userEmail });
@@ -406,7 +405,6 @@ passport.use(
             socialId: userGoogleId,
             email: userEmail,
             fullName: userDisplayName,
-            photo: userPhoto,
             socialProvider: userSocialProvider,
             isConfirmed: true,
           });
@@ -424,17 +422,39 @@ passport.use(
 );
 
 exports.googleLogin = catchAsync(async (req, res, next) => {
-  //console.log(req.user);
   if (req.user) {
     const { user } = req;
+    user.createdAt = undefined;
+    user.__v = undefined;
+
     const token = createToken(user._id);
-    res.status(200).json({
-      success: true,
-      token,
-      data: {
-        user,
-      },
-    });
+    //sendCookie
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
+    res.cookie('jwt', token, cookieOptions);
+    const bufData = Buffer.from(JSON.stringify(user)).toString('base64');
+
+    let redirectUrl = '';
+    if (process.env.NODE_ENV === 'development') {
+      redirectUrl = 'http://localhost:3000/authentication/:';
+    } else if (process.env.NODE_ENV === 'production') {
+      redirectUrl = 'http://localhost:3000/authentication/:';
+    }
+    res.redirect(redirectUrl + bufData);
+
+    // res.status(200).json({
+    //   status: 'success',
+    //   token,
+    //   data: {
+    //     user,
+    //   },
+    // });
   } else {
     return next(
       new AppError('You must be logged in to access this application!')

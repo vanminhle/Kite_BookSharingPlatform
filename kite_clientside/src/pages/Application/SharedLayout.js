@@ -10,25 +10,26 @@ const SharedLayout = () => {
 
   return (
     <Wrapper>
-      {(!user.gender ||
-        !user.phoneNumber ||
-        !user.address ||
-        !user.country ||
-        !user.city ||
-        !user.zipCode ||
-        !user.specialization) && (
-        <UncontrolledAlert className="banner-alert" color="warning">
-          Hi! For better customer support, Please provide some information in
-          the{' '}
-          <Link to="/my-account" className="alert-link">
-            Account Information
-          </Link>{' '}
-          section
-        </UncontrolledAlert>
-      )}
       <main className="home">
         <Sidebar />
+
         <div>
+          {(!user.gender ||
+            !user.phoneNumber ||
+            !user.address ||
+            !user.country ||
+            !user.city ||
+            !user.zipCode ||
+            !user.specialization) && (
+            <UncontrolledAlert className="banner-alert" color="warning">
+              Hi! For better customer support, Please provide some information
+              in the{' '}
+              <Link to="/my-account" className="alert-link">
+                Account Information
+              </Link>{' '}
+              section
+            </UncontrolledAlert>
+          )}
           <div className="home-page">
             <Outlet />
           </div>

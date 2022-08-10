@@ -32,6 +32,7 @@ function App() {
 
           <Route path="/landing" element={<Landing />} />
           <Route path="/authentication" element={<Authentication />} />
+          <Route path="/authentication/:data" element={<Authentication />} />
 
           <Route path="/need-help" element={<NeedHelp />} />
           <Route path="/helper" element={<Helper />} />
@@ -44,7 +45,7 @@ function App() {
 
           <Route path="*" element={<Error />} />
         </Routes>
-        <ToastContainer position="top-center" autoClose={3000} />
+        <ToastContainer position="top-center" autoClose={3000} limit={1} />
       </BrowserRouter>
     </div>
   );

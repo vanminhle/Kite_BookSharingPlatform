@@ -32,7 +32,9 @@ const Sidebar = () => {
             alt="avatar"
           />
           <h4 className="btn-container-text">
-            {user.fullName.split(' ').pop()}
+            {user.socialProvider
+              ? user.fullName.split(' ')[0]
+              : user.fullName.split(' ').pop()}
           </h4>
 
           <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
