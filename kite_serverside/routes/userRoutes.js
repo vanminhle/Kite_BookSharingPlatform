@@ -19,11 +19,8 @@ router.get(
   '/google/redirect',
   passport.authenticate('google', {
     session: false,
-    // successRedirect:
-    //   process.env.NODE_ENV !== 'production' &&
-    //   `${process.env.CLIENT_URL_DEVELOPMENT}/authentication`,
-    //successMessage: 'Login successful',
-    failureMessage: 'Cannot login to Google, Please try again later!',
+    // successRedirect: 'http://localhost:3000/authentication',
+    failureRedirect: `http://localhost:3000/authentication`,
   }),
   authController.googleLogin
 );
@@ -47,6 +44,14 @@ router.patch(
   authController.protect,
   authController.UpdateEmail
 );
+
+router.put(
+  '/deactivateAccount',
+  authController.protect,
+  userController.deactivateAccount
+);
+
+router.get('/logout', authController.protect, authController.logoutSession);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);

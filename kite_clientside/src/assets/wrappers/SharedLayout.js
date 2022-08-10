@@ -8,7 +8,7 @@ const Wrapper = styled.section`
   .home-page {
     width: 90vw;
     margin: 0 auto;
-    padding: 2rem 0;
+    padding-top: 2.5rem;
   }
   .home {
     grid-template-columns: auto 1fr;

@@ -1,5 +1,15 @@
 import Logo from './Logo';
-import Navbar from './NavBar';
-import BigSidebar from './BigSidebar';
+import Sidebar from './Sidebar';
+import UserInformation from './UserInformation';
+import UserDeactivate from './UserDeactivate';
+import UserPassword from './UserPassword';
+import UserEmail from './UserEmail';
 
-export { Logo, Navbar, BigSidebar };
+export {
+  Logo,
+  Sidebar,
+  UserInformation,
+  UserDeactivate,
+  UserPassword,
+  UserEmail,
+};

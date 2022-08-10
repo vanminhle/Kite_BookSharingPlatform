@@ -14,7 +14,7 @@ const VerificationOK = () => {
           now login to Kite!
         </p>
         <Link to="/authentication">
-          <Button>Back To Login</Button>
+          <Button color="primary">Back To Login</Button>
         </Link>
       </div>
     </Wrapper>

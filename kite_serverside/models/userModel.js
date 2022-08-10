@@ -43,24 +43,16 @@ const userSchema = new mongoose.Schema({
       message: 'Password and Password Confirm are not the same!',
     },
   },
-  address: {
-    type: String,
-    trim: true,
-    minLength: [5, 'Address must be at least 5 characters long'],
-  },
   phoneNumber: {
     type: String,
     validate: {
       validator: function (v) {
-        return /((09|03|07|08|05)+([0-9]{8})\b)/g.test(v);
+        return /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/g.test(
+          v
+        );
       },
       message: 'Phone number is not valid!',
     },
-  },
-  zipCode: {
-    type: String,
-    minLength: [5, 'Zip Code is not valid!'],
-    maxLength: [6, 'Zip Code is not valid!'],
   },
   dateOfBirth: Date,
   gender: {
@@ -68,20 +60,30 @@ const userSchema = new mongoose.Schema({
     values: [('male', 'female')],
     default: 'male',
   },
-  state: {
+  specialization: {
     type: String,
     trim: true,
-    minLength: [5, 'State must be at least 5 characters long'],
+    minLength: [5, 'Specialization must be at least 5 characters long'],
+  },
+  address: {
+    type: String,
+    trim: true,
+    minLength: [5, 'Address must be at least 5 characters long'],
+  },
+  country: {
+    type: String,
+    trim: true,
+    minLength: [3, 'Country must be at least 3 characters long'],
   },
   city: {
     type: String,
     trim: true,
-    minLength: [5, 'City must be at least 5 characters long'],
+    minLength: [3, 'City must be at least 3 characters long'],
   },
-  region: {
-    type: String,
-    trim: true,
-    minLength: [4, 'Region must be at least 4 characters long'],
+  zipCode: {
+    type: Number,
+    min: [10000, 'Zip Code is not valid!'],
+    max: [99999, 'Zip Code is not valid!'],
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -95,7 +97,10 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   socialProvider: String,
-  socialId: String,
+  socialId: {
+    type: String,
+    select: false,
+  },
   createdAt: { type: Date, default: Date.now() },
   emailVerificationToken: String,
 });

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import main from '../assets/images/main.svg';
 import Wrapper from '../assets/wrappers/LandingPage';
@@ -5,6 +7,16 @@ import { Logo } from '../components';
 import { Button } from 'reactstrap';
 
 const Landing = () => {
+  const { isLoading } = useSelector((store) => store.user);
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.opacity = 0.5;
+    } else {
+      document.body.style.opacity = 1;
+    }
+  }, [isLoading]);
+
   return (
     <Wrapper>
       <main>
@@ -24,7 +36,9 @@ const Landing = () => {
               facilis, modi expedita cupiditate magnam recusandae? Reiciendis?
             </p>
             <Link to="/authentication">
-              <Button className="btn-hero">Get Started</Button>
+              <Button color="primary" className="btn-hero">
+                Get Started
+              </Button>
             </Link>
           </div>
           <img src={main} alt="job hunt" className="img main-img" />

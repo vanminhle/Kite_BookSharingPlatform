@@ -158,7 +158,12 @@ const HelperActions = () => {
           </div>
         )}
 
-        <Button type="submit" className="btn btn-block" disabled={isLoading}>
+        <Button
+          color="primary"
+          type="submit"
+          className="btn btn-block"
+          disabled={isLoading}
+        >
           Submit
         </Button>
       </form>

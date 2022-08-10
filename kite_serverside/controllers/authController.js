@@ -15,6 +15,16 @@ const createToken = (payload) => {
   return token;
 };
 
+const createLogoutCookie = (res) => {
+  const cookieOptions = {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+  };
+  res.cookie('jwt', 'logged out', cookieOptions);
+};
+
 const createSendVerificationRequest = async (req, res, next, user) => {
   const verifyToken = user.createEmailVerificationToken();
   await user.save({ validateBeforeSave: false });
@@ -82,6 +92,15 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect Email or Password!', 401));
   }
 
+  if (user.active === false) {
+    return next(
+      new AppError(
+        'Your account have been deactivated! please sent an email to support@kite.io for reactivate your account'
+      ),
+      403
+    );
+  }
+
   const token = createToken(user._id);
 
   //sendCookie
@@ -90,8 +109,9 @@ exports.login = catchAsync(async (req, res, next) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
+    sameSite: 'none',
+    secure: true,
   };
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -117,6 +137,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -152,6 +174,12 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+//logout session cookie
+exports.logoutSession = (req, res) => {
+  createLogoutCookie(res);
+  res.status(200).json({ status: 'success', message: 'You have logged out!' });
+};
+
 //role restricted
 exports.restrictTo =
   (...roles) =>
@@ -169,7 +197,7 @@ exports.restrictTo =
 //forgot Password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) {
+  if (!user || user.socialProvider) {
     return next(new AppError('There is no user with that email address.', 404));
   }
 
@@ -245,13 +273,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.sendEmailVerification = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   //console.log(user);
-  if (user && user.isConfirmed) {
-    return res.status(200).json({
-      status: 'success',
-    });
-  }
-
-  if (!user) {
+  if (!user || user.socialProvider || user.isConfirmed) {
     return next(
       new AppError(
         'There is no user account with that email need to be verified!',
@@ -260,7 +282,9 @@ exports.sendEmailVerification = catchAsync(async (req, res, next) => {
     );
   }
 
-  createSendVerificationRequest(req, res, next, user);
+  if (user && !user.isConfirmed) {
+    createSendVerificationRequest(req, res, next, user);
+  }
 });
 
 //email verification
@@ -296,32 +320,46 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
+  if (user.socialProvider) {
+    return next(
+      new AppError(
+        `You can't update your account password when login with ${user.socialProvider}`,
+        401
+      )
+    );
+  }
+
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
     return next(
       new AppError('Your current password is wrong!. Please try again', 401)
     );
   }
 
-  user.password = req.body.password;
+  user.password = req.body.newPassword;
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
 
-  //should logout user after their account password has been updated
-  const token = createToken(user._id);
+  createLogoutCookie(res);
 
   res.status(200).json({
     success: true,
-    token,
-    data: {
-      user,
-    },
+    message: 'Your account password was updated! Please log in again',
   });
 });
 
 //update user email
 exports.UpdateEmail = catchAsync(async (req, res, next) => {
-  const isExistingEmail = await User.findOne({ email: req.body.email });
-  if (isExistingEmail) {
+  if (req.user.socialProvider) {
+    return next(
+      new AppError(
+        `You can't update your account email when login with ${req.user.socialProvider}`,
+        401
+      )
+    );
+  }
+
+  const existUser = await User.findOne({ email: req.body.email });
+  if (existUser && existUser.email === req.body.email) {
     return next(
       new AppError(
         'That email have been already used by another user or duplicate with the old one in your account',
@@ -342,6 +380,7 @@ exports.UpdateEmail = catchAsync(async (req, res, next) => {
     }
   );
 
+  createLogoutCookie(res);
   createSendVerificationRequest(req, res, next, user);
 });
 
@@ -358,7 +397,6 @@ passport.use(
         const userGoogleId = profile.id;
         const userEmail = profile.emails && profile.emails[0].value;
         const userDisplayName = profile.displayName;
-        const userPhoto = profile.photos[0].value;
         const userSocialProvider = profile.provider;
 
         const isExistingUser = await User.findOne({ email: userEmail });
@@ -367,7 +405,6 @@ passport.use(
             socialId: userGoogleId,
             email: userEmail,
             fullName: userDisplayName,
-            photo: userPhoto,
             socialProvider: userSocialProvider,
             isConfirmed: true,
           });
@@ -385,17 +422,39 @@ passport.use(
 );
 
 exports.googleLogin = catchAsync(async (req, res, next) => {
-  //console.log(req.user);
   if (req.user) {
     const { user } = req;
+    user.createdAt = undefined;
+    user.__v = undefined;
+
     const token = createToken(user._id);
-    res.status(200).json({
-      success: true,
-      token,
-      data: {
-        user,
-      },
-    });
+    //sendCookie
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    };
+    res.cookie('jwt', token, cookieOptions);
+    const bufData = Buffer.from(JSON.stringify(user)).toString('base64');
+
+    let redirectUrl = '';
+    if (process.env.NODE_ENV === 'development') {
+      redirectUrl = 'http://localhost:3000/authentication/:';
+    } else if (process.env.NODE_ENV === 'production') {
+      redirectUrl = 'http://localhost:3000/authentication/:';
+    }
+    res.redirect(redirectUrl + bufData);
+
+    // res.status(200).json({
+    //   status: 'success',
+    //   token,
+    //   data: {
+    //     user,
+    //   },
+    // });
   } else {
     return next(
       new AppError('You must be logged in to access this application!')

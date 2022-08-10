@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Logo } from '../components';
 import { useForm, Controller } from 'react-hook-form';
@@ -20,10 +20,24 @@ import {
   loginUser,
   registerUser,
   closeModal,
-  loginSocial,
 } from '../features/user/userSlice';
+import { Buffer } from 'buffer';
+import { addUserToLocalStorage } from '../utils/localStorage';
 
 const Authentication = () => {
+  const { user, isLoading, emailSendingModal, isError } = useSelector(
+    (store) => store.user
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { data } = useParams();
+  if (data) {
+    let base64ToString = Buffer.from(data, 'base64').toString();
+    base64ToString = JSON.parse(base64ToString);
+    addUserToLocalStorage(base64ToString);
+  }
+
   const [isMember, setIsMember] = useState(true);
 
   const schema = yup.object().shape({
@@ -72,7 +86,6 @@ const Authentication = () => {
     handleSubmit,
     formState,
     formState: { errors },
-    formState: { isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       fullName: '',
@@ -85,16 +98,8 @@ const Authentication = () => {
     resolver: yupResolver(schema),
   });
 
-  const { user, isLoading, emailSendingModal, isError } = useSelector(
-    (store) => store.user
-  );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const onSubmit = (values) => {
     const { fullName, email, password, passwordConfirm } = values;
-
-    //dispatch
     if (isMember) {
       dispatch(loginUser({ email, password }));
       return;
@@ -105,15 +110,7 @@ const Authentication = () => {
   const loginGoogle = () => {
     const googleLoginURL =
       process.env.REACT_APP_API_ENDPOINT + 'http/api/users/google';
-    const newWindow = window.open(
-      googleLoginURL,
-      '_blank',
-      'width=500,height=600'
-    );
-  };
-
-  const toggleMember = () => {
-    setIsMember(!isMember);
+    window.location.replace(googleLoginURL);
   };
 
   useEffect(() => {
@@ -140,21 +137,15 @@ const Authentication = () => {
         navigate('/');
       }, 3000);
     }
-  }, [isLoading, isError, user]);
+  }, [isLoading, isError, isMember, user]);
 
   return (
     <Wrapper className="full-page">
       <Modal isOpen={emailSendingModal} toggle={() => dispatch(closeModal())}>
-        <ModalHeader
-          style={{ alignSelf: 'center', borderBottom: '0', marginTop: '1rem' }}
-        >
+        <ModalHeader className="modal-header">
           Please Verify Your Email Address
         </ModalHeader>
-        <ModalBody
-          style={{
-            textAlign: 'center',
-          }}
-        >
+        <ModalBody className="modal-body">
           <div>
             <img
               style={{ width: '70%', margin: '2rem 0' }}
@@ -173,13 +164,7 @@ const Authentication = () => {
             Kite!
           </div>
         </ModalBody>
-        <ModalFooter
-          style={{
-            alignSelf: 'center',
-            borderTop: '0',
-            marginBottom: '1rem',
-          }}
-        >
+        <ModalFooter className="modal-footer">
           <Button color="primary" onClick={() => dispatch(closeModal())}>
             Understood
           </Button>
@@ -200,7 +185,12 @@ const Authentication = () => {
               name="fullName"
               control={control}
               render={({ field }) => (
-                <Input type="text" className="form-input" {...field} />
+                <Input
+                  type="text"
+                  className="form-input"
+                  {...field}
+                  invalid={errors?.fullName?.message === true}
+                />
               )}
             />
           </div>
@@ -216,7 +206,12 @@ const Authentication = () => {
             name="email"
             control={control}
             render={({ field }) => (
-              <Input type="email" className="form-input" {...field} />
+              <Input
+                type="email"
+                className="form-input"
+                {...field}
+                invalid={isError || errors?.email?.message === true}
+              />
             )}
           />
         </div>
@@ -233,7 +228,12 @@ const Authentication = () => {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input type="password" className="form-input" {...field} />
+              <Input
+                type="password"
+                className="form-input"
+                {...field}
+                invalid={errors?.password?.message === true}
+              />
             )}
           />
         </div>
@@ -251,7 +251,12 @@ const Authentication = () => {
               name="passwordConfirm"
               control={control}
               render={({ field }) => (
-                <Input type="password" className="form-input" {...field} />
+                <Input
+                  type="password"
+                  className="form-input"
+                  {...field}
+                  invalid={errors?.passwordConfirm?.message === true}
+                />
               )}
             />
           </div>
@@ -262,7 +267,12 @@ const Authentication = () => {
           </div>
         )}
 
-        <Button type="submit" className="btn btn-block" disabled={isLoading}>
+        <Button
+          color="primary"
+          type="submit"
+          className="btn btn-block"
+          disabled={isLoading}
+        >
           {isMember ? 'Login' : 'Register'}
         </Button>
 
@@ -283,7 +293,11 @@ const Authentication = () => {
 
         <div className="member-section">
           <p>
-            <button type="button" onClick={toggleMember} className="member-btn">
+            <button
+              type="button"
+              onClick={() => setIsMember(!isMember)}
+              className="member-btn"
+            >
               {isMember ? 'Register' : 'Already Have An Account !'}
             </button>
             <button type="button" className="member-btn">

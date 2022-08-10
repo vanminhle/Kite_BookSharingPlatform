@@ -3,7 +3,7 @@ import logo from '../assets/images/logo.svg';
 
 const Logo = () => {
   return (
-    <Link to="/landing">
+    <Link to="/">
       <img src={logo} alt="Kite Logo" className="logo" />
     </Link>
   );

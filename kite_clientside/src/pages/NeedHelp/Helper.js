@@ -155,7 +155,12 @@ const Helper = () => {
           <div className="validation-popup">{errors.email.message}</div>
         )}
 
-        <Button type="submit" className="btn btn-block" disabled={isLoading}>
+        <Button
+          color="primary"
+          type="submit"
+          className="btn btn-block"
+          disabled={isLoading}
+        >
           Submit
         </Button>
 
