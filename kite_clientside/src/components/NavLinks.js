@@ -1,10 +1,18 @@
 import { NavLink } from 'react-router-dom';
-import links from '../utils/links';
+import { linksAdmin, linksManager, links } from '../utils/links';
+import { useSelector } from 'react-redux';
 
 const NavLinks = () => {
+  let listLink;
+  const { user } = useSelector((store) => store.user);
+
+  if (user.role === 'admin') listLink = linksAdmin;
+  if (user.role === 'manager') listLink = linksManager;
+  if (user.role === 'customer') listLink = links;
+
   return (
     <div className="nav-links">
-      {links.map((link) => {
+      {listLink.map((link) => {
         const { text, path, id, icon } = link;
         return (
           <NavLink

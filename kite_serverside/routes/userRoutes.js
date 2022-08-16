@@ -25,6 +25,9 @@ router.get(
   authController.googleLogin
 );
 
+router.get('/logout', authController.protect, authController.logoutSession);
+
+//account information
 router.patch(
   '/updateMyInfo',
   authController.protect,
@@ -51,13 +54,36 @@ router.put(
   userController.deactivateAccount
 );
 
-router.get('/logout', authController.protect, authController.logoutSession);
-
+//account recovery
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.post('/sendEmailVerification', authController.sendEmailVerification);
 router.get('/emailVerify/:verifyToken', authController.emailVerification);
+
+//user management
+router
+  .route('/')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    userController.getAllUsers
+  );
+
+router
+  .route('/:id')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    userController.getUser
+  );
+router
+  .route('/setAccountStatus/:id')
+  .put(
+    authController.protect,
+    authController.restrictTo('admin'),
+    userController.setAccountStatus
+  );
 
 //test route
 router.get('/test', authController.protect, authController.test);

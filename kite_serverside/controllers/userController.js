@@ -3,13 +3,13 @@ const cloudinary = require('../utils/cloudinary');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 //photo buffer
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
-  }
-  if (file.mimetype.startsWith('image/gif')) {
+  } else if (file.mimetype.startsWith('image/gif')) {
     cb(
       new AppError(
         'Animated .gif image is not supported! Please upload another image',
@@ -131,5 +131,66 @@ exports.deactivateAccount = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: 'User account is deactivated successfully!',
+  });
+});
+
+//all users
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  //get total filter
+  const totalData = new APIFeatures(
+    User.countDocuments(),
+    req.query
+  ).countFilter();
+  const results = await totalData.query;
+  const numOfPagesResults = results / 30;
+
+  //get filter data
+  const data = new APIFeatures(User.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  let users = await data.query;
+  users = users.filter((el) => el.role !== 'admin');
+
+  // SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: results,
+    resultsPage: Math.ceil(numOfPagesResults),
+    data: {
+      users,
+    },
+  });
+});
+
+//get one user
+exports.getUser = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user || user.role === 'admin')
+    return next(new AppError('No user found with that ID!', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
+//disable or reactivate account
+exports.setAccountStatus = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  const user = await User.findByIdAndUpdate(req.params.id, {
+    active: req.body.active,
+  });
+
+  if (!user || user.role === 'admin')
+    return next(new AppError('No user found with that ID!', 404));
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Account status changed successfully!',
   });
 });

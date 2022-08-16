@@ -5,9 +5,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import yup from '../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
 import { passwordChange, hideError } from '../features/user/userSlice';
+import moment from 'moment';
 
 const UserPassword = () => {
-  const { isLoading, isError } = useSelector((store) => store.user);
+  const { isLoading, user, isError } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   const schema = yup.object().shape({
@@ -119,8 +120,21 @@ const UserPassword = () => {
               </div>
             )}
           </FormGroup>
-          <FormText style={{ fontSize: '0.9rem' }}>
+          <FormText
+            style={{
+              fontSize: '0.9rem',
+              display: 'flex',
+              marginTop: '1.5rem',
+              justifyContent: 'space-between',
+            }}
+          >
             You will be logged out after change to new password.
+            <div>
+              Last Changed At :{' '}
+              {user.passwordChangedAt
+                ? moment(user.passwordChangedAt).format('LLL')
+                : 'None'}
+            </div>
           </FormText>
 
           <div className="button-submit">
