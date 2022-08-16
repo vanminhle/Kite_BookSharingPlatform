@@ -1,17 +1,30 @@
 import { IoBarChartSharp } from 'react-icons/io5';
 import { MdQueryStats } from 'react-icons/md';
-import { FaWpforms } from 'react-icons/fa';
+import { FaWpforms, FaUserFriends } from 'react-icons/fa';
 import { ImProfile } from 'react-icons/im';
 
-const links = [
+export const linksAdmin = [
   { id: 1, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
-  // { id: 2, text: 'all jobs', path: 'all-jobs', icon: <MdQueryStats /> },
+  {
+    id: 2,
+    text: 'Accounts',
+    path: 'account-management',
+    icon: <FaUserFriends />,
+  },
   // { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
   // { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
-  { id: 2, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
-  { id: 3, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
-  { id: 4, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
-  { id: 5, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
 ];
 
-export default links;
+export const linksManager = [
+  { id: 1, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
+  { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
+  { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
+  { id: 2, text: 'all jobs', path: 'all-jobs', icon: <MdQueryStats /> },
+];
+
+export const links = [
+  { id: 2, text: 'all jobs', path: 'all-jobs', icon: <MdQueryStats /> },
+  { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
+  { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
+  { id: 1, text: 'stats', path: '/', icon: <IoBarChartSharp /> },
+];

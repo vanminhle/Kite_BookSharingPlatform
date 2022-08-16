@@ -12,25 +12,34 @@ const UserAccount = () => {
 
   return (
     <Wrapper>
-      <div className="user-information">
-        <UserInformation />
-      </div>
-      <hr />
-      {!user.socialProvider && (
+      {user.role !== 'admin' && (
         <>
-          <div className="user-password">
-            <UserPassword />
+          <div className="user-information">
+            <UserInformation />
           </div>
           <hr />
-          <div className="user-email">
-            <UserEmail />
+          {!user.socialProvider && (
+            <>
+              <div className="user-password">
+                <UserPassword />
+              </div>
+              <hr />
+              <div className="user-email">
+                <UserEmail />
+              </div>
+              <hr />
+            </>
+          )}
+          <div className="user-deactivate">
+            <UserDeactivate />
           </div>
-          <hr />
         </>
       )}
-      <div className="user-deactivate">
-        <UserDeactivate />
-      </div>
+      {user.role === 'admin' && (
+        <div className="user-password" style={{ marginTop: '5.7rem' }}>
+          <UserPassword />
+        </div>
+      )}
     </Wrapper>
   );
 };

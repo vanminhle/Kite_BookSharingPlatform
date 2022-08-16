@@ -12,6 +12,7 @@ const Sidebar = () => {
   const [showLogout, setShowLogout] = useState(false);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
   return (
     <Wrapper>
       <div className="sidebar-container">
@@ -32,16 +33,16 @@ const Sidebar = () => {
             alt="avatar"
           />
           <h4 className="btn-container-text">
-            {user.socialProvider
-              ? user.fullName.split(' ')[0]
-              : user.fullName.split(' ').pop()}
+            {user.fullName.split(' ')[0] > 7
+              ? user.fullName.split(' ')[0].substring(0, 5) + '...'
+              : user.fullName.split(' ')[0]}
           </h4>
 
           <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
             <Link to="/my-account">
               <button type="button" className="dropdown-btn">
                 <MdManageAccounts />
-                My Account
+                {user.role === 'admin' ? 'Password' : 'My Account'}
               </button>
             </Link>
 

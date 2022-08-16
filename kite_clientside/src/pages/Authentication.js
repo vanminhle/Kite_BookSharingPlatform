@@ -134,7 +134,7 @@ const Authentication = () => {
 
     if (user) {
       setTimeout(() => {
-        navigate('/');
+        navigate('/', { replace: true });
       }, 3000);
     }
   }, [isLoading, isError, isMember, user]);
@@ -210,7 +210,7 @@ const Authentication = () => {
                 type="email"
                 className="form-input"
                 {...field}
-                invalid={isError || errors?.email?.message === true}
+                invalid={errors?.email?.message === true}
               />
             )}
           />

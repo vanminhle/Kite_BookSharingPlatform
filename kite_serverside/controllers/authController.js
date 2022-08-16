@@ -70,7 +70,11 @@ exports.register = catchAsync(async (req, res, next) => {
     state: req.body.state,
     city: req.body.city,
     region: req.body.region,
-    role: req.body.role,
+    role: 'customer',
+    active: true,
+    isConfirmed: false,
+    socialProvider: undefined,
+    socialId: undefined,
   });
 
   createSendVerificationRequest(req, res, next, newUser);
@@ -89,7 +93,12 @@ exports.login = catchAsync(async (req, res, next) => {
     !(await user.correctPassword(password, user.password)) ||
     user.isConfirmed === false
   ) {
-    return next(new AppError('Incorrect Email or Password!', 401));
+    return next(
+      new AppError(
+        `Incorrect Email, Password or Your Account haven't been Confirmed!`,
+        401
+      )
+    );
   }
 
   if (user.active === false) {
@@ -115,7 +124,6 @@ exports.login = catchAsync(async (req, res, next) => {
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
-  user.passwordChangedAt = undefined;
   user.createdAt = undefined;
   user.__v = undefined;
 
@@ -316,7 +324,7 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
   res.redirect(301, redirectUrl);
 });
 
-//update user password (still have problem in jwt)
+//update user password
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
