@@ -136,8 +136,6 @@ const allAccountsSlice = createSlice({
     },
     closeModal: (state) => {
       state.setAccountStatusModal = false;
-      state.setAccountStatusId = null;
-      state.setAccountStatusValue = null;
     },
   },
   extraReducers: {
@@ -169,17 +167,22 @@ const allAccountsSlice = createSlice({
       toast.error(payload);
     },
     //set account status
+    [setAccountStatus.pending]: (state) => {
+      state.isLoading = true;
+    },
     [setAccountStatus.fulfilled]: (state, { payload }) => {
       state.setAccountStatusModal = false;
       state.setAccountStatusId = null;
       state.setAccountStatusValue = null;
+      state.isLoading = false;
       state.setAccountStatusState = !state.setAccountStatusState;
-      toast.success(payload);
+      toast.success(payload, { autoClose: 1500 });
     },
     [setAccountStatus.rejected]: (state, { payload }) => {
       state.setAccountStatusModal = false;
       state.setAccountStatusId = null;
       state.setAccountStatusValue = null;
+      state.isLoading = false;
       state.setAccountStatusState = !state.setAccountStatusState;
       toast.error(payload);
     },

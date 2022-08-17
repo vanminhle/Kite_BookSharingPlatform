@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Wrapper from '../assets/wrappers/TableContainer';
+import Wrapper from '../assets/wrappers/TableAccountContainer';
 import noProfilePicture from '../assets/images/noProfilePicture.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -25,7 +25,7 @@ import moment from 'moment';
 import PageBtnContainer from './PageBtnContainer';
 import UserModal from './UserModal';
 
-const TableContainer = () => {
+const TableAccountContainer = () => {
   const {
     accounts,
     isLoading,
@@ -231,10 +231,10 @@ const TableContainer = () => {
           </tbody>
         </Table>
       </div>
-      {numOfPages > 1 && <PageBtnContainer />}
+      {numOfPages > 1 && <PageBtnContainer props={[numOfPages, page]} />}
       <UserModal />
     </Wrapper>
   );
 };
 
-export default TableContainer;
+export default TableAccountContainer;

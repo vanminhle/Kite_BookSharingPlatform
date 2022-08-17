@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
+  margin-bottom: 5rem;
   .account-info {
     display: flex;
     align-items: center;

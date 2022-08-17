@@ -371,7 +371,7 @@ exports.UpdateEmail = catchAsync(async (req, res, next) => {
     return next(
       new AppError(
         'That email have been already used by another user or duplicate with the old one in your account',
-        401
+        409
       )
     );
   }
