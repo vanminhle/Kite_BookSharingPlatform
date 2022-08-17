@@ -5,7 +5,7 @@ import UserDeactivate from './UserDeactivate';
 import UserPassword from './UserPassword';
 import UserEmail from './UserEmail';
 import QueryAccountContainer from './QueryAccountContainer';
-import TableContainer from './TableContainer';
+import TableAccountContainer from './TableAccountContainer';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
 import UserModal from './UserModal';
@@ -18,7 +18,7 @@ export {
   UserPassword,
   UserEmail,
   QueryAccountContainer,
-  TableContainer,
+  TableAccountContainer,
   PageBtnContainer,
   Loading,
   UserModal,

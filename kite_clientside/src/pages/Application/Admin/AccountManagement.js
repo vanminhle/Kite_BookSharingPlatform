@@ -1,4 +1,7 @@
-import { QueryAccountContainer, TableContainer } from '../../../components';
+import {
+  QueryAccountContainer,
+  TableAccountContainer,
+} from '../../../components';
 import { useSelector } from 'react-redux';
 
 const AccountManagement = () => {
@@ -18,7 +21,7 @@ const AccountManagement = () => {
         </h5>
       </div>
       <QueryAccountContainer />
-      <TableContainer />
+      <TableAccountContainer />
     </>
   );
 };
