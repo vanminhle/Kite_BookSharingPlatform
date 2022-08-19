@@ -179,7 +179,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-//disable or reactivate account
+//admin disable or reactivate account
 exports.setAccountStatus = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const user = await User.findByIdAndUpdate(req.params.id, {

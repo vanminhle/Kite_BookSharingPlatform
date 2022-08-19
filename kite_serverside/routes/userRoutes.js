@@ -77,6 +77,7 @@ router
     authController.restrictTo('admin'),
     userController.getUser
   );
+
 router
   .route('/setAccountStatus/:id')
   .put(
