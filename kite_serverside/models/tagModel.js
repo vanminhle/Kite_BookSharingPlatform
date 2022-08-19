@@ -23,5 +23,7 @@ const tagSchema = new mongoose.Schema({
   },
 });
 
+//testing commit co-authored
+
 const Tag = mongoose.model('Tag', tagSchema);
 module.exports = Tag;
