@@ -1,9 +1,58 @@
-const cloudinary = require('cloudinary');
+const cloudinary = require('./cloudinaryConfig');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+//upload photo
+exports.coverToCloudinary = (fileBuffer, fileName) =>
+  new Promise((resolve, reject) => {
+    cloudinary.v2.uploader
+      .upload_stream(
+        {
+          folder: 'BookCover',
+          public_id: fileName,
+          width: 900,
+          height: 1440,
+          crop: 'fill',
+          quality: 90,
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      )
+      .end(fileBuffer);
+  });
 
-module.exports = cloudinary;
+exports.photoToCloudinary = (fileBuffer, fileName) =>
+  new Promise((resolve, reject) => {
+    cloudinary.v2.uploader
+      .upload_stream(
+        {
+          folder: 'UserPhotos',
+          public_id: fileName,
+          width: 500,
+          height: 500,
+          gravity: 'faces',
+          crop: 'thumb',
+          quality: 90,
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      )
+      .end(fileBuffer);
+  });
+
+//delete photo
+exports.deleteFromCloudinary = (publicId) => {
+  cloudinary.v2.uploader.destroy(publicId, (error) => {
+    if (error) {
+      return error;
+    }
+  });
+};
