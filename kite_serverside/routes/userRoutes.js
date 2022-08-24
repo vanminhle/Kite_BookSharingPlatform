@@ -48,7 +48,7 @@ router.patch(
   authController.UpdateEmail
 );
 
-router.put(
+router.patch(
   '/deactivateAccount',
   authController.protect,
   userController.deactivateAccount
@@ -80,7 +80,7 @@ router
 
 router
   .route('/setAccountStatus/:id')
-  .put(
+  .patch(
     authController.protect,
     authController.restrictTo('admin'),
     userController.setAccountStatus

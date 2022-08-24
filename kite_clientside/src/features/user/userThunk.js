@@ -59,7 +59,7 @@ export const passwordChangeThunk = async (url, password, thunkAPI) => {
 
 export const deactivateAccountThunk = async (url, thunkAPI) => {
   try {
-    const resp = await customFetch.put(url);
+    const resp = await customFetch.patch(url);
     return resp.data.message;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);

@@ -15,6 +15,7 @@ import {
   SharedLayout,
   Stats,
   UserAccount,
+  MyBooks,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,6 +49,17 @@ function App() {
             }
           >
             <Route path="/account-management" element={<AccountManagement />} />
+          </Route>
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SharedLayout allowed={['customer']} />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/my-books" element={<MyBooks />} />
           </Route>
 
           {/* public routes */}

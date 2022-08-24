@@ -5,14 +5,14 @@ const tagSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Tag Name is required'],
     trim: true,
-    maxLength: [20, 'Tag Name must have less of equal than 20 characters'],
+    maxLength: [30, 'Tag Name must have less of equal than 30 characters'],
   },
   group: {
     type: String,
     required: [true, 'Tag Group is required'],
     enum: {
-      values: ['format', 'content', 'genre', 'theme'],
-      message: 'Tag Group should defined by (format, content, theme, genre)',
+      values: ['format', 'genre', 'theme'],
+      message: 'Tag Group should defined by (format, genre, theme)',
     },
   },
   description: {

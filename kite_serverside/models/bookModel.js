@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema(
   {
-    name: {
+    bookName: {
       type: String,
       required: [true, 'Book Name is required'],
       trim: true,
@@ -25,15 +25,15 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Summary is required'],
       trim: true,
-      maxLength: [1000, 'Summary must have less of equal than 1000 characters'],
+      maxLength: [150, 'Summary must have less of equal than 150 characters'],
     },
     description: {
       type: String,
       required: [true, 'Description is required'],
       trim: true,
       maxLength: [
-        150,
-        'Description must have less of equal than 150 characters',
+        1000,
+        'Description must have less of equal than 1000 characters',
       ],
     },
     ratingsAverage: {
@@ -45,10 +45,15 @@ const bookSchema = new mongoose.Schema(
       default: 0,
     },
     approvingStatus: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: 'pending',
+      enum: {
+        values: ['pending', 'approved', 'rejected'],
+        message: 'Book status must be approved or rejected',
+      },
     },
-    approvedReason: {
+    approvingReason: {
+      trim: true,
       type: String,
     },
     tags: [

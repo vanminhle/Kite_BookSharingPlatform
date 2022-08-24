@@ -8,5 +8,6 @@ import AccountManagement from './Admin/AccountManagement';
 //Manager
 
 //Customers
+import MyBooks from './Customer/MyBooks';
 
-export { Stats, SharedLayout, UserAccount, AccountManagement };
+export { Stats, SharedLayout, UserAccount, AccountManagement, MyBooks };

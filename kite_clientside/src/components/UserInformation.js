@@ -59,7 +59,12 @@ const UserInformation = () => {
       .test('min', 'Country is Invalid', (value) =>
         value.trim().length > 0 ? value.length >= 3 : true
       ),
-    city: yup.string().nullable().notRequired().max(40, 'City is Invalid'),
+    city: yup
+      .string()
+      .max(40, 'City is Invalid')
+      .test('min', 'City is Invalid', (value) =>
+        value.trim().length > 0 ? value.length >= 3 : true
+      ),
     zipCode: yup
       .number()
       .typeError('Invalid Zip Code')
@@ -180,7 +185,7 @@ const UserInformation = () => {
                     type="text"
                     {...field}
                     disabled={!edit}
-                    invalid={errors?.fullName?.message === true}
+                    invalid={errors?.fullName?.message && true}
                   />
                 )}
               />
@@ -223,7 +228,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Phone Number"
-                    invalid={errors?.phoneNumber?.message === true}
+                    invalid={errors?.phoneNumber?.message && true}
                   />
                 )}
               />
@@ -246,7 +251,7 @@ const UserInformation = () => {
                     type="date"
                     {...field}
                     disabled={!edit}
-                    invalid={errors?.dateOfBirth?.message === true}
+                    invalid={errors?.dateOfBirth?.message && true}
                   />
                 )}
               />
@@ -273,7 +278,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Address"
-                    invalid={errors?.address?.message === true}
+                    invalid={errors?.address?.message && true}
                   />
                 )}
               />
@@ -296,7 +301,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Country"
-                    invalid={errors?.country?.message === true}
+                    invalid={errors?.country?.message && true}
                   />
                 )}
               />
@@ -321,7 +326,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="City"
-                    invalid={errors?.city?.message === true}
+                    invalid={errors?.city?.message && true}
                   />
                 )}
               />
@@ -344,7 +349,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Zip Code"
-                    invalid={errors?.zipCode?.message === true}
+                    invalid={errors?.zipCode?.message && true}
                   />
                 )}
               />
@@ -367,7 +372,7 @@ const UserInformation = () => {
                     {...field}
                     disabled={!edit}
                     placeholder="Specialization"
-                    invalid={errors?.specialization?.message === true}
+                    invalid={errors?.specialization?.message && true}
                   />
                 )}
               />

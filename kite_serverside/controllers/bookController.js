@@ -9,6 +9,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
 const filterObj = require('../utils/apiObjectFilter');
+const Email = require('../utils/email');
 
 //file buffer
 const multerFilter = (req, file, cb) => {
@@ -46,7 +47,7 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book)
     return next(new AppError('Book does not exist! Please try again', 404));
-  if (book.approvingStatus.status)
+  if (book.approvingStatus === 'approved')
     return next(
       new AppError(
         'Your book has been published! You need to submit a support request if you want to editing published book',
@@ -75,10 +76,22 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
 exports.uploadAndSave = catchAsync(async (req, res, next) => {
   if (!req.files.bookCover && !req.files.bookFile)
     next(new AppError('Book cover and Book Document File is Required!', 400));
+  if (!req.files.bookCover && !req.files.bookFile)
+    next(new AppError('Book cover and Book Document File is Required!', 400));
+
+  const book = await Book.findOne({
+    bookName: req.body.bookName,
+    author: req.user._id,
+  });
+  console.log(book);
+  if (book)
+    next(
+      new AppError('Name of the book is duplicate with your another book!', 400)
+    );
 
   //
 
-  req.files.bookCover[0].filename = `bookCover-${req.body.name
+  req.files.bookCover[0].filename = `bookCover-${req.body.bookName
     .split(' ')
     .join('')}-${req.user.email}`;
 
@@ -92,7 +105,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   //
 
-  req.files.bookFile[0].filename = `bookFile-${req.body.name
+  req.files.bookFile[0].filename = `bookFile-${req.body.bookName
     .split(' ')
     .join('')}-${req.user.email}`;
 
@@ -119,7 +132,7 @@ exports.submitBook = catchAsync(async (req, res, next) => {
     'tags'
   );
   filteredBody.author = req.user._id;
-  filteredBody.name = req.body.name
+  filteredBody.bookName = req.body.bookName
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');
@@ -194,7 +207,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     'description',
     'tags'
   );
-  filteredBody.name = req.body.name
+  filteredBody.bookName = req.body.bookName
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');
@@ -236,5 +249,32 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  });
+});
+
+exports.setBookStatus = catchAsync(async (req, res, next) => {
+  const book = await Book.findByIdAndUpdate(
+    req.params.id,
+    {
+      approvingStatus: req.body.status,
+      approvingReason: req.body.reason,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  const url = `http://localhost:3000/my-book`;
+  await new Email(book.author, url, book).sendBookApprovingStatus();
+
+  if (!book)
+    return next(new AppError('Book does not exist! Please try again', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      book,
+    },
   });
 });

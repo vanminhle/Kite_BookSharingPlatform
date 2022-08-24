@@ -87,7 +87,7 @@ const UserPassword = () => {
                   type="password"
                   {...field}
                   placeholder="New Password"
-                  invalid={errors?.newPassword?.message === true}
+                  invalid={errors?.newPassword?.message && true}
                 />
               )}
             />
@@ -110,7 +110,7 @@ const UserPassword = () => {
                   type="password"
                   {...field}
                   placeholder="Password Confirm"
-                  invalid={errors?.passwordConfirm?.message === true}
+                  invalid={errors?.passwordConfirm?.message && true}
                 />
               )}
             />

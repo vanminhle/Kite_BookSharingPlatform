@@ -3,10 +3,15 @@ const pug = require('pug');
 const htmlToText = require('html-to-text');
 
 module.exports = class Email {
-  constructor(user, url) {
+  constructor(user, url, book) {
     this.to = user.email;
     this.fullName = user.fullName;
     this.url = url;
+    if (book) this.bookName = book.bookName;
+    if (book)
+      this.approvingStatus = `${book.approvingStatus
+        .charAt(0)
+        .toUpperCase()}${book.approvingStatus.slice(1)}`;
     this.form = `Kite - Customers Service <${process.env.EMAIL_FROM}>`;
   }
 
@@ -31,6 +36,8 @@ module.exports = class Email {
     const html = pug.renderFile(`${__dirname}/../templates/${template}.pug`, {
       fullName: this.fullName,
       url: this.url,
+      bookName: this.bookName,
+      approvingStatus: this.approvingStatus,
       subject,
     });
 
@@ -53,5 +60,12 @@ module.exports = class Email {
 
   async sendPasswordReset() {
     await this.send('passwordReset', 'Kite - Account Password Reset');
+  }
+
+  async sendBookApprovingStatus() {
+    await this.send(
+      'bookApprovingStatus',
+      'Kite - Book Approving Status Notification'
+    );
   }
 };

@@ -9,6 +9,7 @@ import TableAccountContainer from './TableAccountContainer';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
 import UserModal from './UserModal';
+import SubmitBookForm from './SubmitBookForm';
 
 export {
   Logo,
@@ -22,4 +23,5 @@ export {
   PageBtnContainer,
   Loading,
   UserModal,
+  SubmitBookForm,
 };

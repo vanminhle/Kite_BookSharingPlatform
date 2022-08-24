@@ -36,4 +36,11 @@ router.delete(
   bookController.deleteBook
 );
 
+router.patch(
+  '/setBookStatus/:id',
+  authController.protect,
+  authController.restrictTo('manager'),
+  bookController.setBookStatus
+);
+
 module.exports = router;
