@@ -27,8 +27,8 @@ yup.addMethod(yup.string, 'phoneNumber', function (message) {
   });
 });
 
-yup.addMethod(yup.string, 'bookName', function (message) {
-  return this.matches(REGEX_BOOK_NAME, {
+yup.addMethod(yup.string, 'bookTitle', function (message) {
+  return this.matches(REGEX_FULLNAME, {
     message,
     excludeEmptyString: true,
   });

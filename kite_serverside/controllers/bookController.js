@@ -80,7 +80,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
     next(new AppError('Book cover and Book Document File is Required!', 400));
 
   const book = await Book.findOne({
-    bookName: req.body.bookName,
+    bookTitle: req.body.bookTitle,
     author: req.user._id,
   });
   console.log(book);
@@ -91,7 +91,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   //
 
-  req.files.bookCover[0].filename = `bookCover-${req.body.bookName
+  req.files.bookCover[0].filename = `bookCover-${req.body.bookTitle
     .split(' ')
     .join('')}-${req.user.email}`;
 
@@ -105,7 +105,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   //
 
-  req.files.bookFile[0].filename = `bookFile-${req.body.bookName
+  req.files.bookFile[0].filename = `bookFile-${req.body.bookTitle
     .split(' ')
     .join('')}-${req.user.email}`;
 
@@ -132,7 +132,7 @@ exports.submitBook = catchAsync(async (req, res, next) => {
     'tags'
   );
   filteredBody.author = req.user._id;
-  filteredBody.bookName = req.body.bookName
+  filteredBody.bookTitle = req.body.bookTitle
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');
@@ -157,7 +157,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     req.query
   ).countFilter();
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / 20;
 
   //get filter data
   const data = new APIFeatures(Book.find(), req.query)
@@ -167,7 +167,8 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     .paginate();
   const books = await data.query;
 
-  res.status(201).json({
+  // SEND RESPONSE
+  res.status(200).json({
     status: 'success',
     results: results,
     resultsPage: Math.ceil(numOfPagesResults),
@@ -207,7 +208,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     'description',
     'tags'
   );
-  filteredBody.bookName = req.body.bookName
+  filteredBody.bookTitle = req.body.bookTitle
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');

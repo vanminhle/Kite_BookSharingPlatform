@@ -1,11 +1,11 @@
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import Wrapper from '../assets/wrappers/PageBtnContainer';
 import { useDispatch } from 'react-redux';
-import { changePage } from '../features/allAccounts/allAccountsSlice';
 
 const PageBtnContainer = ({ props }) => {
   const numOfPages = props[0];
   const page = props[1];
+  const changePage = props[2];
 
   const dispatch = useDispatch();
 

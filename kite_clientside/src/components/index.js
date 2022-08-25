@@ -10,6 +10,9 @@ import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
 import UserModal from './UserModal';
 import SubmitBookForm from './SubmitBookForm';
+import MyBooksContainer from './MyBooksContainer';
+import BooksList from './BooksList';
+import QueryMyBooksContainer from './QueryMyBooksContainer';
 
 export {
   Logo,
@@ -24,4 +27,7 @@ export {
   Loading,
   UserModal,
   SubmitBookForm,
+  MyBooksContainer,
+  BooksList,
+  QueryMyBooksContainer,
 };

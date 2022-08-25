@@ -7,7 +7,7 @@ module.exports = class Email {
     this.to = user.email;
     this.fullName = user.fullName;
     this.url = url;
-    if (book) this.bookName = book.bookName;
+    if (book) this.bookTitle = book.bookTitle;
     if (book)
       this.approvingStatus = `${book.approvingStatus
         .charAt(0)
@@ -36,7 +36,7 @@ module.exports = class Email {
     const html = pug.renderFile(`${__dirname}/../templates/${template}.pug`, {
       fullName: this.fullName,
       url: this.url,
-      bookName: this.bookName,
+      bookTitle: this.bookTitle,
       approvingStatus: this.approvingStatus,
       subject,
     });

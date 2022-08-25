@@ -24,6 +24,7 @@ import {
 import moment from 'moment';
 import PageBtnContainer from './PageBtnContainer';
 import UserModal from './UserModal';
+import { changePage } from '../features/allAccounts/allAccountsSlice';
 
 const TableAccountContainer = () => {
   const {
@@ -231,7 +232,9 @@ const TableAccountContainer = () => {
           </tbody>
         </Table>
       </div>
-      {numOfPages > 1 && <PageBtnContainer props={[numOfPages, page]} />}
+      {numOfPages > 1 && (
+        <PageBtnContainer props={[numOfPages, page, changePage]} />
+      )}
       <UserModal />
     </Wrapper>
   );

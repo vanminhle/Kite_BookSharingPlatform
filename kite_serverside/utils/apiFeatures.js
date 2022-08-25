@@ -29,6 +29,7 @@ class APIFeatures {
       'city',
       'country',
       'phoneNumber',
+      'bookTitle',
     ];
     excludedFields.forEach((el) => delete queryObj[el]);
 
