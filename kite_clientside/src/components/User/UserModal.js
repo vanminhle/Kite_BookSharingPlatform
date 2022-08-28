@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import noProfilePicture from '../assets/images/noProfilePicture.svg';
+import noProfilePicture from '../../assets/images/noProfilePicture.svg';
 import {
   Button,
   Modal,
@@ -14,8 +14,8 @@ import { TbUserCheck, TbUserX } from 'react-icons/tb';
 import { IoEarthOutline } from 'react-icons/io5';
 import { MdOutlineWorkOutline, MdSupportAgent } from 'react-icons/md';
 import { AiOutlineCar, AiOutlineUser } from 'react-icons/ai';
-import { Loading } from '../components';
-import { clearAccount } from '../features/allAccounts/allAccountsSlice';
+import { Loading } from '../../components';
+import { clearAccount } from '../../features/allAccounts/allAccountsSlice';
 import moment from 'moment';
 import { FaUserLock, FaUserTag } from 'react-icons/fa';
 

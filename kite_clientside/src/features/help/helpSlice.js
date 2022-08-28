@@ -57,7 +57,7 @@ const helpSlice = createSlice({
     },
     [forgotPassword.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload);
+      toast.success(payload);
     },
     //EMAIL VERIFICATION
     [verificationEmail.pending]: (state) => {
@@ -69,7 +69,7 @@ const helpSlice = createSlice({
     },
     [verificationEmail.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload);
+      toast.success(payload);
     },
   },
 });

@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form, FormGroup, Input, Label, FormText } from 'reactstrap';
 import { yupResolver } from '@hookform/resolvers/yup';
-import yup from '../utils/yupGlobal';
+import yup from '../../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
-import { passwordChange, hideError } from '../features/user/userSlice';
+import { passwordChange, hideError } from '../../features/user/userSlice';
 import moment from 'moment';
 
 const UserPassword = () => {
@@ -87,7 +87,7 @@ const UserPassword = () => {
                   type="password"
                   {...field}
                   placeholder="New Password"
-                  invalid={errors?.newPassword?.message === true}
+                  invalid={errors?.newPassword?.message && true}
                 />
               )}
             />
@@ -110,7 +110,7 @@ const UserPassword = () => {
                   type="password"
                   {...field}
                   placeholder="Password Confirm"
-                  invalid={errors?.passwordConfirm?.message === true}
+                  invalid={errors?.passwordConfirm?.message && true}
                 />
               )}
             />

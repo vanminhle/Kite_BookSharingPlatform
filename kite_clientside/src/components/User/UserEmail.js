@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form, FormText, FormGroup, Input, Label } from 'reactstrap';
 import { yupResolver } from '@hookform/resolvers/yup';
-import yup from '../utils/yupGlobal';
+import yup from '../../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
-import { emailChange, hideErrorEmail } from '../features/user/userSlice';
+import { emailChange, hideErrorEmail } from '../../features/user/userSlice';
 
 const UserEmail = () => {
   const { isLoading, isErrorEmail, user } = useSelector((store) => store.user);
@@ -60,9 +60,7 @@ const UserEmail = () => {
                 type="email"
                 {...field}
                 disabled={!edit}
-                invalid={
-                  (edit && isErrorEmail) || errors?.email?.message === true
-                }
+                invalid={(edit && isErrorEmail) || errors?.email?.message}
               />
             )}
           />

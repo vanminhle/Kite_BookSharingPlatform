@@ -3,6 +3,9 @@ import userSlice from './features/user/userSlice';
 import helpSlice from './features/help/helpSlice';
 import resetPasswordSlice from './features/help/resetPasswordSlice';
 import allAccountsSlice from './features/allAccounts/allAccountsSlice';
+import myBooksSlice from './features/myBooks/myBooksSlice';
+import manageBooksSlice from './features/manageBooks/manageBooksSlice';
+import tagsSlice from './features/tags/tagsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +13,8 @@ export const store = configureStore({
     help: helpSlice,
     resetPassword: resetPasswordSlice,
     allAccounts: allAccountsSlice,
+    myBooks: myBooksSlice,
+    manageBooks: manageBooksSlice,
+    tags: tagsSlice,
   },
 });

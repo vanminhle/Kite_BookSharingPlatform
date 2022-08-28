@@ -1,5 +1,6 @@
 const multer = require('multer');
-const cloudinary = require('../utils/cloudinary');
+const lodash = require('lodash');
+const { photoToCloudinary } = require('../utils/cloudinary');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -7,18 +8,20 @@ const APIFeatures = require('../utils/apiFeatures');
 
 //photo buffer
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
+  if (
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/jfif' ||
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/pjpeg' ||
+    file.mimetype === 'image/pjp'
+  ) {
     cb(null, true);
-  } else if (file.mimetype.startsWith('image/gif')) {
+  } else {
     cb(
-      new AppError(
-        'Animated .gif image is not supported! Please upload another image',
-        400
-      ),
+      new AppError('Not an valid image! Please upload only images.', 400),
       false
     );
-  } else {
-    cb(new AppError('Not an image! Please upload only images.', 400), false);
   }
 };
 
@@ -32,31 +35,10 @@ exports.uploadUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
   req.file.filename = `user-${req.user.id}-${req.user.email}`;
 
-  const uploadToCloudinary = (fileBuffer) =>
-    new Promise((resolve, reject) => {
-      cloudinary.v2.uploader
-        .upload_stream(
-          {
-            folder: 'UserPhotos',
-            public_id: req.file.filename,
-            width: 500,
-            height: 500,
-            gravity: 'faces',
-            crop: 'thumb',
-            quality: 90,
-          },
-          (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          }
-        )
-        .end(fileBuffer);
-    });
-
-  const uploadResult = await uploadToCloudinary(req.file.buffer);
+  const uploadResult = await photoToCloudinary(
+    req.file.buffer,
+    req.file.filename
+  );
   req.profileImageUrl = uploadResult.url;
 
   next();
@@ -142,7 +124,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     req.query
   ).countFilter();
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
   const data = new APIFeatures(User.find(), req.query)
@@ -181,7 +163,6 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 //admin disable or reactivate account
 exports.setAccountStatus = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const user = await User.findByIdAndUpdate(req.params.id, {
     active: req.body.active,
   });
