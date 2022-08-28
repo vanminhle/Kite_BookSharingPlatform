@@ -152,15 +152,19 @@ exports.submitBook = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-  const totalData = new APIFeatures(
-    Book.countDocuments(),
-    req.query
-  ).countFilter();
+  let totalData;
+  if (req.user.role === 'customer') {
+    totalData = new APIFeatures(Book.countDocuments(), req.query)
+      .filter()
+      .countFilter();
+  } else {
+    totalData = new APIFeatures(Book.countDocuments(), req.query).countFilter();
+  }
   const results = await totalData.query;
-  const numOfPagesResults = results / 20;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
-  const data = new APIFeatures(Book.find(), req.query)
+  const data = new APIFeatures(Book.find().populate('tags'), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -274,6 +278,7 @@ exports.setBookStatus = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    message: 'Book approving status set successfully',
     data: {
       book,
     },

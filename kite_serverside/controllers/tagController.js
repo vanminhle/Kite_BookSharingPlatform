@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const Tag = require('../models/tagModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
+const Book = require('../models/bookModel');
 
 exports.createTag = catchAsync(async (req, res, next) => {
   const tag = await Tag.findOne({ name: req.body.name });
@@ -27,7 +29,7 @@ exports.getAllTags = catchAsync(async (req, res, next) => {
     req.query
   ).countFilter();
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
   const data = new APIFeatures(Tag.find(), req.query)
@@ -88,8 +90,16 @@ exports.updateTag = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTag = catchAsync(async (req, res, next) => {
-  const tag = await Tag.findByIdAndDelete(req.params.id);
+  const check = await Book.find({
+    tags: {
+      $in: [mongoose.Types.ObjectId(req.params.id)],
+    },
+  });
+  console.log(check);
 
+  process.exit();
+
+  const tag = await Tag.findByIdAndDelete(req.params.id);
   if (!tag) {
     return next(new AppError('No tag found with that ID', 404));
   }

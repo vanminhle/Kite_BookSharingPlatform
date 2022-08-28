@@ -1,18 +1,23 @@
 import Logo from './Logo';
 import Sidebar from './Sidebar';
-import UserInformation from './UserInformation';
-import UserDeactivate from './UserDeactivate';
-import UserPassword from './UserPassword';
-import UserEmail from './UserEmail';
-import QueryAccountContainer from './QueryAccountContainer';
-import TableAccountContainer from './TableAccountContainer';
+import UserInformation from './User/UserInformation';
+import UserDeactivate from './User/UserDeactivate';
+import UserPassword from './User/UserPassword';
+import UserEmail from './User/UserEmail';
+import QueryAccountContainer from './Accounts/QueryAccountContainer';
+import TableAccountContainer from './Accounts/TableAccountContainer';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
-import UserModal from './UserModal';
-import SubmitBookForm from './SubmitBookForm';
-import MyBooksContainer from './MyBooksContainer';
+import UserModal from './User/UserModal';
+import SubmitBookForm from './MyBooks/SubmitBookForm';
+import MyBooksContainer from './MyBooks/MyBooksContainer';
 import BooksList from './BooksList';
-import QueryMyBooksContainer from './QueryMyBooksContainer';
+import QueryMyBooksContainer from './MyBooks/QueryMyBooksContainer';
+import QueryManageBooksContainer from './Books/QueryManageBooksContainer';
+import TableManageBooksContainer from './Books/TableManageBooksContainer';
+import QueryTagsContainer from './Tags/QueryTagsContainer';
+import CreateTagForm from './Tags/CreateTagForm';
+import TableTagsContainer from './Tags/TableTagsContainer';
 
 export {
   Logo,
@@ -30,4 +35,9 @@ export {
   MyBooksContainer,
   BooksList,
   QueryMyBooksContainer,
+  QueryManageBooksContainer,
+  TableManageBooksContainer,
+  QueryTagsContainer,
+  TableTagsContainer,
+  CreateTagForm,
 };

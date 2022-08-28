@@ -1,19 +1,12 @@
-import Wrapper from '../assets/wrappers/SearchContainer';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import Wrapper from '../../assets/wrappers/SearchContainer';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
-import { handleChange, getMyBooks } from '../features/myBooks/myBooksSlice';
-import { useEffect } from 'react';
+import { handleChange } from '../../features/tags/tagsSlice';
 
-const QueryMyBooksContainer = () => {
-  const {
-    isLoading,
-    search,
-    bookApprovingStatus,
-    bookApprovingStatusOptions,
-    sort,
-    sortOptions,
-  } = useSelector((store) => store.myBooks);
+const QueryTagsContainer = () => {
+  const { isLoading, search, group, groupOptions, sort, sortOptions } =
+    useSelector((store) => store.tags);
 
   const dispatch = useDispatch();
 
@@ -28,14 +21,14 @@ const QueryMyBooksContainer = () => {
 
   return (
     <Wrapper>
-      <Form className="form" style={{ marginBottom: '-1rem' }}>
+      <Form className="form">
         {/* <h5>search form</h5> */}
         <div className="form-center">
           {/* Search container */}
           <FormGroup>
-            <Label for="search">Search</Label>
+            <Label for="searchString">Search</Label>
             <Controller
-              id="search"
+              id="searchString"
               name="search"
               control={control}
               render={({ field }) => (
@@ -48,24 +41,24 @@ const QueryMyBooksContainer = () => {
               )}
             />
           </FormGroup>
-          {/* filter by status */}
+          {/* Group with */}
           <FormGroup>
-            <Label for="bookApprovingStatus">Approving Status</Label>
+            <Label for="group">Group</Label>
             <Controller
-              id="bookApprovingStatus"
-              name="bookApprovingStatus"
+              id="group"
+              name="group"
               control={control}
               render={({ field }) => (
                 <Input
                   type="select"
                   {...field}
                   onChange={handleSearch}
-                  value={bookApprovingStatus}
+                  value={group}
                 >
-                  {bookApprovingStatusOptions.map((itemValue, index) => {
+                  {groupOptions.map((itemValue, index) => {
                     return (
                       <option key={index} value={itemValue}>
-                        {itemValue.charAt(0).toUpperCase() + itemValue.slice(1)}
+                        {itemValue}
                       </option>
                     );
                   })}
@@ -90,7 +83,7 @@ const QueryMyBooksContainer = () => {
                   {sortOptions.map((itemValue, index) => {
                     return (
                       <option key={index} value={itemValue}>
-                        {itemValue.charAt(0).toUpperCase() + itemValue.slice(1)}
+                        {itemValue}
                       </option>
                     );
                   })}
@@ -104,4 +97,4 @@ const QueryMyBooksContainer = () => {
   );
 };
 
-export default QueryMyBooksContainer;
+export default QueryTagsContainer;

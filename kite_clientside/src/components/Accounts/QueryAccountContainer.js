@@ -1,11 +1,11 @@
-import Wrapper from '../assets/wrappers/SearchContainer';
+import Wrapper from '../../assets/wrappers/SearchContainer';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import {
   handleChange,
   clearFilters,
-} from '../features/allAccounts/allAccountsSlice';
+} from '../../features/allAccounts/allAccountsSlice';
 
 const QueryAccountContainer = () => {
   const {

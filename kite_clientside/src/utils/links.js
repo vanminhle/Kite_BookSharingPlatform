@@ -1,27 +1,49 @@
-import { IoBarChartSharp } from 'react-icons/io5';
-import { MdQueryStats } from 'react-icons/md';
-import { FaWpforms, FaUserFriends } from 'react-icons/fa';
+import { MdFeedback, MdOutlineRateReview } from 'react-icons/md';
+import { FaUserFriends } from 'react-icons/fa';
 import { BiHomeSmile, BiSupport, BiBarChartAlt2 } from 'react-icons/bi';
 import { TbBooks } from 'react-icons/tb';
-import { MdOutlineInventory2 } from 'react-icons/md';
+import {
+  MdOutlineInventory2,
+  MdPayment,
+  MdOutlineFeedback,
+} from 'react-icons/md';
 import { FiBook } from 'react-icons/fi';
+import { BsBookmarkStar } from 'react-icons/bs';
 import { BiBookmarks } from 'react-icons/bi';
-import { ImProfile } from 'react-icons/im';
+import { BsBox } from 'react-icons/bs';
+import { RiProfileLine } from 'react-icons/ri';
 
 export const linksAdmin = [
-  { id: 1, text: 'Statistics', path: '/', icon: <IoBarChartSharp /> },
+  { id: 1, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
   {
     id: 2,
     text: 'Accounts',
-    path: 'account-management',
+    path: '/account-management',
     icon: <FaUserFriends />,
   },
-  // { id: 3, text: 'add job', path: 'add-job', icon: <FaWpforms /> },
-  // { id: 4, text: 'profile', path: 'profile', icon: <ImProfile /> },
+  {
+    id: 3,
+    text: 'Tags',
+    path: '/tags-management',
+    icon: <BsBookmarkStar />,
+  },
+  {
+    id: 4,
+    text: 'Books',
+    path: '/books-management',
+    icon: <BsBox />,
+  },
+  { id: 5, text: 'Authors', path: '/', icon: <RiProfileLine /> },
+  { id: 6, text: 'Tickets', path: '/', icon: <MdOutlineFeedback /> },
 ];
 
 export const linksManager = [
-  { id: 1, text: 'Statistics', path: '/', icon: <IoBarChartSharp /> },
+  { id: 1, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
+  { id: 2, text: 'Books', path: '/manager/manage-books', icon: <BsBox /> },
+  { id: 3, text: 'Authors', path: '/', icon: <RiProfileLine /> },
+  { id: 4, text: 'Translations', path: '/', icon: <MdPayment /> },
+  { id: 5, text: 'Reviews', path: '/', icon: <MdOutlineRateReview /> },
+  { id: 6, text: 'Tickets', path: '/', icon: <MdOutlineFeedback /> },
 ];
 
 export const links = [

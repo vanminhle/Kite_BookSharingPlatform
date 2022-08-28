@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import Wrapper from '../assets/wrappers/MyBookContainer';
+import Wrapper from '../../assets/wrappers/MyBookContainer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Loading } from '.';
-import BooksList from './BooksList';
-import { getMyBooks } from '../features/myBooks/myBooksSlice';
-import PageBtnContainer from './PageBtnContainer';
-import { changeMyBooksPage } from '../features/myBooks/myBooksSlice';
+import { Loading } from '../../components';
+import BooksList from './../BooksList';
+import { getMyBooks } from '../../features/myBooks/myBooksSlice';
+import PageBtnContainer from './../PageBtnContainer';
+import { changeMyBooksPage } from '../../features/myBooks/myBooksSlice';
 
 const MyBooksContainer = () => {
   const {

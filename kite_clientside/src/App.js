@@ -16,13 +16,13 @@ import {
   Stats,
   UserAccount,
   MyBooks,
+  ManageBooks,
+  TagsManagement,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const { user } = useSelector((store) => store.user);
-
   return (
     <div>
       <BrowserRouter>
@@ -49,6 +49,19 @@ function App() {
             }
           >
             <Route path="/account-management" element={<AccountManagement />} />
+            <Route path="/books-management" element={<ManageBooks />} />
+            <Route path="/tags-management" element={<TagsManagement />} />
+          </Route>
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SharedLayout allowed={['manager']} />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/manager/manage-books" element={<ManageBooks />} />
           </Route>
 
           <Route

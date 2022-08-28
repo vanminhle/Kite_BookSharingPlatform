@@ -81,7 +81,7 @@ bookSchema.pre(/^find/, function (next) {
     select: '_id fullName email',
   }).populate({
     path: 'tags',
-    select: '-__v',
+    select: '-_v',
   });
   next(0);
 });

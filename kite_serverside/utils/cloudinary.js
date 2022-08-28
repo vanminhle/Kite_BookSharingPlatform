@@ -8,8 +8,8 @@ exports.coverToCloudinary = (fileBuffer, fileName) =>
         {
           folder: 'BookCover',
           public_id: fileName,
-          width: 900,
-          height: 1440,
+          width: 800,
+          height: 1280,
           crop: 'fill',
           quality: 90,
         },

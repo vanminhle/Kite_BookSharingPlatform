@@ -4,10 +4,20 @@ import UserAccount from './UserAccount';
 
 // Admin
 import AccountManagement from './Admin/AccountManagement';
+import TagsManagement from './Admin/TagsManagement';
 
 //Manager
+import ManageBooks from './ManageBooks';
 
 //Customers
 import MyBooks from './Customer/MyBooks';
 
-export { Stats, SharedLayout, UserAccount, AccountManagement, MyBooks };
+export {
+  Stats,
+  SharedLayout,
+  UserAccount,
+  AccountManagement,
+  MyBooks,
+  ManageBooks,
+  TagsManagement,
+};

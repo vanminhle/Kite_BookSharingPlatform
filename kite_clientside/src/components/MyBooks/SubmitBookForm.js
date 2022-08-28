@@ -1,10 +1,10 @@
-import noImagePlaceholder from '../assets/images/noImagePlaceholder.svg';
+import noImagePlaceholder from '../../assets/images/noImagePlaceholder.svg';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { Loading } from '../components';
+import { Loading } from '../../components';
 import {
   Button,
   Modal,
@@ -19,14 +19,14 @@ import {
   Input,
   FormText,
 } from 'reactstrap';
-import Wrapper from '../assets/wrappers/SubmitBookForm';
+import Wrapper from '../../assets/wrappers/SubmitBookForm';
 import {
   openSubmitForm,
   closeSubmitForm,
   getTags,
   submitBook,
-} from '../features/myBooks/myBooksSlice';
-import yup from '../utils/yupGlobal';
+} from '../../features/myBooks/myBooksSlice';
+import yup from '../../utils/yupGlobal';
 
 const SubmitBookForm = () => {
   const { isForm, isSubmit, loadingForm, tags } = useSelector(
@@ -106,7 +106,6 @@ const SubmitBookForm = () => {
     control,
     handleSubmit,
     setValue,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
