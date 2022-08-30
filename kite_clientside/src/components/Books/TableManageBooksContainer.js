@@ -13,6 +13,8 @@ import {
 } from 'reactstrap';
 import { FaInfoCircle } from 'react-icons/fa';
 import { ImContrast } from 'react-icons/im';
+import { FaTrashAlt } from 'react-icons/fa';
+import { RiFileEditFill } from 'react-icons/ri';
 import { Loading } from '../../components';
 import moment from 'moment';
 import PageBtnContainer from './../PageBtnContainer';
@@ -24,6 +26,10 @@ import {
   closeModal,
   changeValue,
   setBookApprovingStatus,
+  openDeleteModal,
+  closeDeleteModal,
+  deleteBook,
+  getBook,
 } from '../../features/manageBooks/manageBooksSlice';
 
 const TableManageBooksContainer = () => {
@@ -41,7 +47,12 @@ const TableManageBooksContainer = () => {
     setBookApprovingStatusState,
     approvingValue,
     approvingReason,
+    setBookDeleteModal,
+    setBookDeleteId,
+    setFinishUpdate,
+    setBookDeletingState,
   } = useSelector((store) => store.manageBooks);
+  const { user } = useSelector((store) => store.user);
 
   const dispatch = useDispatch();
 
@@ -54,6 +65,8 @@ const TableManageBooksContainer = () => {
     bookApprovingStatus,
     sort,
     setBookApprovingStatusState,
+    setFinishUpdate,
+    setBookDeletingState,
   ]);
 
   if (isLoading) {
@@ -81,51 +94,75 @@ const TableManageBooksContainer = () => {
     dispatch(changeValue({ name, value }));
   };
 
+  const handleModalOnClick = () => {
+    if (setBookApprovingStatusModal) dispatch(closeModal());
+    if (setBookDeleteModal) dispatch(closeDeleteModal());
+  };
+
   return (
     <Wrapper>
       <Modal
-        isOpen={setBookApprovingStatusModal}
+        isOpen={setBookApprovingStatusModal || setBookDeleteModal}
         toggle={() => dispatch(closeModal())}
         style={{ top: '7rem' }}
       >
         <ModalHeader className="modal-header">You Want To?</ModalHeader>
-        <div>
-          <Input
-            className="mb-3"
-            type="select"
-            name="approvingValue"
-            style={{ width: '21rem', marginLeft: '5rem', marginTop: '1rem' }}
-            onChange={handlerApprovingValue}
-          >
-            <option>Approved</option>
-            <option>Rejected</option>
-          </Input>
-          <Input
-            style={{ width: '21rem', marginLeft: '5rem', marginTop: '1rem' }}
-            className="mb-3"
-            name="approvingReason"
-            placeholder="Reason"
-            onChange={handlerApprovingReason}
-          />
-        </div>
+        {setBookApprovingStatusModal && (
+          <div>
+            <Input
+              className="mb-3"
+              type="select"
+              name="approvingValue"
+              style={{ width: '21rem', marginLeft: '5rem', marginTop: '1rem' }}
+              onChange={handlerApprovingValue}
+            >
+              <option>Approved</option>
+              <option>Rejected</option>
+            </Input>
+            <Input
+              style={{ width: '21rem', marginLeft: '5rem', marginTop: '1rem' }}
+              className="mb-3"
+              name="approvingReason"
+              placeholder="Reason"
+              onChange={handlerApprovingReason}
+            />
+          </div>
+        )}
         <ModalFooter className="modal-footer">
-          <Button
-            color="primary"
-            onClick={() =>
-              dispatch(
-                setBookApprovingStatus({
-                  bookId: setBookApprovingStatusId,
-                  value: {
-                    status: approvingValue.toLowerCase(),
-                    reason: approvingReason.toLowerCase(),
-                  },
-                })
-              )
-            }
-          >
-            Finish
-          </Button>
-          <Button color="secondary" onClick={() => dispatch(closeModal())}>
+          {setBookApprovingStatusModal && (
+            <Button
+              color="primary"
+              onClick={() =>
+                dispatch(
+                  setBookApprovingStatus({
+                    bookId: setBookApprovingStatusId,
+                    value: {
+                      status: approvingValue.toLowerCase(),
+                      reason: approvingReason.toLowerCase(),
+                    },
+                  })
+                )
+              }
+            >
+              Finish
+            </Button>
+          )}
+          {setBookDeleteModal && (
+            <Button
+              color="danger"
+              onClick={() =>
+                dispatch(
+                  deleteBook({
+                    bookId: setBookDeleteId,
+                  })
+                )
+              }
+            >
+              Delete
+            </Button>
+          )}
+
+          <Button color="secondary" onClick={handleModalOnClick}>
             Cancel
           </Button>
         </ModalFooter>
@@ -221,13 +258,35 @@ const TableManageBooksContainer = () => {
                         style={{ color: 'var(--primary-800)' }}
                         onClick={() => dispatch()}
                       />
-                      <ImContrast
-                        title="Set Status"
-                        style={{
-                          color: 'var(--green-dark)',
-                        }}
-                        onClick={() => dispatch(openModal({ id: book._id }))}
-                      />
+                      {user.role === 'manager' && (
+                        <ImContrast
+                          title="Set Status"
+                          style={{
+                            color: 'var(--green-dark)',
+                          }}
+                          onClick={() => dispatch(openModal({ id: book._id }))}
+                        />
+                      )}
+                      {user.role === 'admin' && (
+                        <RiFileEditFill
+                          title="Update Book"
+                          style={{
+                            color: 'var(--green-dark)',
+                          }}
+                          onClick={() => dispatch(getBook({ id: book._id }))}
+                        />
+                      )}
+                      {user.role === 'admin' && (
+                        <FaTrashAlt
+                          title="Delete Book"
+                          style={{
+                            color: 'var(--red-dark)',
+                          }}
+                          onClick={() =>
+                            dispatch(openDeleteModal({ id: book._id }))
+                          }
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

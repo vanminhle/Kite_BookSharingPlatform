@@ -15,6 +15,12 @@ const Wrapper = styled.section`
     width: 15rem;
     margin-left: 1rem;
   }
+  .actions-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
 `;
 
 export default Wrapper;

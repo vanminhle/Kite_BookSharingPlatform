@@ -3,6 +3,9 @@ import { toast } from 'react-toastify';
 import {
   getManageBooksThunk,
   setBookApprovingStatusThunk,
+  deleteBookThunk,
+  updateBookThunk,
+  getBookThunk,
 } from './manageBooksThunk';
 
 const initialFiltersState = {
@@ -42,6 +45,17 @@ const initialState = {
   setBookApprovingStatusId: null,
   approvingValue: 'approved',
   approvingReason: null,
+  //delete
+  setBookDeleteModal: false,
+  setBookDeleteId: null,
+  setBookDeletingState: false,
+  //update
+  setOldBookData: null,
+  setBookUpdateId: null,
+  setBookUpdatingModal: false,
+  setBookUpdatingState: false,
+  setBookLoading: false,
+  setFinishUpdate: false,
 };
 
 const bookApprovingStatusFilter = (value) => {
@@ -99,6 +113,32 @@ export const setBookApprovingStatus = createAsyncThunk(
   }
 );
 
+export const deleteBook = createAsyncThunk(
+  'manageBooks/deleteBook',
+  async (id, thunkAPI) => {
+    return deleteBookThunk(`http/api/books/${id.bookId}`, thunkAPI);
+  }
+);
+
+export const getBook = createAsyncThunk(
+  'manageBooks/getBook',
+  async (id, thunkAPI) => {
+    return getBookThunk(`http/api/books/${id.id}`, thunkAPI);
+  }
+);
+
+export const updateBook = createAsyncThunk(
+  'manageBooks/updateBook',
+  async (formData, thunkAPI) => {
+    const { setBookUpdateId } = thunkAPI.getState().manageBooks;
+    return updateBookThunk(
+      `http/api/books/${setBookUpdateId}`,
+      formData,
+      thunkAPI
+    );
+  }
+);
+
 const manageBooksSlice = createSlice({
   name: 'manageBooks',
   initialState,
@@ -129,8 +169,21 @@ const manageBooksSlice = createSlice({
       state.approvingValue = null;
       state.approvingReason = null;
     },
+    openDeleteModal: (state, { payload: { id } }) => {
+      state.setBookDeleteModal = true;
+      state.setBookDeleteId = id;
+    },
+    closeDeleteModal: (state) => {
+      state.setBookDeleteModal = false;
+      state.setBookDeleteId = null;
+    },
     changeValue: (state, { payload: { name, value } }) => {
       state[name] = value;
+    },
+    closeBookModal: (state) => {
+      state.setOldBookData = null;
+      state.setBookUpdateId = null;
+      state.setBookUpdatingModal = false;
     },
   },
   extraReducers: {
@@ -168,6 +221,60 @@ const manageBooksSlice = createSlice({
       state.setBookApprovingStatusState = !state.setBookApprovingStatusState;
       toast.error(payload);
     },
+    //delete
+    [deleteBook.pending]: (state) => {
+      state.setBookDeletingState = !state.setBookDeletingState;
+    },
+    [deleteBook.fulfilled]: (state, { payload }) => {
+      state.setBookDeleteModal = false;
+      state.setBookDeleteId = null;
+      state.setBookDeletingState = !state.setBookDeletingState;
+      state.setFinishUpdate = false;
+      state.setBookDeletingState = !state.setBookDeletingState;
+      toast.success(payload, { autoClose: 3000 });
+    },
+    [deleteBook.rejected]: (state, { payload }) => {
+      state.setBookDeleteModal = false;
+      state.setBookDeleteId = null;
+      state.isLoading = false;
+      state.setFinishUpdate = false;
+      state.setBookDeletingState = !state.setBookDeletingState;
+      toast.error(payload);
+    },
+    //get
+    [getBook.pending]: (state) => {
+      state.setBookUpdatingModal = true;
+      state.setBookLoading = true;
+    },
+    [getBook.fulfilled]: (state, { payload }) => {
+      state.setBookUpdatingModal = true;
+      state.setBookLoading = false;
+      state.setBookUpdateId = payload.data.book.id;
+      state.setOldBookData = payload.data.book;
+    },
+    [getBook.rejected]: (state, { payload }) => {
+      state.setBookUpdatingModal = false;
+      state.setBookUpdateId = null;
+      state.setOldBookData = null;
+      state.setBookLoading = false;
+      toast.error(payload);
+    },
+    //update
+    [updateBook.pending]: (state) => {
+      state.setBookUpdatingState = !state.setBookUpdatingState;
+    },
+    [updateBook.fulfilled]: (state, { payload }) => {
+      state.setBookUpdatingModal = false;
+      state.setBookUpdateId = null;
+      state.setOldBookData = null;
+      state.setBookUpdatingState = !state.setBookUpdatingState;
+      state.setFinishUpdate = true;
+      toast.success(payload, { autoClose: 3000 });
+    },
+    [updateBook.rejected]: (state, { payload }) => {
+      state.setBookUpdatingState = !state.setBookUpdatingState;
+      toast.error(payload);
+    },
   },
 });
 
@@ -180,6 +287,9 @@ export const {
   closeModal,
   changeValue,
   clearFilters,
+  openDeleteModal,
+  closeDeleteModal,
+  closeBookModal,
 } = manageBooksSlice.actions;
 
 export default manageBooksSlice.reducer;
