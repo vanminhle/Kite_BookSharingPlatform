@@ -20,18 +20,24 @@ import {
   FormText,
 } from 'reactstrap';
 import Wrapper from '../../assets/wrappers/SubmitBookForm';
+import { getTags } from '../../features/myBooks/myBooksSlice';
 import {
-  openSubmitForm,
-  closeSubmitForm,
-  getTags,
-  submitBook,
-} from '../../features/myBooks/myBooksSlice';
+  closeBookModal,
+  updateBook,
+} from '../../features/manageBooks/manageBooksSlice';
+
 import yup from '../../utils/yupGlobal';
 
-const SubmitBookForm = () => {
-  const { isForm, isSubmit, loadingForm, tags } = useSelector(
-    (store) => store.myBooks
-  );
+const EditBookForm = () => {
+  const { tags } = useSelector((store) => store.myBooks);
+  const {
+    setBookLoading,
+    setBookUpdatingModal,
+    setOldBookData,
+    setBookUpdatingState,
+    isLoading,
+  } = useSelector((store) => store.manageBooks);
+
   const dispatch = useDispatch();
   const [preview, setPreview] = useState(noImagePlaceholder);
 
@@ -162,48 +168,54 @@ const SubmitBookForm = () => {
     //   console.log(pair[0] + ', ' + pair[1]);
     // }
 
-    dispatch(submitBook(formData));
+    dispatch(updateBook(formData));
   };
 
   useEffect(() => {
-    if (isSubmit) {
+    if (setBookUpdatingState) {
       document.body.style.opacity = 0.5;
     } else {
       document.body.style.opacity = 1;
     }
 
-    if (!isForm) {
+    if (setBookUpdatingModal) {
       reset({
-        bookTitle: '',
-        bookFile: '',
-        bookCover: '',
-        price: '',
-        summary: '',
-        description: '',
+        bookTitle: setOldBookData?.bookTitle || '',
+        bookFile: setOldBookData?.bookFile || '',
+        bookCover: setOldBookData?.bookCover || '',
+        price: setOldBookData?.price || '',
+        summary: setOldBookData?.summary || '',
+        description: setOldBookData?.description || '',
+        format: setOldBookData?.tags
+          ?.filter((item) => item.group === 'format')
+          .map((item) => item._id),
+
+        genre: setOldBookData?.tags
+          ?.filter((item) => item.group === 'genre')
+          .map((item) => item._id),
+
+        theme: setOldBookData?.tags
+          ?.filter((item) => item.group === 'theme')
+          .map((item) => item._id),
       });
-      setPreview(noImagePlaceholder);
+      setPreview(setOldBookData?.bookCover);
     }
 
-    if (isForm && !isSubmit) {
+    if (setBookUpdatingModal && !setBookUpdatingState) {
       dispatch(getTags());
     }
-  }, [isSubmit, isForm]);
+  }, [setBookUpdatingModal, setBookUpdatingState, setOldBookData, isLoading]);
 
   return (
     <Wrapper>
-      <div
-        className="br-icon"
-        onClick={() => dispatch(openSubmitForm())}
-        title="Submit a Book"
-      ></div>
       <Modal
         style={{ transform: 'none' }}
         className="sidebar-modal"
-        isOpen={isForm}
+        isOpen={setBookUpdatingModal}
         fullscreen
-        toggle={() => dispatch(closeSubmitForm())}
+        toggle={() => dispatch(closeBookModal())}
       >
-        {loadingForm ? (
+        {setBookLoading ? (
           <Loading center />
         ) : (
           <>
@@ -330,6 +342,9 @@ const SubmitBookForm = () => {
                             render={({ field }) => (
                               <Input
                                 {...field}
+                                defaultChecked={setOldBookData?.tags?.some(
+                                  (item) => item.name === tag.name
+                                )}
                                 onChange={(e) => {
                                   setValue(
                                     `format[${index}]`,
@@ -361,6 +376,9 @@ const SubmitBookForm = () => {
                             render={({ field }) => (
                               <Input
                                 {...field}
+                                defaultChecked={setOldBookData?.tags?.some(
+                                  (item) => item.name === tag.name
+                                )}
                                 onChange={(e) => {
                                   setValue(
                                     `genre[${index}]`,
@@ -392,6 +410,9 @@ const SubmitBookForm = () => {
                             render={({ field }) => (
                               <Input
                                 {...field}
+                                defaultChecked={setOldBookData?.tags?.some(
+                                  (item) => item.name === tag.name
+                                )}
                                 onChange={(e) => {
                                   setValue(
                                     `theme[${index}]`,
@@ -496,12 +517,12 @@ const SubmitBookForm = () => {
                   </Col>
                 </Row>
                 <ModalFooter>
-                  <Button type="submit" disabled={isSubmit} color="primary">
+                  <Button type="submit" disabled={isLoading} color="primary">
                     Submit Book
                   </Button>
                   <Button
                     color="secondary"
-                    onClick={() => dispatch(closeSubmitForm())}
+                    onClick={() => dispatch(closeBookModal())}
                   >
                     Cancel
                   </Button>
@@ -515,4 +536,4 @@ const SubmitBookForm = () => {
   );
 };
 
-export default SubmitBookForm;
+export default EditBookForm;

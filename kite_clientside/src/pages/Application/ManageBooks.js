@@ -1,8 +1,10 @@
 import {
+  EditBookForm,
   QueryManageBooksContainer,
   TableManageBooksContainer,
 } from '../../components';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 const ManageBooks = () => {
   const { manageBooks, totalManageBooks } = useSelector(
@@ -23,6 +25,7 @@ const ManageBooks = () => {
         </h5>
       </div>
       <QueryManageBooksContainer />
+      <EditBookForm />
       <TableManageBooksContainer />
     </>
   );

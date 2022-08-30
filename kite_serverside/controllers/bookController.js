@@ -47,7 +47,7 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book)
     return next(new AppError('Book does not exist! Please try again', 404));
-  if (book.approvingStatus === 'approved')
+  if (req.user.role !== 'admin' && book.approvingStatus === 'approved')
     return next(
       new AppError(
         'Your book has been published! You need to submit a support request if you want to editing published book',
@@ -68,6 +68,9 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
           )
         );
     });
+    req.bookAuthor = book.author._id;
+    req.bookAuthorEmail = book.author.email;
+    req.bookEdited = true;
     next();
   }
 });
@@ -81,9 +84,8 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   const book = await Book.findOne({
     bookTitle: req.body.bookTitle,
-    author: req.user._id,
+    author: req.bookEdited ? req.bookAuthor : req.user._id,
   });
-  console.log(book);
   if (book)
     next(
       new AppError('Name of the book is duplicate with your another book!', 400)
@@ -93,7 +95,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   req.files.bookCover[0].filename = `bookCover-${req.body.bookTitle
     .split(' ')
-    .join('')}-${req.user.email}`;
+    .join('')}-${req.bookEdited ? req.bookAuthorEmail : req.user.email}`;
 
   const uploadResult = await coverToCloudinary(
     req.files.bookCover[0].buffer,
@@ -107,7 +109,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   req.files.bookFile[0].filename = `bookFile-${req.body.bookTitle
     .split(' ')
-    .join('')}-${req.user.email}`;
+    .join('')}-${req.bookEdited ? req.bookAuthorEmail : req.user.email}`;
 
   fs.writeFile(
     `public/booksDocument/${req.files.bookFile[0].filename}.pdf`,
@@ -231,6 +233,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    message: 'Book updated successfully!',
     data: {
       book: updatedBook,
     },

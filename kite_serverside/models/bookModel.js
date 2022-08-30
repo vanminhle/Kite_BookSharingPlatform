@@ -60,6 +60,7 @@ const bookSchema = new mongoose.Schema(
         'Approving Reason must have less of equal than 36 characters',
       ],
     },
+    publicationDate: Date,
     tags: [
       {
         type: mongoose.Schema.ObjectId,
@@ -67,7 +68,6 @@ const bookSchema = new mongoose.Schema(
         required: [true, 'Book must have some tags'],
       },
     ],
-    publicationDate: Date,
   },
   {
     toJSON: { virtuals: true },
@@ -83,7 +83,7 @@ bookSchema.pre(/^find/, function (next) {
     path: 'tags',
     select: '-_v',
   });
-  next(0);
+  next();
 });
 
 const Book = mongoose.model('Book', bookSchema);

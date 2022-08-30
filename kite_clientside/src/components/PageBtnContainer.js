@@ -37,16 +37,17 @@ const PageBtnContainer = ({ props }) => {
       </button>
       <div className="btn-container">
         {pages.map((pageNumber) => {
-          return (
-            <button
-              type="button"
-              key={pageNumber}
-              className={pageNumber === page ? 'pageBtn active' : 'pageBtn'}
-              onClick={() => dispatch(changePage(pageNumber))}
-            >
-              {pageNumber}
-            </button>
-          );
+          if (page)
+            return (
+              <button
+                type="button"
+                key={pageNumber}
+                className={pageNumber === page ? 'pageBtn active' : 'pageBtn'}
+                onClick={() => dispatch(changePage(pageNumber))}
+              >
+                {pageNumber}
+              </button>
+            );
         })}
       </div>
       <button type="button" className="next-btn" onClick={nextPage}>
