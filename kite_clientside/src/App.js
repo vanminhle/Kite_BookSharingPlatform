@@ -18,6 +18,8 @@ import {
   MyBooks,
   ManageBooks,
   TagsManagement,
+  Book,
+  Reading,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,6 +40,8 @@ function App() {
           >
             <Route index element={<Stats />} />
             <Route path="/my-account" element={<UserAccount />} />
+            <Route path="/book/:bookId" element={<Book />} />
+            <Route path="/book/reading/:bookId" element={<Reading />} />
           </Route>
 
           <Route

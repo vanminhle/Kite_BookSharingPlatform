@@ -1,6 +1,8 @@
 import Stats from './Stats';
 import SharedLayout from './SharedLayout';
 import UserAccount from './UserAccount';
+import Book from './Book';
+import Reading from './Reading';
 
 // Admin
 import AccountManagement from './Admin/AccountManagement';
@@ -20,4 +22,6 @@ export {
   MyBooks,
   ManageBooks,
   TagsManagement,
+  Book,
+  Reading,
 };

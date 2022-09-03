@@ -201,9 +201,13 @@ exports.getBookFile = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) return next(new AppError('No book found with that ID!', 404));
 
-  const data = fs.readFileSync(`public/booksDocument/${book.bookFile}`);
-  res.contentType('application/pdf');
-  res.send(data);
+  await fs.readFile(`public/booksDocument/${book.bookFile}`, (err, data) => {
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `inline; filename=${book.bookFile}`,
+    });
+    res.send(data);
+  });
 });
 
 exports.updateBook = catchAsync(async (req, res, next) => {
@@ -242,17 +246,37 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
-  if (!book)
+  if (
+    !book ||
+    (req.user.role === 'customer' &&
+      req.user._id.equals(book.author._id) === false)
+  )
     return next(new AppError('Book does not exist! Please try again', 404));
 
-  await Book.findByIdAndDelete(req.params.id);
-  await deleteFromCloudinary(book.bookCoverPublicId);
-  await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
-    if (err)
-      next(
-        new AppError('Problem when try to editing Book. Please try again!', 409)
-      );
-  });
+  if (book.approvingStatus === 'approved' && req.user.role !== 'admin')
+    return next(
+      new AppError(
+        `Book has been published can't be deleted! Submit a ticket for more information!`,
+        403
+      )
+    );
+
+  if (
+    req.user.role === 'admin' ||
+    (req.user.role === 'customer' && req.user._id.equals(book.author._id))
+  ) {
+    await Book.findByIdAndDelete(req.params.id);
+    await deleteFromCloudinary(book.bookCoverPublicId);
+    await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
+      if (err)
+        next(
+          new AppError(
+            'Problem when try to deleting Book. Please try again!',
+            409
+          )
+        );
+    });
+  }
 
   res.status(204).json({
     status: 'success',

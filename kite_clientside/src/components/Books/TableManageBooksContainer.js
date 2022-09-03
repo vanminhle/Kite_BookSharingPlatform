@@ -31,8 +31,11 @@ import {
   deleteBook,
   getBook,
 } from '../../features/manageBooks/manageBooksSlice';
+import { useNavigate } from 'react-router-dom';
 
 const TableManageBooksContainer = () => {
+  const navigate = useNavigate();
+
   const {
     manageBooks,
     isLoading,
@@ -256,7 +259,7 @@ const TableManageBooksContainer = () => {
                       <FaInfoCircle
                         title="View Book"
                         style={{ color: 'var(--primary-800)' }}
-                        onClick={() => dispatch()}
+                        onClick={() => navigate(`/book/${book.id}`)}
                       />
                       {user.role === 'manager' && (
                         <ImContrast

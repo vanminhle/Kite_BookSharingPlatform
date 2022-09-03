@@ -19,11 +19,13 @@ const MyBooksContainer = () => {
     sort,
   } = useSelector((store) => store.myBooks);
 
+  const { setFinishUpdate } = useSelector((store) => store.manageBooks);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getMyBooks());
-  }, [isSubmit, sort, search, bookApprovingStatus, page]);
+  }, [isSubmit, sort, search, bookApprovingStatus, page, setFinishUpdate]);
 
   if (isLoading) {
     return <Loading center />;

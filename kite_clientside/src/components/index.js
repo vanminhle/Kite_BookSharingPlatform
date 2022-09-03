@@ -19,6 +19,7 @@ import QueryTagsContainer from './Tags/QueryTagsContainer';
 import CreateTagForm from './Tags/CreateTagForm';
 import TableTagsContainer from './Tags/TableTagsContainer';
 import EditBookForm from './Books/EditBookForm';
+import BookNotFound from './BookNotFound';
 
 export {
   Logo,
@@ -42,4 +43,5 @@ export {
   TableTagsContainer,
   CreateTagForm,
   EditBookForm,
+  BookNotFound,
 };

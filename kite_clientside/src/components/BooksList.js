@@ -1,10 +1,18 @@
 import Wrapper from '../assets/wrappers/BooksList';
-import { Button } from 'reactstrap';
+import { Button, ModalFooter, ModalHeader, Modal } from 'reactstrap';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { IoPricetagsOutline } from 'react-icons/io5';
 import { BiTime } from 'react-icons/bi';
 import { BsChatSquareText } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
+import {
+  getBook,
+  openDeleteModal,
+  deleteBook,
+  closeModal,
+  closeDeleteModal,
+} from '../features/manageBooks/manageBooksSlice';
 
 const BooksList = ({
   approvingStatus,
@@ -16,12 +24,47 @@ const BooksList = ({
   approvingReason,
   price,
 }) => {
+  const { setBookDeleteModal, setBookDeleteId } = useSelector(
+    (store) => store.manageBooks
+  );
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const date = moment(createdAt).format('l LT');
 
+  const handleModalOnClick = () => {
+    if (setBookDeleteModal) dispatch(closeDeleteModal());
+  };
+
   return (
     <Wrapper>
+      <Modal
+        isOpen={setBookDeleteModal}
+        toggle={() => dispatch(closeModal())}
+        style={{ top: '7rem' }}
+      >
+        <ModalHeader className="modal-header">You Want To?</ModalHeader>
+        <ModalFooter className="modal-footer">
+          <Button
+            color="danger"
+            onClick={() =>
+              dispatch(
+                deleteBook({
+                  bookId: setBookDeleteId,
+                })
+              )
+            }
+          >
+            Delete
+          </Button>
+
+          <Button color="secondary" onClick={handleModalOnClick}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       <img src={bookCover} className="book-cover" alt={bookTitle} />
       <div className="book-details" title={`${bookTitle} : ${summary}`}>
         <header>
@@ -45,13 +88,19 @@ const BooksList = ({
         </div>
         <footer>
           <div className="actions">
-            <Button color="primary" onClick={() => dispatch()}>
+            <Button color="primary" onClick={() => navigate(`/book/${_id}`)}>
               Detail
             </Button>
-            <Button color="success" onClick={() => dispatch()}>
+            <Button
+              color="success"
+              onClick={() => dispatch(getBook({ id: _id }))}
+            >
               Edit
             </Button>
-            <Button color="danger" onClick={() => dispatch()}>
+            <Button
+              color="danger"
+              onClick={() => dispatch(openDeleteModal({ id: _id }))}
+            >
               Delete
             </Button>
           </div>

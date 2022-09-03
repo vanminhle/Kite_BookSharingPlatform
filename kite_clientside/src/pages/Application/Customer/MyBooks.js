@@ -3,6 +3,7 @@ import {
   SubmitBookForm,
   MyBooksContainer,
   QueryMyBooksContainer,
+  EditBookForm,
 } from '../../../components';
 import { useSelector } from 'react-redux';
 
@@ -24,6 +25,7 @@ const MyBooks = () => {
       </div>
       <QueryMyBooksContainer />
       <SubmitBookForm />
+      <EditBookForm />
       <MyBooksContainer />
     </Wrapper>
   );

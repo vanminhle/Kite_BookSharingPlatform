@@ -50,8 +50,8 @@ export const links = [
   { id: 1, text: 'Home', path: '/', icon: <BiHomeSmile /> },
   { id: 2, text: 'Browse', path: '/', icon: <TbBooks /> },
   { id: 3, text: 'Inventory', path: '/', icon: <MdOutlineInventory2 /> },
-  { id: 4, text: 'Wishlist', path: '/', icon: <BiBookmarks /> },
-  { id: 5, text: 'My Books', path: '/my-books', icon: <FiBook /> },
-  { id: 6, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
-  { id: 7, text: 'Support', path: '/', icon: <BiSupport /> },
+  // { id: 4, text: 'Wishlist', path: '/', icon: <BiBookmarks /> },
+  { id: 4, text: 'My Books', path: '/my-books', icon: <FiBook /> },
+  { id: 5, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
+  { id: 6, text: 'Support', path: '/', icon: <BiSupport /> },
 ];

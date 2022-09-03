@@ -95,9 +95,11 @@ exports.deleteTag = catchAsync(async (req, res, next) => {
       $in: [mongoose.Types.ObjectId(req.params.id)],
     },
   });
-  console.log(check);
-
-  process.exit();
+  if (check.length !== 0) {
+    return next(
+      new AppError(`Tag has been assigned to book can't be deleted`, 409)
+    );
+  }
 
   const tag = await Tag.findByIdAndDelete(req.params.id);
   if (!tag) {
