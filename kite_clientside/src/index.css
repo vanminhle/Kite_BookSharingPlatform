@@ -423,6 +423,64 @@ ul {
   right: -7rem;
 }
 
+/* Sidebar Modal */
+.sidebar-modal .modal-content {
+  height: 100%;
+  width: 45%;
+  left: 55%;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.sidebar-modal .modal-header {
+  align-self: normal;
+  padding-bottom: 0.5rem;
+}
+
+.sidebar-modal .modal-title {
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  margin-left: 0.2rem;
+  font-size: 1.4rem;
+}
+
+.sidebar-modal .modal-body {
+  align-self: normal;
+  padding-top: 0;
+  text-align: left;
+}
+
+.sidebar-modal .modal-body p {
+  font-size: 1rem;
+  margin-bottom: 1.7rem;
+  overflow: hidden;
+}
+
+.sidebar-modal .modal-footer {
+  align-self: flex-end;
+  margin-top: 0.3rem;
+}
+
+.sidebar-modal .modal-body .validation-popup {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: red;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.sidebar-modal .modal-body .checkbox-input {
+  margin-bottom: 0.5rem;
+  display: grid;
+  grid-template-columns: 13rem 13rem 13rem;
+}
+
+.sidebar-modal .modal-body .form-label {
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
 /* elements */
 .page-title {
   text-transform: uppercase;

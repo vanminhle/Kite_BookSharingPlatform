@@ -206,7 +206,12 @@ exports.restrictTo =
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user || user.socialProvider) {
-    return next(new AppError('There is no user with that email address.', 404));
+    return next(
+      new AppError(
+        'Password reset token have been sent to your email address!',
+        404
+      )
+    );
   }
 
   // Generate the random reset token and send it to the user email
@@ -284,7 +289,7 @@ exports.sendEmailVerification = catchAsync(async (req, res, next) => {
   if (!user || user.socialProvider || user.isConfirmed) {
     return next(
       new AppError(
-        'There is no user account with that email need to be verified!',
+        'Password reset token have been sent to your email address!',
         404
       )
     );

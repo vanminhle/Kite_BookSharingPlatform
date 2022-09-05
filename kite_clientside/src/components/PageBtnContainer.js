@@ -1,11 +1,11 @@
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import Wrapper from '../assets/wrappers/PageBtnContainer';
 import { useDispatch } from 'react-redux';
-import { changePage } from '../features/allAccounts/allAccountsSlice';
 
 const PageBtnContainer = ({ props }) => {
   const numOfPages = props[0];
   const page = props[1];
+  const changePage = props[2];
 
   const dispatch = useDispatch();
 
@@ -37,16 +37,17 @@ const PageBtnContainer = ({ props }) => {
       </button>
       <div className="btn-container">
         {pages.map((pageNumber) => {
-          return (
-            <button
-              type="button"
-              key={pageNumber}
-              className={pageNumber === page ? 'pageBtn active' : 'pageBtn'}
-              onClick={() => dispatch(changePage(pageNumber))}
-            >
-              {pageNumber}
-            </button>
-          );
+          if (page)
+            return (
+              <button
+                type="button"
+                key={pageNumber}
+                className={pageNumber === page ? 'pageBtn active' : 'pageBtn'}
+                onClick={() => dispatch(changePage(pageNumber))}
+              >
+                {pageNumber}
+              </button>
+            );
         })}
       </div>
       <button type="button" className="next-btn" onClick={nextPage}>

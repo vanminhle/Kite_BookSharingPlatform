@@ -5,7 +5,7 @@ import {
   closeModal,
   openDeactivateModal,
   deactivateAccount,
-} from '../features/user/userSlice';
+} from '../../features/user/userSlice';
 
 const UserDeactivate = () => {
   const { deactivateAccountModal, isError } = useSelector(

@@ -33,7 +33,7 @@ const Sidebar = () => {
             alt="avatar"
           />
           <h4 className="btn-container-text">
-            {user.fullName.split(' ')[0] > 7
+            {user.fullName.split(' ')[0] > 8
               ? user.fullName.split(' ')[0].substring(0, 5) + '...'
               : user.fullName.split(' ')[0]}
           </h4>

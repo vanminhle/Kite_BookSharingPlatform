@@ -9,6 +9,8 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const userRouter = require('./routes/userRoutes');
 const tagRouter = require('./routes/tagRoutes');
+const bookRouter = require('./routes/bookRoutes');
+const transactionRouter = require('./routes/transactionRoutes');
 
 const app = express();
 
@@ -20,7 +22,10 @@ if (process.env.NODE_ENV === 'development') {
 // Add headers before the routes are defined
 //app.use(cors());
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL);
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    process.env.CLIENT_URL_DEVELOPMENT
+  );
 
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -43,6 +48,8 @@ app.use(cookieParser());
 
 app.use('/http/api/users', userRouter);
 app.use('/http/api/tags', tagRouter);
+app.use('/http/api/books', bookRouter);
+app.use('/http/api/transactions', transactionRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
