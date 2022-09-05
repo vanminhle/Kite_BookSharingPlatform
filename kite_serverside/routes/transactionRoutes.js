@@ -23,7 +23,7 @@ router.get(
 );
 
 router.delete(
-  '/:transactionId',
+  '/:id',
   authController.protect,
   authController.restrictTo('manager'),
   transactionController.deleteTransaction

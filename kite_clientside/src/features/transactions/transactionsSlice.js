@@ -21,12 +21,14 @@ const initialState = {
   numOfPages: 1,
   page: 1,
   isDelete: false,
+  deleteModal: false,
+  transactionId: null,
 };
 
-export const deleteTag = createAsyncThunk(
-  'tags/delete',
+export const deleteTransaction = createAsyncThunk(
+  'transactions/deleteTransaction',
   async (id, thunkAPI) => {
-    return deleteTransactionThunk(`http/api/tags/${id}`, thunkAPI);
+    return deleteTransactionThunk(`http/api/transactions/${id}`, thunkAPI);
   }
 );
 
@@ -57,6 +59,14 @@ const transactionsSlice = createSlice({
     },
     changeTransactionsPage: (state, { payload }) => {
       state.page = payload;
+    },
+    openDeleteModal: (state, { payload }) => {
+      state.deleteModal = true;
+      state.transactionId = payload;
+    },
+    closeDeleteModal: (state) => {
+      state.deleteModal = false;
+      state.transactionId = null;
     },
   },
   extraReducers: {
@@ -89,23 +99,29 @@ const transactionsSlice = createSlice({
       toast.error(payload);
     },
     //delete tag
-    [deleteTag.pending]: (state) => {
+    [deleteTransaction.pending]: (state) => {
       state.isDelete = true;
     },
-    [deleteTag.fulfilled]: (state) => {
+    [deleteTransaction.fulfilled]: (state) => {
       state.isDelete = false;
-      state.tags = [];
+      state.deleteModal = false;
       state.page = 1;
-      toast.success(`Tag deleted successfully!!`);
+      toast.success(`Transaction deleted successfully!!`);
     },
-    [deleteTag.rejected]: (state, { payload }) => {
+    [deleteTransaction.rejected]: (state, { payload }) => {
       state.isDelete = false;
+      state.deleteModal = false;
+      state.transactionId = null;
       toast.error(payload);
     },
   },
 });
 
-export const { handleChange, changeTransactionsPage } =
-  transactionsSlice.actions;
+export const {
+  handleChange,
+  changeTransactionsPage,
+  openDeleteModal,
+  closeDeleteModal,
+} = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;
