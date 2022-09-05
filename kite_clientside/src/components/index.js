@@ -11,7 +11,7 @@ import Loading from './Loading';
 import UserModal from './User/UserModal';
 import SubmitBookForm from './MyBooks/SubmitBookForm';
 import MyBooksContainer from './MyBooks/MyBooksContainer';
-import BooksList from './BooksList';
+import BooksList from './MyBooks/BooksList';
 import QueryMyBooksContainer from './MyBooks/QueryMyBooksContainer';
 import QueryManageBooksContainer from './Books/QueryManageBooksContainer';
 import TableManageBooksContainer from './Books/TableManageBooksContainer';
@@ -20,6 +20,10 @@ import CreateTagForm from './Tags/CreateTagForm';
 import TableTagsContainer from './Tags/TableTagsContainer';
 import EditBookForm from './Books/EditBookForm';
 import BookNotFound from './BookNotFound';
+import InventoryBooksContainer from './Inventory/InventoryBooksContainer';
+import InventoryBooksList from './Inventory/InventoryBooksList';
+import QueryTransactionsContainer from './Transactions/QueryTransactionsContainer';
+import TableTransactionsContainer from './Transactions/TableTransactionsContainer';
 
 export {
   Logo,
@@ -44,4 +48,8 @@ export {
   CreateTagForm,
   EditBookForm,
   BookNotFound,
+  InventoryBooksContainer,
+  InventoryBooksList,
+  QueryTransactionsContainer,
+  TableTransactionsContainer,
 };

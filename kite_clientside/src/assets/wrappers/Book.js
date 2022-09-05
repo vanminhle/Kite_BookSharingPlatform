@@ -35,7 +35,7 @@ const Wrapper = styled.section`
   }
 
   .book-cover {
-    width: 17%;
+    width: 18%;
   }
 
   .badge-tag {
@@ -43,7 +43,7 @@ const Wrapper = styled.section`
     gap: 0.5rem;
     margin-top: 1rem;
     display: inline-grid;
-    grid-template-columns: repeat(9, auto);
+    grid-template-columns: repeat(8, auto);
   }
 
   .book-price {
@@ -53,7 +53,7 @@ const Wrapper = styled.section`
     margin-top: 1.2rem;
     position: absolute;
     letter-spacing: 1px;
-    top: 16.5rem;
+    top: 18rem;
   }
 
   .book-description {
@@ -65,7 +65,7 @@ const Wrapper = styled.section`
   }
 
   .btn {
-    width: 16.2%;
+    width: 17.2%;
   }
 `;
 export default Wrapper;

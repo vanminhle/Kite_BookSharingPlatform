@@ -10,9 +10,11 @@ import TagsManagement from './Admin/TagsManagement';
 
 //Manager
 import ManageBooks from './ManageBooks';
+import TransactionsManagement from './Manager/TransactionsManagement';
 
 //Customers
 import MyBooks from './Customer/MyBooks';
+import MyInventory from './Customer/MyInventory';
 
 export {
   Stats,
@@ -24,4 +26,6 @@ export {
   TagsManagement,
   Book,
   Reading,
+  MyInventory,
+  TransactionsManagement,
 };

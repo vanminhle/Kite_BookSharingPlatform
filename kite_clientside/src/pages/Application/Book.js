@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Wrapper from '../../assets/wrappers/Book';
 import { Loading, BookNotFound } from '../../components';
-import { viewBookDetail } from '../../features/book/bookSlice';
+import {
+  viewBookDetail,
+  buyBook,
+  getBookTransactionOfUser,
+} from '../../features/book/bookSlice';
 import { useNavigate } from 'react-router-dom';
 import { Button, Badge, ListGroup, ListGroupItem } from 'reactstrap';
 
@@ -12,10 +16,16 @@ const Book = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { book, isLoading } = useSelector((store) => store.book);
+  const { book, isLoading, bookTransactionOfUser } = useSelector(
+    (store) => store.book
+  );
+  const { user } = useSelector((store) => store.user);
+
+  // console.log(book);
 
   useEffect(() => {
     dispatch(viewBookDetail({ bookId }));
+    dispatch(getBookTransactionOfUser({ bookId }));
   }, []);
 
   if (isLoading) {
@@ -25,8 +35,6 @@ const Book = () => {
   if (book === 'failed') {
     return <BookNotFound />;
   }
-
-  console.log(book);
 
   return (
     <Wrapper>
@@ -52,12 +60,21 @@ const Book = () => {
         </div>
       </div>
       <div className="button-container">
-        <Button
-          color="primary"
-          onClick={() => navigate(`/book/reading/${book?.id}`)}
-        >
-          Reading Book
-        </Button>
+        {user.role === 'admin' ||
+        user.role === 'manager' ||
+        user._id === book?.author._id ||
+        bookTransactionOfUser ? (
+          <Button
+            color="primary"
+            onClick={() => navigate(`/book/reading/${book?.id}`)}
+          >
+            Reading Book
+          </Button>
+        ) : (
+          <Button color="primary" onClick={() => dispatch(buyBook(book._id))}>
+            Buy Book
+          </Button>
+        )}
       </div>
       <ListGroup className="book-description">
         <ListGroupItem>{book?.description}</ListGroupItem>

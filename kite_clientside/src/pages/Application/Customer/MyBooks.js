@@ -8,7 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 
 const MyBooks = () => {
-  const { myBooks, totalMyBooks } = useSelector((store) => store.myBooks);
+  const { myBooks, totalBooks } = useSelector((store) => store.myBooks);
 
   return (
     <Wrapper>
@@ -20,7 +20,7 @@ const MyBooks = () => {
       >
         <h4 className="page-title">MY BOOK LIST</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalMyBooks} book{myBooks.length > 1 && 's'} found
+          {totalBooks} book{myBooks.length > 1 && 's'} found
         </h5>
       </div>
       <QueryMyBooksContainer />

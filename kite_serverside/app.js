@@ -49,7 +49,7 @@ app.use(cookieParser());
 app.use('/http/api/users', userRouter);
 app.use('/http/api/tags', tagRouter);
 app.use('/http/api/books', bookRouter);
-app.use('/http/api/transaction', transactionRouter);
+app.use('/http/api/transactions', transactionRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
