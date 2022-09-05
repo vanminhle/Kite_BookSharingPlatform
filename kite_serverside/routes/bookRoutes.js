@@ -13,9 +13,9 @@ router.post(
   bookController.submitBook
 );
 
-router.get('/', bookController.getAllBooks);
+router.get('/', authController.protect, bookController.getAllBooks);
 
-router.get('/:id', bookController.getBook);
+router.get('/:id', authController.protect, bookController.getBook);
 
 router.get('/reading/:id', authController.protect, bookController.getBookFile);
 
@@ -32,7 +32,7 @@ router.patch(
 router.delete(
   '/:id',
   authController.protect,
-  authController.restrictTo('admin'),
+  authController.restrictTo('admin', 'customer'),
   bookController.deleteBook
 );
 

@@ -1,12 +1,12 @@
-import noProfilePicture from '../assets/images/noProfilePicture.svg';
+import noProfilePicture from '../../assets/images/noProfilePicture.svg';
 import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form, Row, Col, FormGroup, Input, Label } from 'reactstrap';
 import moment from 'moment';
 import { yupResolver } from '@hookform/resolvers/yup';
-import yup from '../utils/yupGlobal';
+import yup from '../../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
-import { informationChange } from '../features/user/userSlice';
+import { informationChange } from '../../features/user/userSlice';
 
 const UserInformation = () => {
   const { isLoading, isEdit, user } = useSelector((store) => store.user);

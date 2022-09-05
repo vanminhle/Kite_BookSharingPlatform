@@ -1,15 +1,29 @@
 import Logo from './Logo';
 import Sidebar from './Sidebar';
-import UserInformation from './UserInformation';
-import UserDeactivate from './UserDeactivate';
-import UserPassword from './UserPassword';
-import UserEmail from './UserEmail';
-import QueryAccountContainer from './QueryAccountContainer';
-import TableAccountContainer from './TableAccountContainer';
+import UserInformation from './User/UserInformation';
+import UserDeactivate from './User/UserDeactivate';
+import UserPassword from './User/UserPassword';
+import UserEmail from './User/UserEmail';
+import QueryAccountContainer from './Accounts/QueryAccountContainer';
+import TableAccountContainer from './Accounts/TableAccountContainer';
 import PageBtnContainer from './PageBtnContainer';
 import Loading from './Loading';
-import UserModal from './UserModal';
-import SubmitBookForm from './SubmitBookForm';
+import UserModal from './User/UserModal';
+import SubmitBookForm from './MyBooks/SubmitBookForm';
+import MyBooksContainer from './MyBooks/MyBooksContainer';
+import BooksList from './MyBooks/BooksList';
+import QueryMyBooksContainer from './MyBooks/QueryMyBooksContainer';
+import QueryManageBooksContainer from './Books/QueryManageBooksContainer';
+import TableManageBooksContainer from './Books/TableManageBooksContainer';
+import QueryTagsContainer from './Tags/QueryTagsContainer';
+import CreateTagForm from './Tags/CreateTagForm';
+import TableTagsContainer from './Tags/TableTagsContainer';
+import EditBookForm from './Books/EditBookForm';
+import BookNotFound from './BookNotFound';
+import InventoryBooksContainer from './Inventory/InventoryBooksContainer';
+import InventoryBooksList from './Inventory/InventoryBooksList';
+import QueryTransactionsContainer from './Transactions/QueryTransactionsContainer';
+import TableTransactionsContainer from './Transactions/TableTransactionsContainer';
 
 export {
   Logo,
@@ -24,4 +38,18 @@ export {
   Loading,
   UserModal,
   SubmitBookForm,
+  MyBooksContainer,
+  BooksList,
+  QueryMyBooksContainer,
+  QueryManageBooksContainer,
+  TableManageBooksContainer,
+  QueryTagsContainer,
+  TableTagsContainer,
+  CreateTagForm,
+  EditBookForm,
+  BookNotFound,
+  InventoryBooksContainer,
+  InventoryBooksList,
+  QueryTransactionsContainer,
+  TableTransactionsContainer,
 };

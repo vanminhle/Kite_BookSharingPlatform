@@ -9,6 +9,8 @@ const Wrapper = styled.section`
   gap: 1rem;
   margin-bottom: 3rem;
   margin-top: 3rem;
+  transition: var(--transition);
+
   .btn-container {
     background: var(--primary-100);
   }
@@ -22,6 +24,10 @@ const Wrapper = styled.section`
     color: var(--grey-800);
     transition: var(--transition);
     cursor: pointer;
+  }
+  .pageBtn:hover {
+    background: var(--primary-500);
+    color: var(--white);
   }
   .active {
     background: var(--primary-500);

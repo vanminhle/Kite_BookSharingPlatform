@@ -1,4 +1,5 @@
 const multer = require('multer');
+const lodash = require('lodash');
 const { photoToCloudinary } = require('../utils/cloudinary');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -123,7 +124,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     req.query
   ).countFilter();
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
   const data = new APIFeatures(User.find(), req.query)

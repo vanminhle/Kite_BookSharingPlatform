@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import Wrapper from '../assets/wrappers/TableAccountContainer';
-import noProfilePicture from '../assets/images/noProfilePicture.svg';
+import Wrapper from '../../assets/wrappers/TableAccountContainer';
+import noProfilePicture from '../../assets/images/noProfilePicture.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Table,
@@ -12,7 +12,7 @@ import {
 } from 'reactstrap';
 import { FaInfoCircle, FaUnlock, FaLock } from 'react-icons/fa';
 import { BiSortDown, BiSortUp } from 'react-icons/bi';
-import { Loading } from '../components';
+import { Loading } from '../../components';
 import {
   getAllAccounts,
   getUserAccount,
@@ -20,10 +20,11 @@ import {
   setAccountStatus,
   openModal,
   closeModal,
-} from '../features/allAccounts/allAccountsSlice';
+} from '../../features/allAccounts/allAccountsSlice';
 import moment from 'moment';
-import PageBtnContainer from './PageBtnContainer';
-import UserModal from './UserModal';
+import PageBtnContainer from '../PageBtnContainer';
+import UserModal from '../User/UserModal';
+import { changePage } from '../../features/allAccounts/allAccountsSlice';
 
 const TableAccountContainer = () => {
   const {
@@ -231,7 +232,9 @@ const TableAccountContainer = () => {
           </tbody>
         </Table>
       </div>
-      {numOfPages > 1 && <PageBtnContainer props={[numOfPages, page]} />}
+      {numOfPages > 1 && (
+        <PageBtnContainer props={[numOfPages, page, changePage]} />
+      )}
       <UserModal />
     </Wrapper>
   );

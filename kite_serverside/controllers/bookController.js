@@ -47,7 +47,7 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book)
     return next(new AppError('Book does not exist! Please try again', 404));
-  if (book.approvingStatus === 'approved')
+  if (req.user.role !== 'admin' && book.approvingStatus === 'approved')
     return next(
       new AppError(
         'Your book has been published! You need to submit a support request if you want to editing published book',
@@ -68,6 +68,9 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
           )
         );
     });
+    req.bookAuthor = book.author._id;
+    req.bookAuthorEmail = book.author.email;
+    req.bookEdited = true;
     next();
   }
 });
@@ -80,10 +83,9 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
     next(new AppError('Book cover and Book Document File is Required!', 400));
 
   const book = await Book.findOne({
-    bookName: req.body.bookName,
-    author: req.user._id,
+    bookTitle: req.body.bookTitle,
+    author: req.bookEdited ? req.bookAuthor : req.user._id,
   });
-  console.log(book);
   if (book)
     next(
       new AppError('Name of the book is duplicate with your another book!', 400)
@@ -91,9 +93,9 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   //
 
-  req.files.bookCover[0].filename = `bookCover-${req.body.bookName
+  req.files.bookCover[0].filename = `bookCover-${req.body.bookTitle
     .split(' ')
-    .join('')}-${req.user.email}`;
+    .join('')}-${req.bookEdited ? req.bookAuthorEmail : req.user.email}`;
 
   const uploadResult = await coverToCloudinary(
     req.files.bookCover[0].buffer,
@@ -105,9 +107,9 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
 
   //
 
-  req.files.bookFile[0].filename = `bookFile-${req.body.bookName
+  req.files.bookFile[0].filename = `bookFile-${req.body.bookTitle
     .split(' ')
-    .join('')}-${req.user.email}`;
+    .join('')}-${req.bookEdited ? req.bookAuthorEmail : req.user.email}`;
 
   fs.writeFile(
     `public/booksDocument/${req.files.bookFile[0].filename}.pdf`,
@@ -132,7 +134,7 @@ exports.submitBook = catchAsync(async (req, res, next) => {
     'tags'
   );
   filteredBody.author = req.user._id;
-  filteredBody.bookName = req.body.bookName
+  filteredBody.bookTitle = req.body.bookTitle
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');
@@ -152,22 +154,27 @@ exports.submitBook = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-  const totalData = new APIFeatures(
-    Book.countDocuments(),
-    req.query
-  ).countFilter();
+  let totalData;
+  if (req.user.role === 'customer') {
+    totalData = new APIFeatures(Book.countDocuments(), req.query)
+      .filter()
+      .countFilter();
+  } else {
+    totalData = new APIFeatures(Book.countDocuments(), req.query).countFilter();
+  }
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
-  const data = new APIFeatures(Book.find(), req.query)
+  const data = new APIFeatures(Book.find().populate('tags'), req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate();
   const books = await data.query;
 
-  res.status(201).json({
+  // SEND RESPONSE
+  res.status(200).json({
     status: 'success',
     results: results,
     resultsPage: Math.ceil(numOfPagesResults),
@@ -194,9 +201,13 @@ exports.getBookFile = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) return next(new AppError('No book found with that ID!', 404));
 
-  const data = fs.readFileSync(`public/booksDocument/${book.bookFile}`);
-  res.contentType('application/pdf');
-  res.send(data);
+  await fs.readFile(`public/booksDocument/${book.bookFile}`, (err, data) => {
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `inline; filename=${book.bookFile}`,
+    });
+    res.send(data);
+  });
 });
 
 exports.updateBook = catchAsync(async (req, res, next) => {
@@ -207,7 +218,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     'description',
     'tags'
   );
-  filteredBody.bookName = req.body.bookName
+  filteredBody.bookTitle = req.body.bookTitle
     .split(' ')
     .map((w) => w.substring(0, 1).toUpperCase() + w.substring(1))
     .join(' ');
@@ -226,6 +237,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    message: 'Book updated successfully!',
     data: {
       book: updatedBook,
     },
@@ -234,17 +246,37 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
-  if (!book)
+  if (
+    !book ||
+    (req.user.role === 'customer' &&
+      req.user._id.equals(book.author._id) === false)
+  )
     return next(new AppError('Book does not exist! Please try again', 404));
 
-  await Book.findByIdAndDelete(req.params.id);
-  await deleteFromCloudinary(book.bookCoverPublicId);
-  await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
-    if (err)
-      next(
-        new AppError('Problem when try to editing Book. Please try again!', 409)
-      );
-  });
+  if (book.approvingStatus === 'approved' && req.user.role !== 'admin')
+    return next(
+      new AppError(
+        `Book has been published can't be deleted! Submit a ticket for more information!`,
+        403
+      )
+    );
+
+  if (
+    req.user.role === 'admin' ||
+    (req.user.role === 'customer' && req.user._id.equals(book.author._id))
+  ) {
+    await Book.findByIdAndDelete(req.params.id);
+    await deleteFromCloudinary(book.bookCoverPublicId);
+    await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
+      if (err)
+        next(
+          new AppError(
+            'Problem when try to deleting Book. Please try again!',
+            409
+          )
+        );
+    });
+  }
 
   res.status(204).json({
     status: 'success',
@@ -273,6 +305,7 @@ exports.setBookStatus = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    message: 'Book approving status set successfully',
     data: {
       book,
     },

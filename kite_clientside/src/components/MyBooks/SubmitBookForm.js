@@ -1,10 +1,10 @@
-import noImagePlaceholder from '../assets/images/noImagePlaceholder.svg';
+import noImagePlaceholder from '../../assets/images/noImagePlaceholder.svg';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { Loading } from '../components';
+import { Loading } from '../../components';
 import {
   Button,
   Modal,
@@ -19,17 +19,17 @@ import {
   Input,
   FormText,
 } from 'reactstrap';
-import Wrapper from '../assets/wrappers/SubmitBookForm';
+import Wrapper from '../../assets/wrappers/SubmitBookForm';
 import {
   openSubmitForm,
   closeSubmitForm,
   getTags,
   submitBook,
-} from '../features/myBooks/myBooksSlice';
-import yup from '../utils/yupGlobal';
+} from '../../features/myBooks/myBooksSlice';
+import yup from '../../utils/yupGlobal';
 
 const SubmitBookForm = () => {
-  const { isForm, isLoading, loadingForm, tags } = useSelector(
+  const { isForm, isSubmit, loadingForm, tags } = useSelector(
     (store) => store.myBooks
   );
   const dispatch = useDispatch();
@@ -47,10 +47,10 @@ const SubmitBookForm = () => {
   const SUPPORTED_FILE_FORMATS = ['application/pdf'];
 
   const schema = yup.object().shape({
-    bookName: yup
+    bookTitle: yup
       .string()
       .required('Book Name is Required')
-      .bookName('Book Name must not contain special characters')
+      .bookTitle('Book Name must not contain special characters')
       .max(80, 'Full Name must have less than 80 characters')
       .min(4, 'Book Name is Invalid'),
     bookFile: yup
@@ -85,7 +85,7 @@ const SubmitBookForm = () => {
     description: yup
       .string()
       .required('Description is Required')
-      .max(1000, 'Description must have less than 1000 characters')
+      .max(600, 'Description must have less than 600 characters')
       .min(30, 'Description must be at least 30 characters'),
     format: yup
       .array()
@@ -106,11 +106,10 @@ const SubmitBookForm = () => {
     control,
     handleSubmit,
     setValue,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
-      bookName: '',
+      bookTitle: '',
       price: '',
       summary: '',
       description: '',
@@ -132,7 +131,7 @@ const SubmitBookForm = () => {
     const {
       bookCover,
       bookFile,
-      bookName,
+      bookTitle,
       description,
       format,
       genre,
@@ -142,21 +141,21 @@ const SubmitBookForm = () => {
     } = values;
 
     const tags = [];
-    const formatTags = format.filter((format) => format);
-    const genreTags = genre.filter((genre) => genre);
-    const themeTags = theme.filter((theme) => theme);
-    tags.push(...formatTags);
-    tags.push(...genreTags);
-    tags.push(...themeTags);
+    format.forEach((element) => tags.push(element));
+    genre.forEach((element) => tags.push(element));
+    theme.forEach((element) => tags.push(element));
+    const tagsFilter = tags.filter(
+      (tag, index, self) => index === self.indexOf(tag)
+    );
 
     const formData = new FormData();
-    formData.append('bookName', bookName);
+    formData.append('bookTitle', bookTitle);
     formData.append('description', description);
     formData.append('summary', summary);
     formData.append('price', price);
     formData.append('bookCover', bookCover, bookCover.name);
     formData.append('bookFile', bookFile, bookFile.name);
-    tags.map((tag) => formData.append('tags', tag));
+    tagsFilter.map((tag) => formData.append('tags', tag));
 
     // console.log(formData.get('tag'));
     // for (var pair of formData.entries()) {
@@ -167,7 +166,7 @@ const SubmitBookForm = () => {
   };
 
   useEffect(() => {
-    if (isLoading) {
+    if (isSubmit) {
       document.body.style.opacity = 0.5;
     } else {
       document.body.style.opacity = 1;
@@ -175,7 +174,7 @@ const SubmitBookForm = () => {
 
     if (!isForm) {
       reset({
-        bookName: '',
+        bookTitle: '',
         bookFile: '',
         bookCover: '',
         price: '',
@@ -185,10 +184,10 @@ const SubmitBookForm = () => {
       setPreview(noImagePlaceholder);
     }
 
-    if (isForm && !isLoading) {
+    if (isForm && !isSubmit) {
       dispatch(getTags());
     }
-  }, [isLoading, isForm]);
+  }, [isSubmit, isForm]);
 
   return (
     <Wrapper>
@@ -220,23 +219,23 @@ const SubmitBookForm = () => {
                 <Row>
                   <Col md={9}>
                     <FormGroup>
-                      <Label for="bookName">Book Name</Label>
+                      <Label for="bookTitle">Book Title</Label>
                       <Controller
-                        id="bookName"
-                        name="bookName"
+                        id="bookTitle"
+                        name="bookTitle"
                         control={control}
                         render={({ field }) => (
                           <Input
                             type="text"
                             {...field}
                             placeholder="Book Name"
-                            invalid={errors?.bookName?.message && true}
+                            invalid={errors?.bookTitle?.message && true}
                           />
                         )}
                       />
-                      {errors?.bookName?.message && (
+                      {errors?.bookTitle?.message && (
                         <div className="validation-popup">
-                          {errors.bookName.message}
+                          {errors.bookTitle.message}
                         </div>
                       )}
                     </FormGroup>
@@ -497,7 +496,7 @@ const SubmitBookForm = () => {
                   </Col>
                 </Row>
                 <ModalFooter>
-                  <Button type="submit" disabled={isLoading} color="primary">
+                  <Button type="submit" disabled={isSubmit} color="primary">
                     Submit Book
                   </Button>
                   <Button
