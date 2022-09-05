@@ -106,7 +106,10 @@ exports.getUserSuccessTransaction = catchAsync(async (req, res, next) => {
   });
   const numberOfTransaction = transactionTotal / req.query.limit;
 
-  const data = new APIFeatures(Transaction.find(), { user: req.user._id })
+  const data = new APIFeatures(
+    Transaction.find({ user: req.user._id }),
+    req.query
+  )
     .sort()
     .paginate();
   const transaction = await data.query;

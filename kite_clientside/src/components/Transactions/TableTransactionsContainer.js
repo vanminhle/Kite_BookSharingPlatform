@@ -1,6 +1,20 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table } from 'reactstrap';
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Label,
+  Form,
+  Row,
+  Col,
+  FormGroup,
+  Input,
+  FormText,
+  Table,
+} from 'reactstrap';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { Loading } from '../../components';
 import Wrapper from '../../assets/wrappers/TableAccountContainer';
@@ -8,7 +22,10 @@ import PageBtnContainer from './../PageBtnContainer';
 import noProfilePicture from '../../assets/images/noProfilePicture.svg';
 import {
   getTransactions,
+  openDeleteModal,
+  closeDeleteModal,
   changeTransactionsPage,
+  deleteTransaction,
 } from '../../features/transactions/transactionsSlice';
 import moment from 'moment';
 
@@ -22,6 +39,8 @@ const TableTransactionsContainer = () => {
     numOfPages,
     isDelete,
     page,
+    deleteModal,
+    transactionId,
   } = useSelector((store) => store.transactions);
 
   const dispatch = useDispatch();
@@ -29,11 +48,11 @@ const TableTransactionsContainer = () => {
   useEffect(() => {
     dispatch(getTransactions());
 
-    // if (isUpdate || isCreate || isDelete) {
-    //   document.body.style.opacity = 0.5;
-    // } else {
-    //   document.body.style.opacity = 1;
-    // }
+    if (isDelete) {
+      document.body.style.opacity = 0.5;
+    } else {
+      document.body.style.opacity = 1;
+    }
   }, [search, page, sort, searchOptions, isDelete]);
 
   if (isLoading) {
@@ -52,6 +71,31 @@ const TableTransactionsContainer = () => {
 
   return (
     <Wrapper>
+      <Modal
+        isOpen={deleteModal}
+        toggle={() => dispatch(closeDeleteModal())}
+        style={{ top: '7rem' }}
+      >
+        <ModalHeader className="modal-header">
+          Delete This Transaction?
+        </ModalHeader>
+        <ModalFooter className="modal-footer">
+          <Button
+            color="danger"
+            onClick={() => dispatch(deleteTransaction(transactionId))}
+          >
+            Delete
+          </Button>
+
+          <Button
+            color="secondary"
+            onClick={() => dispatch(closeDeleteModal())}
+          >
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       <div style={{ marginBottom: '3rem' }}>
         <Table bordered hover>
           <thead>
@@ -60,7 +104,7 @@ const TableTransactionsContainer = () => {
               <th>Performer</th>
               <th>Book</th>
               <th>Price</th>
-              <th style={{ textAlign: 'center' }}>Actions</th>
+              <th style={{ textAlign: 'center' }}>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -108,7 +152,14 @@ const TableTransactionsContainer = () => {
                     <p className="mb-0">{transaction.price} $</p>
                   </td>
                   <td>
-                    <div className="actions-div"></div>
+                    <div className="actions-div">
+                      <RiDeleteBin6Line
+                        title="Delete Transaction"
+                        onClick={() =>
+                          dispatch(openDeleteModal(transaction._id))
+                        }
+                      />
+                    </div>
                   </td>
                 </tr>
               );
