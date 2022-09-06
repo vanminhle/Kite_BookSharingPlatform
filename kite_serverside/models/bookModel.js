@@ -75,6 +75,12 @@ const bookSchema = new mongoose.Schema(
   }
 );
 
+bookSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'book',
+  localField: '_id',
+});
+
 bookSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'author',

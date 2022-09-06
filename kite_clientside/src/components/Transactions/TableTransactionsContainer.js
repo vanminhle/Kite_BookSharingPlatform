@@ -1,20 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Label,
-  Form,
-  Row,
-  Col,
-  FormGroup,
-  Input,
-  FormText,
-  Table,
-} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalFooter, Table } from 'reactstrap';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { Loading } from '../../components';
 import Wrapper from '../../assets/wrappers/TableAccountContainer';
