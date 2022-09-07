@@ -39,6 +39,7 @@ const Book = () => {
 
   return (
     <Wrapper>
+      <div className="book-score">{book?.ratingsAverage}</div>
       <div className="book-info">
         <img
           className="book-cover"

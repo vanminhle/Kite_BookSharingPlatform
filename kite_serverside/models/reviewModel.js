@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Book = require('./bookModel');
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -34,12 +35,54 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.index({ book: 1, user: 1 }, { unique: true });
+
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
     select: 'fullName photo email',
   });
   next();
+});
+
+reviewSchema.statics.calcAverageRatings = async function (bookId) {
+  const stats = await this.aggregate([
+    {
+      $match: { book: bookId },
+    },
+    {
+      $group: {
+        _id: '$book',
+        numRatings: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+
+  if (stats.length > 0) {
+    await Book.findByIdAndUpdate(bookId, {
+      ratingsQuantity: stats[0].numRatings,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Book.findByIdAndUpdate(bookId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 0,
+    });
+  }
+};
+
+reviewSchema.post('save', function () {
+  this.constructor.calcAverageRatings(this.book);
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.review = await this.findOne().clone();
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.review.constructor.calcAverageRatings(this.review.book);
 });
 
 const Review = mongoose.model('Review', reviewSchema);
