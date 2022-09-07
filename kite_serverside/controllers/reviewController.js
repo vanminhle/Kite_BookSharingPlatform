@@ -1,18 +1,14 @@
+const Book = require('../models/bookModel');
 const Review = require('../models/reviewModel');
 const Transaction = require('../models/transactionModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find()
-    .populate({
-      path: 'book',
-      select: 'bookTitle author -tags',
-    })
-    .populate({
-      path: 'user',
-      select: 'email fullName',
-    });
+  const reviews = await Review.find().populate({
+    path: 'book',
+    select: 'bookTitle author -tags',
+  });
 
   res.status(200).json({
     status: 'success',
@@ -28,11 +24,18 @@ exports.createReview = catchAsync(async (req, res, next) => {
     user: req.user._id,
     book: req.body.book,
   });
-
   if (userTransaction.length === 0) {
     return next(
       new AppError('You need to buy this book before review it!', 404)
     );
+  }
+
+  const userReview = await Review.find({
+    user: req.user._id,
+    book: req.body.book,
+  });
+  if (userReview.length !== 0) {
+    return next(new AppError('You have already reviewed this book!', 404));
   }
 
   const newReview = await Review.create({ ...req.body, user: req.user._id });

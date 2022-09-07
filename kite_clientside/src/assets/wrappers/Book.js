@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
+  hr {
+    margin: 2rem 2.8rem 2.8rem 2.8rem;
+  }
   h4 {
     text-transform: uppercase;
     margin-bottom: 0.6rem;
@@ -57,7 +60,7 @@ const Wrapper = styled.section`
   }
 
   .book-description {
-    padding: 2rem 2.8rem 2.8rem 2.8rem;
+    padding: 2rem 2.8rem 1rem 2.8rem;
   }
 
   .button-container {

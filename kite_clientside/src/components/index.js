@@ -24,6 +24,7 @@ import InventoryBooksContainer from './Inventory/InventoryBooksContainer';
 import InventoryBooksList from './Inventory/InventoryBooksList';
 import QueryTransactionsContainer from './Transactions/QueryTransactionsContainer';
 import TableTransactionsContainer from './Transactions/TableTransactionsContainer';
+import ReviewsContainer from './Reviews/ReviewsContainer';
 
 export {
   Logo,
@@ -52,4 +53,5 @@ export {
   InventoryBooksList,
   QueryTransactionsContainer,
   TableTransactionsContainer,
+  ReviewsContainer,
 };
