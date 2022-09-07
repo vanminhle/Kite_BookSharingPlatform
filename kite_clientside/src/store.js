@@ -8,6 +8,7 @@ import manageBooksSlice from './features/manageBooks/manageBooksSlice';
 import tagsSlice from './features/tags/tagsSlice';
 import bookSlice from './features/book/bookSlice';
 import transactionsSlice from './features/transactions/transactionsSlice';
+import reviewsSlice from './features/reviews/reviewsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     tags: tagsSlice,
     book: bookSlice,
     transactions: transactionsSlice,
+    reviews: reviewsSlice,
   },
 });

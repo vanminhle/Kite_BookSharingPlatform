@@ -38,7 +38,7 @@ export const getBookTransactionOfUser = createAsyncThunk(
   'book/getBookTransaction',
   async (data, thunkAPI) => {
     return getBookTransactionOfUserThunk(
-      `http/api/transactions/${data.bookId}`,
+      `http/api/transactions/isOwnBook/${data.bookId}`,
       thunkAPI
     );
   }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Wrapper from '../../assets/wrappers/Book';
-import { Loading, BookNotFound } from '../../components';
+import { Loading, BookNotFound, ReviewsContainer } from '../../components';
 import {
   viewBookDetail,
   buyBook,
@@ -19,6 +19,7 @@ const Book = () => {
   const { book, isLoading, bookTransactionOfUser } = useSelector(
     (store) => store.book
   );
+  const { isReviewLoading } = useSelector((store) => store.reviews);
   const { user } = useSelector((store) => store.user);
 
   // console.log(book);
@@ -26,9 +27,9 @@ const Book = () => {
   useEffect(() => {
     dispatch(viewBookDetail({ bookId }));
     dispatch(getBookTransactionOfUser({ bookId }));
-  }, []);
+  }, [isReviewLoading]);
 
-  if (isLoading) {
+  if (isLoading || isReviewLoading) {
     return <Loading center />;
   }
 
@@ -47,7 +48,6 @@ const Book = () => {
         <div className="book-info-text">
           <h4>{book?.bookTitle}</h4>
           <h6>{book?.author.fullName}</h6>
-          <p className="email-author">{book?.author.email}</p>
           <div className="badge-tag">
             {book?.tags.map((tag, index) => (
               <Badge color="primary" pill key={index}>
@@ -79,6 +79,8 @@ const Book = () => {
       <ListGroup className="book-description">
         <ListGroupItem>{book?.description}</ListGroupItem>
       </ListGroup>
+      <hr />
+      <ReviewsContainer reviews={book?.reviews} />
     </Wrapper>
   );
 };

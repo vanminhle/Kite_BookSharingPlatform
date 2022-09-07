@@ -30,7 +30,7 @@ router.delete(
 );
 
 router.get(
-  '/:bookId/:userId',
+  '/isOwnBook/:id',
   authController.protect,
   transactionController.getTransactionOfBook
 );
