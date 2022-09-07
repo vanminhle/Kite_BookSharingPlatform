@@ -70,5 +70,18 @@ const Wrapper = styled.section`
   .btn {
     width: 17.2%;
   }
+
+  .book-score {
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    border-radius: 100%;
+    width: 5rem;
+    padding: 0.7rem 1rem 0.7rem 1rem;
+    font-weight: 500;
+    background-color: var(--primary-500);
+    right: 2.5rem;
+  }
 `;
 export default Wrapper;
