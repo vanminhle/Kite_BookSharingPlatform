@@ -43,7 +43,7 @@ export const createReview = createAsyncThunk(
 );
 
 export const deleteReview = createAsyncThunk(
-  'reviews/createReview',
+  'reviews/deleteReview',
   async (id, thunkAPI) => {
     return deleteReviewThunk(`http/api/reviews/${id}`, thunkAPI);
   }
