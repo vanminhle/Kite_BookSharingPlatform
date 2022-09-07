@@ -1,18 +1,34 @@
-const Book = require('../models/bookModel');
 const Review = require('../models/reviewModel');
 const Transaction = require('../models/transactionModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find().populate({
-    path: 'book',
-    select: 'bookTitle author -tags',
-  });
+  const totalData = new APIFeatures(
+    Review.countDocuments(),
+    req.query
+  ).countFilter();
+  const results = await totalData.query;
+  const numOfPagesResults = results / req.query.limit;
+
+  const data = new APIFeatures(
+    Review.find().populate({
+      path: 'book',
+      select: 'bookTitle author -tags',
+    }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const reviews = await data.query;
 
   res.status(200).json({
     status: 'success',
-    results: reviews.length,
+    results: results,
+    resultsPage: Math.ceil(numOfPagesResults),
     data: {
       reviews,
     },

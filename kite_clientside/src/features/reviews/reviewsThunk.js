@@ -17,3 +17,12 @@ export const deleteReviewThunk = async (url, thunkAPI) => {
     return thunkAPI.rejectWithValue(err.response.data.message);
   }
 };
+
+export const getReviewsThunk = async (url, thunkAPI) => {
+  try {
+    const resp = await customFetch.get(url);
+    return resp.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data.message);
+  }
+};

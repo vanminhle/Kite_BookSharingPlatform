@@ -95,10 +95,10 @@ const transactionsSlice = createSlice({
       }
     },
     [getTransactions.rejected]: (state, { payload }) => {
-      getTransactions.isLoading = false;
+      state.isLoading = false;
       toast.error(payload);
     },
-    //delete tag
+    //delete
     [deleteTransaction.pending]: (state) => {
       state.isDelete = true;
     },
