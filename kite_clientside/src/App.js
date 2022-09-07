@@ -22,6 +22,7 @@ import {
   Reading,
   MyInventory,
   TransactionsManagement,
+  ReviewsManagement,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -69,6 +70,10 @@ function App() {
             <Route
               path="/manager/transactions-management"
               element={<TransactionsManagement />}
+            />
+            <Route
+              path="/manager/reviews-management"
+              element={<ReviewsManagement />}
             />
           </Route>
           <Route

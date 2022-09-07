@@ -34,7 +34,6 @@ export const linksAdmin = [
     icon: <BsBox />,
   },
   { id: 5, text: 'Authors', path: '/', icon: <RiProfileLine /> },
-  { id: 6, text: 'Tickets', path: '/', icon: <MdOutlineFeedback /> },
 ];
 
 export const linksManager = [
@@ -47,7 +46,12 @@ export const linksManager = [
     path: '/manager/transactions-management',
     icon: <MdPayment />,
   },
-  { id: 5, text: 'Reviews', path: '/', icon: <MdOutlineRateReview /> },
+  {
+    id: 5,
+    text: 'Reviews',
+    path: '/manager/reviews-management',
+    icon: <MdOutlineRateReview />,
+  },
   { id: 6, text: 'Tickets', path: '/', icon: <MdOutlineFeedback /> },
 ];
 
