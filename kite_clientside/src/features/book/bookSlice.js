@@ -50,7 +50,7 @@ export const getUserTransactionsInventory = createAsyncThunk(
     const { page } = thunkAPI.getState().book;
 
     return getUserTransactionsInventoryThunk(
-      `http/api/transactions/myInventory?page=${page}&limit=10`,
+      `http/api/transactions/myInventory?page=${page}&limit=10&sort=-createdAt`,
       thunkAPI
     );
   }

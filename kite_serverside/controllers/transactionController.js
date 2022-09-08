@@ -13,7 +13,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get(
       'host'
-    )}/http/api/transaction/checkout-success/?book=${book._id}&user=${
+    )}/http/api/transactions/checkout-success/?book=${book._id}&user=${
       req.user._id
     }&price=${book.price}`,
     cancel_url: `${process.env.CLIENT_URL_DEVELOPMENT}/book/${book._id}`,

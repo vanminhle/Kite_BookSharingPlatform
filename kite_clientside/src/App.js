@@ -23,6 +23,7 @@ import {
   MyInventory,
   TransactionsManagement,
   ReviewsManagement,
+  Browse,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/book/:bookId" element={<Book />} />
             <Route path="/book/reading/:bookId" element={<Reading />} />
           </Route>
+
           <Route
             path="/"
             element={
@@ -58,6 +60,7 @@ function App() {
             <Route path="/books-management" element={<ManageBooks />} />
             <Route path="/tags-management" element={<TagsManagement />} />
           </Route>
+
           <Route
             path="/"
             element={
@@ -76,6 +79,7 @@ function App() {
               element={<ReviewsManagement />}
             />
           </Route>
+
           <Route
             path="/"
             element={
@@ -86,7 +90,9 @@ function App() {
           >
             <Route path="/my-books" element={<MyBooks />} />
             <Route path="/my-inventory" element={<MyInventory />} />
+            <Route path="/browse" element={<Browse />} />
           </Route>
+
           {/* public routes */}
           <Route path="/landing" element={<Landing />} />
           <Route path="/authentication" element={<Authentication />} />
