@@ -56,16 +56,14 @@ export const linksManager = [
 ];
 
 export const links = [
-  { id: 1, text: 'Home', path: '/', icon: <BiHomeSmile /> },
-  { id: 2, text: 'Browse', path: '/', icon: <TbBooks /> },
+  { id: 1, text: 'Browse', path: '/browse', icon: <TbBooks /> },
   {
-    id: 3,
+    id: 2,
     text: 'Inventory',
     path: '/my-inventory',
     icon: <MdOutlineInventory2 />,
   },
-  // { id: 4, text: 'Wishlist', path: '/', icon: <BiBookmarks /> },
-  { id: 4, text: 'My Books', path: '/my-books', icon: <FiBook /> },
-  { id: 5, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
-  { id: 6, text: 'Support', path: '/', icon: <BiSupport /> },
+  { id: 3, text: 'My Books', path: '/my-books', icon: <FiBook /> },
+  { id: 4, text: 'Statistics', path: '/', icon: <BiBarChartAlt2 /> },
+  { id: 5, text: 'Support', path: '/', icon: <BiSupport /> },
 ];

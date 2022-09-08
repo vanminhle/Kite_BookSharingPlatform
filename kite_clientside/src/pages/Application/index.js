@@ -16,6 +16,7 @@ import ReviewsManagement from './Manager/ReviewsManagement';
 //Customers
 import MyBooks from './Customer/MyBooks';
 import MyInventory from './Customer/MyInventory';
+import Browse from './Customer/Browse';
 
 export {
   Stats,
@@ -30,4 +31,5 @@ export {
   MyInventory,
   TransactionsManagement,
   ReviewsManagement,
+  Browse,
 };

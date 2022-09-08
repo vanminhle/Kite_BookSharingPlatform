@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 const SharedLayout = (props) => {
-  console.log(props);
   const { user } = useSelector((store) => store.user);
 
   return (
