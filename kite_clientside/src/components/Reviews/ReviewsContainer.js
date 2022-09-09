@@ -33,8 +33,6 @@ const ReviewsContainer = ({ reviews }) => {
   const dispatch = useDispatch();
   let { bookId } = useParams();
 
-  console.log(reviews);
-
   const { isCreateSuccess } = useSelector((store) => store.reviews);
   const { user } = useSelector((store) => store.user);
   const { bookTransactionOfUser } = useSelector((store) => store.book);

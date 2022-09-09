@@ -21,7 +21,7 @@ export const getAllBooks = createAsyncThunk(
     }
 
     return getAllBooksThunk(
-      `http/api/books?page=${page}&limit={limit}`,
+      `http/api/books?page=${page}&limit=${limit}`,
       thunkAPI
     );
   }

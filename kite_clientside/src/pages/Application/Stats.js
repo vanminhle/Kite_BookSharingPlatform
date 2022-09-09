@@ -1,5 +1,10 @@
+import { useSelector } from 'react-redux';
+import { AdminStatisticsContainer } from './../../components';
+
 const Stats = () => {
-  return <h2>Stats</h2>;
+  const { user } = useSelector((store) => store.user);
+
+  return <>{user.role === 'admin' && <AdminStatisticsContainer />}</>;
 };
 
 export default Stats;
