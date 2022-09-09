@@ -31,6 +31,15 @@ import BrowseBooksContainer from './BrowseBooks/BrowseBooksContainer';
 import QueryBrowseBooksContainer from './BrowseBooks/QueryBrowseBooksContainer';
 import BrowseBooksList from './BrowseBooks/BrowseBooksList';
 
+import AdminStatisticsContainer from './AdminStatistics/AdminStatisticsContainer';
+import AccountsStatsContainer from './AdminStatistics/AccountsStatsContainer';
+import AccountsChartContainer from './AdminStatistics/AccountsChartContainer';
+import AccountsBarChart from './AdminStatistics/AccountsBarChart';
+import BooksStatsContainer from './AdminStatistics/BooksStatsContainer';
+import BooksChartContainer from './AdminStatistics/BooksChartContainer';
+import BooksLineChart from './AdminStatistics/BooksLineChart';
+import BooksAreaChart from './AdminStatistics/BooksAreaChart';
+
 export {
   Logo,
   Sidebar,
@@ -64,4 +73,12 @@ export {
   BrowseBooksContainer,
   QueryBrowseBooksContainer,
   BrowseBooksList,
+  AdminStatisticsContainer,
+  AccountsStatsContainer,
+  BooksStatsContainer,
+  AccountsBarChart,
+  AccountsChartContainer,
+  BooksChartContainer,
+  BooksLineChart,
+  BooksAreaChart,
 };

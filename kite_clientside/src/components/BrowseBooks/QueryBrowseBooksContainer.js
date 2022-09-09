@@ -2,7 +2,6 @@ import { Form, FormGroup, Input, FormText } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { handleChange } from '../../features/browseBooks/browseBooksSlice';
-import { BiSearch } from 'react-icons/bi';
 
 const QueryBrowseBooksContainer = () => {
   const { isLoading, search } = useSelector((store) => store.browseBooks);
@@ -43,15 +42,6 @@ const QueryBrowseBooksContainer = () => {
                 }}
               />
             )}
-          />
-          <BiSearch
-            style={{
-              width: '2%',
-              height: '2%',
-              position: 'absolute',
-              right: '0.7rem',
-              top: '-0.1rem',
-            }}
           />
         </FormGroup>
       </div>
