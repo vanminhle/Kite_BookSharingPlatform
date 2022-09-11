@@ -1,5 +1,5 @@
 import Wrapper from '../../assets/wrappers/SearchContainer';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { handleChange } from '../../features/myBooks/myBooksSlice';

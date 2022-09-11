@@ -31,8 +31,11 @@ import {
   deleteBook,
   getBook,
 } from '../../features/manageBooks/manageBooksSlice';
+import { useNavigate } from 'react-router-dom';
 
 const TableManageBooksContainer = () => {
+  const navigate = useNavigate();
+
   const {
     manageBooks,
     isLoading,
@@ -217,25 +220,23 @@ const TableManageBooksContainer = () => {
                   <td>
                     <div>
                       <p className="fw-normal mb-0">
-                        {book.ratingAverage ? book.ratingAverage : 0} Point
-                        {book.ratingAverage > 0 && 's'}
+                        {book.ratingsQuantity ? book.ratingsQuantity : 0} Point
+                        {book.ratingsQuantity > 0 && 's'}
                       </p>
-                      <Badge color="danger">Bad</Badge>
                     </div>
                   </td>
                   <td>
                     <div>
                       <p className="fw-normal mb-0">
-                        {book.ratingQuantity ? book.ratingQuantity : 0} Account
-                        {book.ratingQuantity > 0 && 's'}
+                        {book.ratingsQuantity ? book.ratingsQuantity : 0}{' '}
+                        Account
+                        {book.ratingsQuantity > 0 && 's'}
                       </p>
-                      <Badge color="primary">High</Badge>
                     </div>
                   </td>
                   <td>
                     <div>
                       <p className="fw-normal mb-0">{book.price} $</p>
-                      <p className="text-muted mb-0">0 Sales</p>
                     </div>
                   </td>
                   <td>
@@ -256,7 +257,7 @@ const TableManageBooksContainer = () => {
                       <FaInfoCircle
                         title="View Book"
                         style={{ color: 'var(--primary-800)' }}
-                        onClick={() => dispatch()}
+                        onClick={() => navigate(`/book/${book._id}`)}
                       />
                       {user.role === 'manager' && (
                         <ImContrast
@@ -295,7 +296,7 @@ const TableManageBooksContainer = () => {
           </tbody>
         </Table>
       </div>
-      {numOfPages > 1 && (
+      {!search && numOfPages > 1 && (
         <PageBtnContainer props={[numOfPages, page, changePage]} />
       )}
       <UserModal />

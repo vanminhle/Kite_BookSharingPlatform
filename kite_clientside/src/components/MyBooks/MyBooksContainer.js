@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Wrapper from '../../assets/wrappers/MyBookContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import { Loading } from '../../components';
-import BooksList from './../BooksList';
+import BooksList from './BooksList';
 import { getMyBooks } from '../../features/myBooks/myBooksSlice';
 import PageBtnContainer from './../PageBtnContainer';
 import { changeMyBooksPage } from '../../features/myBooks/myBooksSlice';
@@ -19,11 +19,13 @@ const MyBooksContainer = () => {
     sort,
   } = useSelector((store) => store.myBooks);
 
+  const { setFinishUpdate } = useSelector((store) => store.manageBooks);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getMyBooks());
-  }, [isSubmit, sort, search, bookApprovingStatus, page]);
+  }, [isSubmit, sort, search, bookApprovingStatus, page, setFinishUpdate]);
 
   if (isLoading) {
     return <Loading center />;
@@ -43,7 +45,7 @@ const MyBooksContainer = () => {
     <Wrapper>
       <div className="my-books-list">
         {myBooks.map((book) => {
-          return <BooksList key={book._id} {...book} st />;
+          return <BooksList key={book._id} {...book} />;
         })}
       </div>
       {numOfPages > 1 && (

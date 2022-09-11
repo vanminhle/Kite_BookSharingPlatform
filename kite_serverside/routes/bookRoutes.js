@@ -32,7 +32,7 @@ router.patch(
 router.delete(
   '/:id',
   authController.protect,
-  authController.restrictTo('admin'),
+  authController.restrictTo('admin', 'customer'),
   bookController.deleteBook
 );
 

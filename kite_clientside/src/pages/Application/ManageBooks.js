@@ -4,7 +4,6 @@ import {
   TableManageBooksContainer,
 } from '../../components';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 
 const ManageBooks = () => {
   const { manageBooks, totalManageBooks } = useSelector(
