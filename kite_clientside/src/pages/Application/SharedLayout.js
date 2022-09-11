@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Sidebar } from '../../components';
 import Wrapper from '../../assets/wrappers/SharedLayout';
 import { UncontrolledAlert } from 'reactstrap';
@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 
 const SharedLayout = (props) => {
-  console.log(props);
   const { user } = useSelector((store) => store.user);
 
   return (

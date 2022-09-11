@@ -141,12 +141,12 @@ const SubmitBookForm = () => {
     } = values;
 
     const tags = [];
-    const formatTags = format.filter((format) => format);
-    const genreTags = genre.filter((genre) => genre);
-    const themeTags = theme.filter((theme) => theme);
-    tags.push(...formatTags);
-    tags.push(...genreTags);
-    tags.push(...themeTags);
+    format.forEach((element) => tags.push(element));
+    genre.forEach((element) => tags.push(element));
+    theme.forEach((element) => tags.push(element));
+    const tagsFilter = tags.filter(
+      (tag, index, self) => index === self.indexOf(tag)
+    );
 
     const formData = new FormData();
     formData.append('bookTitle', bookTitle);
@@ -155,7 +155,7 @@ const SubmitBookForm = () => {
     formData.append('price', price);
     formData.append('bookCover', bookCover, bookCover.name);
     formData.append('bookFile', bookFile, bookFile.name);
-    tags.map((tag) => formData.append('tags', tag));
+    tagsFilter.map((tag) => formData.append('tags', tag));
 
     // console.log(formData.get('tag'));
     // for (var pair of formData.entries()) {

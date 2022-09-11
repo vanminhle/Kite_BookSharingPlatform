@@ -38,7 +38,10 @@ const bookSchema = new mongoose.Schema(
     },
     ratingsAverage: {
       type: Number,
-      default: 0,
+      default: 1,
+      min: [1, 'Rating must be above 1.0'],
+      max: [5, 'Rating must be below 5.0'],
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -60,6 +63,7 @@ const bookSchema = new mongoose.Schema(
         'Approving Reason must have less of equal than 36 characters',
       ],
     },
+    publicationDate: Date,
     tags: [
       {
         type: mongoose.Schema.ObjectId,
@@ -67,13 +71,18 @@ const bookSchema = new mongoose.Schema(
         required: [true, 'Book must have some tags'],
       },
     ],
-    publicationDate: Date,
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
+bookSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'book',
+  localField: '_id',
+});
 
 bookSchema.pre(/^find/, function (next) {
   this.populate({
@@ -83,7 +92,7 @@ bookSchema.pre(/^find/, function (next) {
     path: 'tags',
     select: '-_v',
   });
-  next(0);
+  next();
 });
 
 const Book = mongoose.model('Book', bookSchema);

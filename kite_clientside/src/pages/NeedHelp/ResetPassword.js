@@ -37,7 +37,6 @@ const HelperActions = () => {
     handleSubmit,
     formState,
     formState: { errors },
-    formState: { isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       password: '',

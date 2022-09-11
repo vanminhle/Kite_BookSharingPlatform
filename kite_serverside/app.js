@@ -10,6 +10,9 @@ const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const tagRouter = require('./routes/tagRoutes');
 const bookRouter = require('./routes/bookRoutes');
+const transactionRouter = require('./routes/transactionRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
+const statisticsRouter = require('./routes/statisticsRoutes');
 
 const app = express();
 
@@ -48,6 +51,9 @@ app.use(cookieParser());
 app.use('/http/api/users', userRouter);
 app.use('/http/api/tags', tagRouter);
 app.use('/http/api/books', bookRouter);
+app.use('/http/api/transactions', transactionRouter);
+app.use('/http/api/reviews', reviewRouter);
+app.use('/http/api/statistics', statisticsRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

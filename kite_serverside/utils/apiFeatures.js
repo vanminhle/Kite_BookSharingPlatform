@@ -33,6 +33,8 @@ class APIFeatures {
       'author',
       'price',
       'name',
+      'performerName',
+      'performerEmail',
     ];
     excludedFields.forEach((el) => delete queryObj[el]);
 

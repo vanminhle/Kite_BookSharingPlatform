@@ -12,7 +12,7 @@ import {
   ModalHeader,
   Input,
 } from 'reactstrap';
-import { FaGoogle, FaMicrosoft } from 'react-icons/fa';
+import { FaGoogle } from 'react-icons/fa';
 import { yupResolver } from '@hookform/resolvers/yup';
 import yup from '../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -283,10 +283,6 @@ const Authentication = () => {
             </div>
             <Button className="btn-block google-login" onClick={loginGoogle}>
               <FaGoogle /> <p className="google-text">Continue with Google</p>
-            </Button>
-            <Button className="btn-block microsoft-login">
-              <FaMicrosoft />
-              <p className="microsoft-text">Continue with Microsoft</p>
             </Button>
           </div>
         )}

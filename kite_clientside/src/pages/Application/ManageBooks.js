@@ -1,4 +1,5 @@
 import {
+  EditBookForm,
   QueryManageBooksContainer,
   TableManageBooksContainer,
 } from '../../components';
@@ -23,6 +24,7 @@ const ManageBooks = () => {
         </h5>
       </div>
       <QueryManageBooksContainer />
+      <EditBookForm />
       <TableManageBooksContainer />
     </>
   );

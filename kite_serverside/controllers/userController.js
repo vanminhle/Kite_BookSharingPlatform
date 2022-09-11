@@ -1,5 +1,4 @@
 const multer = require('multer');
-const lodash = require('lodash');
 const { photoToCloudinary } = require('../utils/cloudinary');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
