@@ -5,7 +5,6 @@ import { BiTime } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
 const BooksList = (book) => {
-  console.log(book);
   const navigate = useNavigate();
 
   const date = moment(book.createdAt).format('l LT');

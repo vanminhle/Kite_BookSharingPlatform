@@ -32,8 +32,6 @@ const InventoryBookContainer = () => {
     );
   }
 
-  console.log(userInventory);
-
   return (
     <Wrapper>
       <div className="my-books-list">

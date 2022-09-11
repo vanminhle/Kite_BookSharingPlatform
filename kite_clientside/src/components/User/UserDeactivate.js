@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,9 +7,7 @@ import {
 } from '../../features/user/userSlice';
 
 const UserDeactivate = () => {
-  const { deactivateAccountModal, isError } = useSelector(
-    (store) => store.user
-  );
+  const { deactivateAccountModal } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   return (

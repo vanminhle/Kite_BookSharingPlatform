@@ -1,5 +1,4 @@
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
   Landing,
   Error,
