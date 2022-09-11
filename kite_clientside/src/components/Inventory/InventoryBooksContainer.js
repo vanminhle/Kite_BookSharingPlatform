@@ -32,11 +32,14 @@ const InventoryBookContainer = () => {
     );
   }
 
+  console.log(userInventory);
+
   return (
     <Wrapper>
       <div className="my-books-list">
         {userInventory?.map((book) => {
-          return <BooksList key={book.book._id} {...book} />;
+          console.log(book);
+          return <BooksList key={book?.book._id} {...book} />;
         })}
       </div>
       {numOfPages > 1 && (

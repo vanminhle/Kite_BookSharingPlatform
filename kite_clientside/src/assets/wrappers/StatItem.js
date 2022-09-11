@@ -13,7 +13,7 @@ const Wrapper = styled.article`
   .count {
     display: block;
     font-weight: 700;
-    font-size: 50px;
+    font-size: 35px;
     color: ${(props) => props.color};
   }
   .title {
@@ -21,7 +21,8 @@ const Wrapper = styled.article`
     text-transform: capitalize;
     letter-spacing: var(--letterSpacing);
     text-align: left;
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
+    font-size: 20px;
   }
   .icon {
     width: 70px;

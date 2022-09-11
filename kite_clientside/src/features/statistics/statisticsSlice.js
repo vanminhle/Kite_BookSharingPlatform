@@ -6,6 +6,9 @@ import {
   getAccountYearlyStatsThunk,
   getBooksUploadedMonthlyThunk,
   getBooksSoldMonthlyThunk,
+  getTopFiveBooksSalesThunk,
+  getTopFiveBooksRevenueThunk,
+  getTotalRevenueMonthlyThunk,
 } from './statisticsThunk';
 
 const initialState = {
@@ -14,6 +17,9 @@ const initialState = {
   accountCreatedYearly: null,
   booksUploadedMonthly: null,
   booksSoldMonthly: null,
+  topBooksSales: null,
+  topBooksRevenue: null,
+  totalRevenueMonthly: null,
 };
 
 export const getAccountsStatistics = createAsyncThunk(
@@ -60,10 +66,39 @@ export const getBooksSoldMonthly = createAsyncThunk(
   }
 );
 
+export const getTopFiveBooksSales = createAsyncThunk(
+  'statistics/getTopFiveBooksSales',
+  async (_, thunkAPI) => {
+    return getTopFiveBooksSalesThunk(
+      `http/api/statistics/topFiveBooksSales`,
+      thunkAPI
+    );
+  }
+);
+
+export const getTopFiveBooksRevenue = createAsyncThunk(
+  'statistics/getTopFiveBooksRevenue',
+  async (_, thunkAPI) => {
+    return getTopFiveBooksRevenueThunk(
+      `http/api/statistics/topFiveBooksRevenue`,
+      thunkAPI
+    );
+  }
+);
+
+export const getTotalRevenueMonthly = createAsyncThunk(
+  'statistics/getTotalRevenueMonthly',
+  async (_, thunkAPI) => {
+    return getTotalRevenueMonthlyThunk(
+      `http/api/statistics/totalRevenueMonthly`,
+      thunkAPI
+    );
+  }
+);
+
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState,
-  reducers: {},
   extraReducers: {
     [getAccountsStatistics.fulfilled]: (state, { payload }) => {
       state.accountsStats = payload.data;
@@ -99,9 +134,30 @@ const reviewsSlice = createSlice({
     [getBooksSoldMonthly.rejected]: (state, { payload }) => {
       toast.error(`Can't get the statistics data right now. Please try again!`);
     },
+
+    //
+    [getTopFiveBooksSales.fulfilled]: (state, { payload }) => {
+      state.topBooksSales = payload.data;
+    },
+    [getTopFiveBooksSales.rejected]: (state, { payload }) => {
+      toast.error(`Can't get the statistics data right now. Please try again!`);
+    },
+    //
+    [getTopFiveBooksRevenue.fulfilled]: (state, { payload }) => {
+      state.topBooksRevenue = payload.data;
+    },
+    [getTopFiveBooksRevenue.rejected]: (state, { payload }) => {
+      toast.error(`Can't get the statistics data right now. Please try again!`);
+    },
+    //
+    [getTotalRevenueMonthly.fulfilled]: (state, { payload }) => {
+      state.totalRevenueMonthly = payload.data;
+    },
+    [getTotalRevenueMonthly.rejected]: (state, { payload }) => {
+      toast.error(`Can't get the statistics data right now. Please try again!`);
+    },
+    //
   },
 });
-
-export const {} = reviewsSlice.actions;
 
 export default reviewsSlice.reducer;
