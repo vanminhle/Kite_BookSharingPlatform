@@ -166,12 +166,32 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
   const numOfPagesResults = results / req.query.limit;
 
   //get filter data
-  const data = new APIFeatures(Book.find().populate('tags'), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const books = await data.query.lean();
+  let data;
+  if (req.user.role === 'customer') {
+    data = new APIFeatures(
+      Book.find({ approvingStatus: 'approved' }).populate('tags'),
+      req.query
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+  } else {
+    data = new APIFeatures(Book.find().populate('tags'), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+  }
+
+  let books = await data.query.lean();
+  if (req.query.searchByAuthor) {
+    books = books.filter((book) =>
+      book.author.fullName
+        .toLowerCase()
+        .includes(req.query.searchByAuthor.toLowerCase())
+    );
+  }
 
   // SEND RESPONSE
   res.status(200).json({

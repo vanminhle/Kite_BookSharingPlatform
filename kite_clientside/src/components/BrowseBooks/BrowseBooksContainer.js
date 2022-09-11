@@ -32,23 +32,13 @@ const BrowseBooksContainer = () => {
           style={{
             marginBottom: '0',
             fontWeight: '500',
-            marginTop: '12rem',
+            marginTop: '16.5rem',
             textAlign: 'center',
             fontSize: '2rem',
           }}
         >
           NOTHING FOUND 😿
         </h5>
-        <Button
-          color="primary"
-          style={{
-            marginLeft: '45%',
-            marginTop: '2rem',
-          }}
-          onClick={() => dispatch(getAllBooks())}
-        >
-          Refresh
-        </Button>
       </div>
     );
   }
