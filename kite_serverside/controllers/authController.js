@@ -474,18 +474,3 @@ exports.googleLogin = catchAsync(async (req, res, next) => {
     );
   }
 });
-
-//Microsoft oAuth
-
-//FOR TESTING ONLY
-exports.test = function (req, res, next) {
-  res.status(200).json({
-    status: 'success',
-  });
-};
-
-exports.deleteTest = function (req, res, next) {
-  res.status(200).json({
-    status: 'success',
-  });
-};

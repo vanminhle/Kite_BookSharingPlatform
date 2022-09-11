@@ -14,7 +14,7 @@ export const submitBooksThunk = async (url, formData, thunkAPI) => {
     const resp = await customFetch.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    console.log(resp.data);
+    return resp.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);
   }

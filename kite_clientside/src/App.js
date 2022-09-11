@@ -16,13 +16,19 @@ import {
   Stats,
   UserAccount,
   MyBooks,
+  ManageBooks,
+  TagsManagement,
+  Book,
+  Reading,
+  MyInventory,
+  TransactionsManagement,
+  ReviewsManagement,
+  Browse,
 } from './pages/Application';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const { user } = useSelector((store) => store.user);
-
   return (
     <div>
       <BrowserRouter>
@@ -38,6 +44,8 @@ function App() {
           >
             <Route index element={<Stats />} />
             <Route path="/my-account" element={<UserAccount />} />
+            <Route path="/book/:bookId" element={<Book />} />
+            <Route path="/book/reading/:bookId" element={<Reading />} />
           </Route>
 
           <Route
@@ -49,6 +57,27 @@ function App() {
             }
           >
             <Route path="/account-management" element={<AccountManagement />} />
+            <Route path="/books-management" element={<ManageBooks />} />
+            <Route path="/tags-management" element={<TagsManagement />} />
+          </Route>
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SharedLayout allowed={['manager']} />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/manager/manage-books" element={<ManageBooks />} />
+            <Route
+              path="/manager/transactions-management"
+              element={<TransactionsManagement />}
+            />
+            <Route
+              path="/manager/reviews-management"
+              element={<ReviewsManagement />}
+            />
           </Route>
 
           <Route
@@ -60,22 +89,21 @@ function App() {
             }
           >
             <Route path="/my-books" element={<MyBooks />} />
+            <Route path="/my-inventory" element={<MyInventory />} />
+            <Route path="/browse" element={<Browse />} />
           </Route>
 
           {/* public routes */}
           <Route path="/landing" element={<Landing />} />
           <Route path="/authentication" element={<Authentication />} />
           <Route path="/authentication/:data" element={<Authentication />} />
-
           <Route path="/need-help" element={<NeedHelp />} />
           <Route path="/helper" element={<Helper />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-
           <Route
             path="/email-verification/success"
             element={<VerificationOK />}
           />
-
           <Route path="*" element={<Error />} />
         </Routes>
         <ToastContainer position="top-center" autoClose={3000} limit={1} />

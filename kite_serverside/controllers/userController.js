@@ -123,7 +123,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     req.query
   ).countFilter();
   const results = await totalData.query;
-  const numOfPagesResults = results / 30;
+  const numOfPagesResults = results / req.query.limit;
 
   //get filter data
   const data = new APIFeatures(User.find(), req.query)
