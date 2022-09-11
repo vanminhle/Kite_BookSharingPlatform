@@ -1,8 +1,8 @@
+const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Transaction = require('../models/transactionModel');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 
 exports.accountsStatistics = catchAsync(async (req, res, next) => {
   const totalAccounts = await User.countDocuments();
@@ -73,6 +73,17 @@ exports.booksStatistics = catchAsync(async (req, res, next) => {
     { $project: { soldCount: 1 } },
   ]);
 
+  const Revenue = await Transaction.aggregate([
+    {
+      $group: {
+        _id: null,
+        average: { $avg: '$price' },
+        total: { $sum: '$price' },
+      },
+    },
+    { $project: { _id: 0, average: 1, total: 1 } },
+  ]);
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -80,6 +91,7 @@ exports.booksStatistics = catchAsync(async (req, res, next) => {
       totalPublished,
       totalUnpublished,
       totalSold: totalSold.length,
+      Revenue,
     },
   });
 });
@@ -146,6 +158,94 @@ exports.booksSoldMonthly = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       totalSoldEachMonth,
+    },
+  });
+});
+
+exports.topFiveBooksSales = catchAsync(async (req, res, next) => {
+  const topFiveBooksSales = await Transaction.aggregate([
+    {
+      $group: {
+        _id: '$book',
+        Count: {
+          $sum: 1,
+        },
+      },
+    },
+    { $sort: { Count: -1 } },
+    { $limit: 5 },
+    { $project: { _id: 1, Count: 1 } },
+  ]);
+
+  await Book.populate(topFiveBooksSales, {
+    path: '_id',
+    select: 'bookTitle author -tags',
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      topFiveBooksSales,
+    },
+  });
+});
+
+exports.topFiveBooksRevenue = catchAsync(async (req, res, next) => {
+  const topFiveBooksRevenue = await Transaction.aggregate([
+    {
+      $group: {
+        _id: '$book',
+        Count: {
+          $sum: '$price',
+        },
+      },
+    },
+    { $sort: { Count: -1 } },
+    { $limit: 5 },
+    { $project: { _id: 1, Count: 1 } },
+  ]);
+
+  await Book.populate(topFiveBooksRevenue, {
+    path: '_id',
+    select: 'bookTitle author -tags',
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      topFiveBooksRevenue,
+    },
+  });
+});
+
+exports.totalRevenueMonthly = catchAsync(async (req, res, next) => {
+  const totalRevenueMonthly = await Transaction.aggregate([
+    {
+      $group: {
+        _id: { $month: '$createdAt' },
+        Count: {
+          $sum: '$price',
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        Month: '$_id',
+        Count: 1,
+      },
+    },
+    {
+      $sort: {
+        Month: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      totalRevenueMonthly,
     },
   });
 });

@@ -10,7 +10,7 @@ import {
 
 const BarChartComponent = ({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={370}>
+    <ResponsiveContainer width="100%" height={390}>
       <BarChart
         data={data}
         margin={{

@@ -171,7 +171,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate();
-  const books = await data.query;
+  const books = await data.query.lean();
 
   // SEND RESPONSE
   res.status(200).json({

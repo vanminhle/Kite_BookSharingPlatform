@@ -1,4 +1,4 @@
-import { Form, FormGroup, Input, FormText } from 'reactstrap';
+import { Form, FormGroup, Input } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { handleChange } from '../../features/browseBooks/browseBooksSlice';

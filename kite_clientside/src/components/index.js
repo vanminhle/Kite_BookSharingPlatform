@@ -40,6 +40,14 @@ import BooksChartContainer from './AdminStatistics/BooksChartContainer';
 import BooksLineChart from './AdminStatistics/BooksLineChart';
 import BooksAreaChart from './AdminStatistics/BooksAreaChart';
 
+import ManagerStatisticsContainer from './ManagerStatistics/ManagerStatisticsContainer';
+import RevenueStatsContainer from './ManagerStatistics/RevenueStatsContainer';
+import SoldChartContainer from './ManagerStatistics/SoldChartContainer';
+import SoldBarChartContainer from './ManagerStatistics/SoldBarChartContainer';
+import RevenueChartContainer from './ManagerStatistics/RevenueChartContainer';
+import RevenueAreaChartContainer from './ManagerStatistics/RevenueAreaChartContainer';
+import TableTopContainer from './ManagerStatistics/TableTopContainer';
+
 export {
   Logo,
   Sidebar,
@@ -81,4 +89,11 @@ export {
   BooksChartContainer,
   BooksLineChart,
   BooksAreaChart,
+  ManagerStatisticsContainer,
+  RevenueStatsContainer,
+  SoldChartContainer,
+  SoldBarChartContainer,
+  RevenueChartContainer,
+  RevenueAreaChartContainer,
+  TableTopContainer,
 };
