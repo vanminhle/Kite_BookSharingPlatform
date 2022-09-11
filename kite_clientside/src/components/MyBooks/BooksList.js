@@ -1,4 +1,4 @@
-import Wrapper from '../assets/wrappers/BooksList';
+import Wrapper from '../../assets/wrappers/BooksList';
 import { Button, ModalFooter, ModalHeader, Modal } from 'reactstrap';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,7 +12,7 @@ import {
   deleteBook,
   closeModal,
   closeDeleteModal,
-} from '../features/manageBooks/manageBooksSlice';
+} from '../../features/manageBooks/manageBooksSlice';
 
 const BooksList = ({
   approvingStatus,

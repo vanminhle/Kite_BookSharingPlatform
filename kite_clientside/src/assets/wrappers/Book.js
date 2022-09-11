@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
+  hr {
+    margin: 2rem 2.8rem 2.8rem 2.8rem;
+  }
   h4 {
     text-transform: uppercase;
     margin-bottom: 0.6rem;
@@ -35,7 +38,7 @@ const Wrapper = styled.section`
   }
 
   .book-cover {
-    width: 17%;
+    width: 18%;
   }
 
   .badge-tag {
@@ -43,7 +46,7 @@ const Wrapper = styled.section`
     gap: 0.5rem;
     margin-top: 1rem;
     display: inline-grid;
-    grid-template-columns: repeat(9, auto);
+    grid-template-columns: repeat(8, auto);
   }
 
   .book-price {
@@ -53,11 +56,11 @@ const Wrapper = styled.section`
     margin-top: 1.2rem;
     position: absolute;
     letter-spacing: 1px;
-    top: 16.5rem;
+    top: 18rem;
   }
 
   .book-description {
-    padding: 2rem 2.8rem 2.8rem 2.8rem;
+    padding: 2rem 2.8rem 1rem 2.8rem;
   }
 
   .button-container {
@@ -65,7 +68,20 @@ const Wrapper = styled.section`
   }
 
   .btn {
-    width: 16.2%;
+    width: 17.2%;
+  }
+
+  .book-score {
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    position: absolute;
+    border-radius: 100%;
+    width: 5rem;
+    padding: 0.7rem 1rem 0.7rem 1rem;
+    font-weight: 500;
+    background-color: var(--primary-500);
+    right: 2.5rem;
   }
 `;
 export default Wrapper;

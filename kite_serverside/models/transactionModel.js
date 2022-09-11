@@ -27,10 +27,12 @@ const transactionSchema = new mongoose.Schema({
 
 //query middleware
 transactionSchema.pre(/^find/, function (next) {
-  this.populate('user').populate({
-    path: 'book',
-    select: 'bookTitle author bookFile bookCover publicationDate price',
-  });
+  this.where({})
+    .populate({ path: 'user', select: 'id fullName email' })
+    .populate({
+      path: 'book',
+      select: 'bookTitle summary price bookCover -tags',
+    });
   next();
 });
 

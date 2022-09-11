@@ -25,7 +25,7 @@ import {
 const Helper = () => {
   let location = useLocation();
   let state = location.state.setIsForgotPassword;
-  const [isForgotPassword, setIsForgotPassword] = useState(state);
+  const [isForgotPassword] = useState(state);
 
   const schema = yup.object().shape({
     email: yup
@@ -41,7 +41,6 @@ const Helper = () => {
     handleSubmit,
     formState,
     formState: { errors },
-    formState: { isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       email: '',

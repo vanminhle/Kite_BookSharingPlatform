@@ -1,9 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Wrapper from '../../assets/wrappers/Book';
-import { Loading, BookNotFound } from '../../components';
-import { viewBookDetail } from '../../features/book/bookSlice';
+import { Loading, BookNotFound, ReviewsContainer } from '../../components';
+import {
+  viewBookDetail,
+  buyBook,
+  getBookTransactionOfUser,
+} from '../../features/book/bookSlice';
 import { useNavigate } from 'react-router-dom';
 import { Button, Badge, ListGroup, ListGroupItem } from 'reactstrap';
 
@@ -12,13 +16,20 @@ const Book = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { book, isLoading } = useSelector((store) => store.book);
+  const { book, isLoading, bookTransactionOfUser } = useSelector(
+    (store) => store.book
+  );
+  const { isReviewLoading } = useSelector((store) => store.reviews);
+  const { user } = useSelector((store) => store.user);
+
+  // console.log(book);
 
   useEffect(() => {
     dispatch(viewBookDetail({ bookId }));
-  }, []);
+    dispatch(getBookTransactionOfUser({ bookId }));
+  }, [isReviewLoading]);
 
-  if (isLoading) {
+  if (isLoading || isReviewLoading) {
     return <Loading center />;
   }
 
@@ -26,10 +37,9 @@ const Book = () => {
     return <BookNotFound />;
   }
 
-  console.log(book);
-
   return (
     <Wrapper>
+      <div className="book-score">{book?.ratingsAverage}</div>
       <div className="book-info">
         <img
           className="book-cover"
@@ -39,7 +49,6 @@ const Book = () => {
         <div className="book-info-text">
           <h4>{book?.bookTitle}</h4>
           <h6>{book?.author.fullName}</h6>
-          <p className="email-author">{book?.author.email}</p>
           <div className="badge-tag">
             {book?.tags.map((tag, index) => (
               <Badge color="primary" pill key={index}>
@@ -52,16 +61,27 @@ const Book = () => {
         </div>
       </div>
       <div className="button-container">
-        <Button
-          color="primary"
-          onClick={() => navigate(`/book/reading/${book?.id}`)}
-        >
-          Reading Book
-        </Button>
+        {user.role === 'admin' ||
+        user.role === 'manager' ||
+        user._id === book?.author._id ||
+        bookTransactionOfUser ? (
+          <Button
+            color="primary"
+            onClick={() => navigate(`/book/reading/${book?.id}`)}
+          >
+            Reading Book
+          </Button>
+        ) : (
+          <Button color="primary" onClick={() => dispatch(buyBook(book._id))}>
+            Buy Book
+          </Button>
+        )}
       </div>
       <ListGroup className="book-description">
         <ListGroupItem>{book?.description}</ListGroupItem>
       </ListGroup>
+      <hr />
+      <ReviewsContainer reviews={book?.reviews} />
     </Wrapper>
   );
 };

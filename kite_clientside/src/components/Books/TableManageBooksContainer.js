@@ -220,8 +220,8 @@ const TableManageBooksContainer = () => {
                   <td>
                     <div>
                       <p className="fw-normal mb-0">
-                        {book.ratingAverage ? book.ratingAverage : 0} Point
-                        {book.ratingAverage > 0 && 's'}
+                        {book.ratingsAverage ? book.ratingsAverage : 0} Point
+                        {book.ratingsAverage > 0 && 's'}
                       </p>
                       <Badge color="danger">Bad</Badge>
                     </div>
