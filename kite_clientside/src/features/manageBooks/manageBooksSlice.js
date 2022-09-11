@@ -20,8 +20,6 @@ const initialFiltersState = {
     'Oldest Submit',
     'A-Z Book Title',
     'Z-A Book Title',
-    'A-Z Author Name',
-    'Z-A Author Name',
     'Price Highest',
     'Price Lowest',
     // 'Sales Highest',
@@ -68,9 +66,18 @@ const bookApprovingStatusFilter = (value) => {
   return value;
 };
 
-const searchQueryFilter = (value) => {
-  if (value === 'Book Title') value = 'bookTitle';
-  if (value === 'Author') value = 'fullName';
+const searchQueryFilter = (value, search) => {
+  if (value === 'bookTitle' || value === 'Book Title') {
+    if (search !== '') {
+      value = `bookTitle[regex]=^${search}&bookTitle[options]=i`;
+    } else {
+      value = `bookTitle[regex]=^&bookTitle[options]=i`;
+    }
+  } else if (value === 'Author') {
+    value = `searchByAuthor=${search}`;
+  } else {
+    value = '';
+  }
   return value;
 };
 
@@ -79,8 +86,6 @@ const sortFilter = (value) => {
   if (value === 'Oldest Submit') value = 'sort=createdAt';
   if (value === 'A-Z Book Title') value = 'sort=bookTitle';
   if (value === 'Z-A Book Title') value = 'sort=-bookTitle';
-  if (value === 'A-Z Author Name') value = 'sort=author.fullName';
-  if (value === 'Z-A Author Name') value = 'sort=-author.fullName';
   if (value === 'Price Highest') value = 'sort=-price';
   if (value === 'Price Lowest') value = 'sort=price';
   return value;
@@ -93,10 +98,15 @@ export const getManageBooks = createAsyncThunk(
       thunkAPI.getState().manageBooks;
     const bookApprovingStatusQuery =
       bookApprovingStatusFilter(bookApprovingStatus);
-    const searchQuery = searchQueryFilter(searchValue);
+    const searchQuery = searchQueryFilter(searchValue, search);
     const sortQuery = sortFilter(sort);
 
-    let url = `http/api/books?${searchQuery}[regex]=^${search}&${searchQuery}[options]=i&${bookApprovingStatusQuery}&${sortQuery}&page=${page}&limit=30`;
+    let url;
+    if (search !== '') {
+      url = `http/api/books?${searchQuery}&${bookApprovingStatusQuery}&${sortQuery}`;
+    } else {
+      url = `http/api/books?${searchQuery}&${bookApprovingStatusQuery}&${sortQuery}&page=${page}&limit=30`;
+    }
     return getManageBooksThunk(url, thunkAPI);
   }
 );
