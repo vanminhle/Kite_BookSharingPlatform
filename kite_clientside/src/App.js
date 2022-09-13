@@ -8,6 +8,8 @@ import {
   Helper,
   ResetPassword,
   ProtectedRoute,
+  CustomerSupportBox,
+  ManagerSupportBox,
 } from './pages';
 import {
   AccountManagement,
@@ -77,6 +79,7 @@ function App() {
               path="/manager/reviews-management"
               element={<ReviewsManagement />}
             />
+            <Route path="/manager/support" element={<ManagerSupportBox />} />
           </Route>
 
           <Route
@@ -90,6 +93,7 @@ function App() {
             <Route path="/my-books" element={<MyBooks />} />
             <Route path="/my-inventory" element={<MyInventory />} />
             <Route path="/browse" element={<Browse />} />
+            <Route path="/support" element={<CustomerSupportBox />} />
           </Route>
 
           {/* public routes */}

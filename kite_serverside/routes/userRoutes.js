@@ -69,18 +69,20 @@ router.get(
   userController.getAllUsers
 );
 
-router.get(
-  '/:id',
-  authController.protect,
-  authController.restrictTo('admin'),
-  userController.getUser
-);
+router.get('/:id', authController.protect, userController.getUser);
 
 router.patch(
   '/setAccountStatus/:id',
   authController.protect,
   authController.restrictTo('admin'),
   userController.setAccountStatus
+);
+
+router.patch(
+  '/setAccountRole/:id',
+  authController.protect,
+  authController.restrictTo('admin'),
+  userController.setAccountRole
 );
 
 module.exports = router;

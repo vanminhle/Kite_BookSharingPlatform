@@ -156,7 +156,10 @@ exports.submitBook = catchAsync(async (req, res, next) => {
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   let totalData;
   if (req.user.role === 'customer') {
-    totalData = new APIFeatures(Book.countDocuments(), req.query)
+    totalData = new APIFeatures(
+      Book.countDocuments({ approvingStatus: 'approved' }),
+      req.query
+    )
       .filter()
       .countFilter();
   } else {
