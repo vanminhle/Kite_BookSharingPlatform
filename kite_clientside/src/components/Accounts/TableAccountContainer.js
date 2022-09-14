@@ -42,6 +42,7 @@ const TableAccountContainer = () => {
     setAccountStatusModal,
     setAccountStatusId,
     setAccountStatusValue,
+    setAccountRoleState,
   } = useSelector((store) => store.allAccounts);
 
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ const TableAccountContainer = () => {
     role,
     sort,
     setAccountStatusState,
+    setAccountRoleState,
   ]);
 
   if (isLoading) {

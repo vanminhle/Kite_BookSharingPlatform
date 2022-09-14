@@ -1,8 +1,6 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -148,6 +146,8 @@ exports.protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
+
+  console.log(req.cookies.jwt);
 
   if (!token) {
     return next(
@@ -360,6 +360,66 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   });
 });
 
+//googleLogin
+exports.googleLoginAccount = catchAsync(async (req, res, next) => {
+  //decode credential
+  const base64Url = req.body.credential.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const buff = Buffer.from(base64, 'base64');
+  const payloadinit = buff.toString('ascii');
+  const payload = JSON.parse(payloadinit);
+
+  //set userData
+  const userGoogleId = payload.sub;
+  const userEmail = payload.email;
+  const userDisplayName = payload.name;
+
+  //check user for create account and login
+  const isExistingUser = await User.findOne({ email: userEmail });
+
+  if (!isExistingUser) {
+    const user = new User({
+      socialId: userGoogleId,
+      email: userEmail,
+      fullName: userDisplayName,
+      socialProvider: 'google',
+      isConfirmed: true,
+    });
+    await user.save({ validateBeforeSave: false });
+    req.user = user;
+    next();
+  }
+
+  if (isExistingUser) {
+    req.user = isExistingUser;
+    next();
+  }
+});
+
+exports.googleLoginSession = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  const token = createToken(user._id);
+
+  //sendCookie
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+  };
+  res.cookie('jwt', token, cookieOptions);
+
+  res.status(200).json({
+    success: true,
+    token,
+    data: {
+      user,
+    },
+  });
+});
+
 //update user email
 exports.UpdateEmail = catchAsync(async (req, res, next) => {
   if (req.user.socialProvider) {
@@ -395,82 +455,4 @@ exports.UpdateEmail = catchAsync(async (req, res, next) => {
 
   createLogoutCookie(res);
   createSendVerificationRequest(req, res, next, user);
-});
-
-//Google oAuth
-passport.use(
-  new GoogleStrategy(
-    {
-      callbackURL: `http://localhost:8000/http/api/users/google/redirect`,
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        const userGoogleId = profile.id;
-        const userEmail = profile.emails && profile.emails[0].value;
-        const userDisplayName = profile.displayName;
-        const userSocialProvider = profile.provider;
-
-        const isExistingUser = await User.findOne({ email: userEmail });
-        if (!isExistingUser) {
-          const user = new User({
-            socialId: userGoogleId,
-            email: userEmail,
-            fullName: userDisplayName,
-            socialProvider: userSocialProvider,
-            isConfirmed: true,
-          });
-          await user.save({ validateBeforeSave: false });
-          return done(null, user);
-        }
-        if (isExistingUser) {
-          return done(null, isExistingUser);
-        }
-      } catch (error) {
-        done(error);
-      }
-    }
-  )
-);
-
-exports.googleLogin = catchAsync(async (req, res, next) => {
-  if (req.user) {
-    const { user } = req;
-    user.createdAt = undefined;
-    user.__v = undefined;
-
-    const token = createToken(user._id);
-    //sendCookie
-    const cookieOptions = {
-      expires: new Date(
-        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-      ),
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    };
-    res.cookie('jwt', token, cookieOptions);
-    const bufData = Buffer.from(JSON.stringify(user)).toString('base64');
-
-    let redirectUrl = '';
-    if (process.env.NODE_ENV === 'development') {
-      redirectUrl = 'http://localhost:3000/authentication/:';
-    } else if (process.env.NODE_ENV === 'production') {
-      redirectUrl = 'http://localhost:3000/authentication/:';
-    }
-    res.redirect(redirectUrl + bufData);
-
-    // res.status(200).json({
-    //   status: 'success',
-    //   token,
-    //   data: {
-    //     user,
-    //   },
-    // });
-  } else {
-    return next(
-      new AppError('You must be logged in to access this application!')
-    );
-  }
 });

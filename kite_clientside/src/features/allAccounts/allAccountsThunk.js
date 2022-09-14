@@ -26,3 +26,12 @@ export const setAccountStatusThunk = async (url, data, thunkAPI) => {
     return thunkAPI.rejectWithValue(err.response.data.message);
   }
 };
+
+export const setAccountRoleThunk = async (url, data, thunkAPI) => {
+  try {
+    const resp = await customFetch.patch(url, data);
+    return resp.data.message;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data.message);
+  }
+};

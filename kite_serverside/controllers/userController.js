@@ -174,3 +174,17 @@ exports.setAccountStatus = catchAsync(async (req, res, next) => {
     message: 'Account status changed successfully!',
   });
 });
+
+exports.setAccountRole = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, {
+    role: req.body.role,
+  });
+
+  if (!user || user.role === 'admin')
+    return next(new AppError('No user found with that ID!', 404));
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Account role changed successfully!',
+  });
+});

@@ -48,6 +48,9 @@ import RevenueChartContainer from './ManagerStatistics/RevenueChartContainer';
 import RevenueAreaChartContainer from './ManagerStatistics/RevenueAreaChartContainer';
 import TableTopContainer from './ManagerStatistics/TableTopContainer';
 
+import Conversation from './Conversation';
+import Message from './Message';
+
 export {
   Logo,
   Sidebar,
@@ -96,4 +99,6 @@ export {
   RevenueChartContainer,
   RevenueAreaChartContainer,
   TableTopContainer,
+  Conversation,
+  Message,
 };

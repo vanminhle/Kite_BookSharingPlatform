@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
 
@@ -7,22 +6,10 @@ const router = express.Router();
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-
-router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    session: false,
-  })
-);
-router.get(
-  '/google/redirect',
-  passport.authenticate('google', {
-    session: false,
-    // successRedirect: 'http://localhost:3000/authentication',
-    failureRedirect: `http://localhost:3000/authentication`,
-  }),
-  authController.googleLogin
+router.post(
+  '/googleLogin',
+  authController.googleLoginAccount,
+  authController.googleLoginSession
 );
 
 router.get('/logout', authController.protect, authController.logoutSession);
@@ -69,18 +56,20 @@ router.get(
   userController.getAllUsers
 );
 
-router.get(
-  '/:id',
-  authController.protect,
-  authController.restrictTo('admin'),
-  userController.getUser
-);
+router.get('/:id', authController.protect, userController.getUser);
 
 router.patch(
   '/setAccountStatus/:id',
   authController.protect,
   authController.restrictTo('admin'),
   userController.setAccountStatus
+);
+
+router.patch(
+  '/setAccountRole/:id',
+  authController.protect,
+  authController.restrictTo('admin'),
+  userController.setAccountRole
 );
 
 module.exports = router;

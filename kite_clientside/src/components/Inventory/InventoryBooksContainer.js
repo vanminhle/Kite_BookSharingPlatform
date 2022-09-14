@@ -36,7 +36,6 @@ const InventoryBookContainer = () => {
     <Wrapper>
       <div className="my-books-list">
         {userInventory?.map((book) => {
-          console.log(book);
           return <BooksList key={book?.book._id} {...book} />;
         })}
       </div>
