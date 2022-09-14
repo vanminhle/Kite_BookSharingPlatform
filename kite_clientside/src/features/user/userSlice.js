@@ -12,6 +12,7 @@ import {
   changeEmailThunk,
   deactivateAccountThunk,
   changeInformationThunk,
+  handleGoogleLoginThunk,
 } from './userThunk';
 
 const initialState = {
@@ -81,18 +82,12 @@ export const deactivateAccount = createAsyncThunk(
   }
 );
 
-// export const loginSocial = createAsyncThunk(
-//   'user/loginSocial',
-//   async (thunkAPI) => {
-//     try {
-//       const resp = customFetch.get('http/api/users/google/redirect/success');
-//       console.log(resp);
-//       return resp.data;
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.response.data.message);
-//     }
-//   }
-// );
+export const handleGoogleLogin = createAsyncThunk(
+  'user/googleLogin',
+  async (data, thunkAPI) => {
+    return handleGoogleLoginThunk('http/api/users/googleLogin', data, thunkAPI);
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -227,12 +222,23 @@ const userSlice = createSlice({
       state.user = null;
       toast.error(payload);
     },
-    // //LOGIN WITH GOOGLE
-    // [loginSocial.pending]: (state) => {},
-    // [loginSocial.fulfilled]: (state, { payload }) => {},
-    // [loginSocial.rejected]: (state, { payload }) => {
-    //   toast.error(payload);
-    // },
+    //login google
+    [handleGoogleLogin.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [handleGoogleLogin.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      const { user } = payload.data;
+      addUserToLocalStorage(user);
+      state.user = user;
+      toast.success(`Welcome Back! ${user.fullName}`);
+    },
+    [handleGoogleLogin.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(
+        `Problem when trying to login with Google. Please try again!`
+      );
+    },
   },
 });
 

@@ -12,7 +12,7 @@ import {
   ModalHeader,
   Input,
 } from 'reactstrap';
-import { FaGoogle } from 'react-icons/fa';
+import { GoogleLogin } from '@react-oauth/google';
 import { yupResolver } from '@hookform/resolvers/yup';
 import yup from '../utils/yupGlobal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,9 +20,11 @@ import {
   loginUser,
   registerUser,
   closeModal,
+  handleGoogleLogin,
 } from '../features/user/userSlice';
 import { Buffer } from 'buffer';
 import { addUserToLocalStorage } from '../utils/localStorage';
+import { toast } from 'react-toastify';
 
 const Authentication = () => {
   const { user, isLoading, emailSendingModal, isError } = useSelector(
@@ -37,6 +39,7 @@ const Authentication = () => {
     base64ToString = JSON.parse(base64ToString);
     addUserToLocalStorage(base64ToString);
   }
+  useEffect(() => {}, [data]);
 
   const [isMember, setIsMember] = useState(true);
 
@@ -105,12 +108,6 @@ const Authentication = () => {
       return;
     }
     dispatch(registerUser({ fullName, email, password, passwordConfirm }));
-  };
-
-  const loginGoogle = () => {
-    const googleLoginURL =
-      process.env.REACT_APP_API_ENDPOINT + 'http/api/users/google';
-    window.location.replace(googleLoginURL);
   };
 
   useEffect(() => {
@@ -281,9 +278,18 @@ const Authentication = () => {
             <div className="divider">
               <p className="text-divider">OR</p>
             </div>
-            <Button className="btn-block google-login" onClick={loginGoogle}>
-              <FaGoogle /> <p className="google-text">Continue with Google</p>
-            </Button>
+            <GoogleLogin
+              theme="filled_blue"
+              width="320"
+              onSuccess={(credentialResponse) => {
+                dispatch(handleGoogleLogin(credentialResponse));
+              }}
+              onError={() => {
+                toast.error(
+                  'Problem when trying to login with Google. Please try again!'
+                );
+              }}
+            />
           </div>
         )}
 

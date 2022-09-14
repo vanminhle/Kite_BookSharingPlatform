@@ -58,19 +58,22 @@ const TableTagsContainer = () => {
         <Table bordered hover>
           <thead>
             <tr>
+              <th style={{ textAlign: 'center' }}>No.</th>
               <th>Name</th>
               <th>Group</th>
               <th>Description</th>
-              <th>Sales</th>
-              <th>Buyer Qty.</th>
-              <th>Books Qty.</th>
-              <th style={{ textAlign: 'center' }}>Edit</th>
+              <th style={{ textAlign: 'center' }}>Action</th>
             </tr>
           </thead>
           <tbody>
-            {tags.map((tag) => {
+            {tags.map((tag, index) => {
               return (
                 <tr key={tag._id}>
+                  <td>
+                    <p className="fw-bold mb-1" style={{ textAlign: 'center' }}>
+                      {index}
+                    </p>
+                  </td>
                   <td>
                     <p className="fw-bold mb-1">{tag.name}</p>
                   </td>
@@ -83,16 +86,10 @@ const TableTagsContainer = () => {
                     <p className="fw-bold mb-1">{tag.description}</p>
                   </td>
                   <td>
-                    <p className="fw-bold mb-1">0 Sales</p>
-                  </td>
-                  <td>
-                    <p className="fw-bold mb-1">0 Buyer</p>
-                  </td>
-                  <td>
-                    <p className="fw-bold mb-1">0 Books</p>
-                  </td>
-                  <td>
-                    <div className="actions-div">
+                    <div
+                      className="actions-div"
+                      style={{ justifyContent: 'space-evenly' }}
+                    >
                       <FaEdit
                         title="Edit"
                         style={{
