@@ -4,6 +4,7 @@ import {
   getAllAccountsThunk,
   getUserAccountThunk,
   setAccountStatusThunk,
+  setAccountRoleThunk,
 } from './allAccountsThunk';
 
 const initialFiltersState = {
@@ -34,6 +35,7 @@ const initialState = {
   setAccountStatusModal: false,
   setAccountStatusId: null,
   setAccountStatusValue: null,
+  setAccountRoleState: false,
 };
 
 const accountStatusFilter = (value) => {
@@ -108,6 +110,18 @@ export const setAccountStatus = createAsyncThunk(
   }
 );
 
+export const setAccountRole = createAsyncThunk(
+  'allAccounts/setAccountRole',
+  async (data, thunkAPI) => {
+    const userId = data.accountId;
+    return setAccountRoleThunk(
+      `http/api/users/setAccountRole/${userId}`,
+      data,
+      thunkAPI
+    );
+  }
+);
+
 const allAccountsSlice = createSlice({
   name: 'allAccounts',
   initialState,
@@ -176,7 +190,7 @@ const allAccountsSlice = createSlice({
       state.setAccountStatusValue = null;
       state.isLoading = false;
       state.setAccountStatusState = !state.setAccountStatusState;
-      toast.success(payload, { autoClose: 1500 });
+      toast.success(payload);
     },
     [setAccountStatus.rejected]: (state, { payload }) => {
       state.setAccountStatusModal = false;
@@ -184,6 +198,24 @@ const allAccountsSlice = createSlice({
       state.setAccountStatusValue = null;
       state.isLoading = false;
       state.setAccountStatusState = !state.setAccountStatusState;
+      toast.error(payload);
+    },
+    //set account role
+    [setAccountRole.pending]: (state) => {
+      state.ModalLoading = true;
+    },
+    [setAccountRole.fulfilled]: (state, { payload }) => {
+      state.ModalLoading = false;
+      state.accountModal = false;
+      state.account = null;
+      state.setAccountRoleState = !state.setAccountRoleState;
+      toast.success(payload);
+    },
+    [setAccountRole.rejected]: (state, { payload }) => {
+      state.ModalLoading = false;
+      state.accountModal = false;
+      state.account = null;
+      state.setAccountRoleState = !state.setAccountRoleState;
       toast.error(payload);
     },
   },

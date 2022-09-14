@@ -11,6 +11,7 @@ import transactionsSlice from './features/transactions/transactionsSlice';
 import reviewsSlice from './features/reviews/reviewsSlice';
 import browseBooksSlice from './features/browseBooks/browseBooksSlice';
 import statisticsSlice from './features/statistics/statisticsSlice';
+import supportConversationsSlice from './features/supportConversations/supportConversationsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export const store = configureStore({
     reviews: reviewsSlice,
     browseBooks: browseBooksSlice,
     statistics: statisticsSlice,
+    supportConversations: supportConversationsSlice,
   },
 });

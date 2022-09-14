@@ -12,6 +12,8 @@ import Error from './Error';
 
 //UTILITIES
 import ProtectedRoute from './ProtectedRoute';
+import CustomerSupportBox from './Support/CustomerSupportBox';
+import ManagerSupportBox from './Support/ManagerSupportBox';
 
 export {
   Landing,
@@ -22,4 +24,6 @@ export {
   VerificationOK,
   Error,
   ProtectedRoute,
+  CustomerSupportBox,
+  ManagerSupportBox,
 };

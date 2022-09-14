@@ -13,6 +13,8 @@ const bookRouter = require('./routes/bookRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const statisticsRouter = require('./routes/statisticsRoutes');
+const conversationRouter = require('./routes/conversationRoutes');
+const messageRouter = require('./routes/messageRoutes');
 
 const app = express();
 
@@ -54,6 +56,8 @@ app.use('/http/api/books', bookRouter);
 app.use('/http/api/transactions', transactionRouter);
 app.use('/http/api/reviews', reviewRouter);
 app.use('/http/api/statistics', statisticsRouter);
+app.use('/http/api/support/conversation', conversationRouter);
+app.use('/http/api/support/message', messageRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
