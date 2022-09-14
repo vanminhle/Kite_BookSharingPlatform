@@ -15,15 +15,30 @@ import { IoEarthOutline } from 'react-icons/io5';
 import { MdOutlineWorkOutline, MdSupportAgent } from 'react-icons/md';
 import { AiOutlineCar, AiOutlineUser } from 'react-icons/ai';
 import { Loading } from '../../components';
-import { clearAccount } from '../../features/allAccounts/allAccountsSlice';
+import {
+  clearAccount,
+  getUserAccount,
+  setAccountRole,
+} from '../../features/allAccounts/allAccountsSlice';
 import moment from 'moment';
 import { FaUserLock, FaUserTag } from 'react-icons/fa';
+import { useEffect } from 'react';
 
 const UserModal = () => {
   const { ModalLoading, account, accountModal } = useSelector(
     (store) => store.allAccounts
   );
   const dispatch = useDispatch();
+
+  const handleRoleChange = (accountId, role) => {
+    if (role === 'manager') {
+      role = 'customer';
+    } else {
+      role = 'manager';
+    }
+
+    dispatch(setAccountRole({ accountId, role }));
+  };
 
   return (
     <Modal
@@ -124,7 +139,15 @@ const UserModal = () => {
                 )}
               </div>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter style={{ display: 'flex' }}>
+              <Button
+                color={account?.role === 'customer' ? 'danger' : 'primary'}
+                onClick={() => handleRoleChange(account?._id, account?.role)}
+              >
+                {account?.role === 'customer'
+                  ? 'Set Manager Role'
+                  : 'Set Customer Role'}
+              </Button>
               <Button
                 color="secondary"
                 onClick={() => dispatch(clearAccount())}
