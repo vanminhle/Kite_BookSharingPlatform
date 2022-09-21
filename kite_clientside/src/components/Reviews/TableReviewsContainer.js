@@ -124,11 +124,11 @@ const TableReviewsContainer = () => {
                           }}
                         />
                         <p className="fw-bold mb-0">
-                          Book: {review.book.bookTitle}
+                          Book: {review.book?.bookTitle}
                         </p>
                         <p className="text-muted mb-0">
-                          {review.book.author.fullName} -{' '}
-                          {review.book.author.email}
+                          {review.book?.author.fullName} -{' '}
+                          {review.book?.author.email}
                         </p>
                       </div>
                     </div>

@@ -54,9 +54,9 @@ const TableTopContainer = () => {
                     gap: '0.2rem',
                   }}
                 >
-                  <p style={{ marginBottom: '0' }}>{book._id.bookTitle}</p>
+                  <p style={{ marginBottom: '0' }}>{book?._id?.bookTitle}</p>
                   <p style={{ marginBottom: '0' }} className="text-muted">
-                    {book._id.author.fullName}
+                    {book?._id?.author.fullName}
                   </p>
                 </div>
                 <p style={{ marginBottom: '0', marginLeft: 'auto' }}>
@@ -96,13 +96,13 @@ const TableTopContainer = () => {
                     gap: '0.2rem',
                   }}
                 >
-                  <p style={{ marginBottom: '0' }}>{book._id.bookTitle}</p>
+                  <p style={{ marginBottom: '0' }}>{book?._id?.bookTitle}</p>
                   <p style={{ marginBottom: '0' }} className="text-muted">
-                    {book._id.author.fullName}
+                    {book?._id?.author.fullName}
                   </p>
                 </div>
                 <p style={{ marginBottom: '0', marginLeft: 'auto' }}>
-                  {book.Count} $
+                  {book?.Count} $
                 </p>
               </div>
             </ListGroupItem>

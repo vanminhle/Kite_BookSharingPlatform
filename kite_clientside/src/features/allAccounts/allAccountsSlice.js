@@ -85,7 +85,11 @@ export const getAllAccounts = createAsyncThunk(
     const accountStatusQuery = accountStatusFilter(accountStatus);
     const searchQuery = searchQueryFilter(searchValue);
 
-    let url = `http/api/users?${searchQuery}[regex]=^${search}&${searchQuery}[options]=i&${accountStatusQuery}&${confirmStatusQuery}&${roleQuery}&sort=${sort}&page=${page}&limit=30`;
+    let url = '';
+    if (search)
+      url = `http/api/users?${searchQuery}[regex]=^${search}&${searchQuery}[options]=i&${accountStatusQuery}&${confirmStatusQuery}&${roleQuery}&sort=${sort}`;
+    else
+      url = `http/api/users?${searchQuery}[regex]=^${search}&${searchQuery}[options]=i&${accountStatusQuery}&${confirmStatusQuery}&${roleQuery}&sort=${sort}&page=${page}&limit=30`;
 
     return getAllAccountsThunk(url, thunkAPI);
   }
