@@ -40,7 +40,7 @@ const RevenueStatsContainer = () => {
     },
     {
       title: 'average',
-      count: booksStats?.Revenue[0].average || 0,
+      count: booksStats?.Revenue[0].average.toFixed(0) || 0,
       icon: <VscLibrary />,
       color: '#e9b949',
       bcg: '#fcefc7',

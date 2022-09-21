@@ -142,15 +142,15 @@ const reviewsSlice = createSlice({
         );
       } else if (state.search && state.searchValue === 'Book Name') {
         state.reviews = payload.data.reviews.filter((review) =>
-          review.book.bookTitle.toLowerCase().includes(state.search)
+          review.book?.bookTitle.toLowerCase().includes(state.search)
         );
       } else if (state.search && state.searchValue === 'Book Author') {
         state.reviews = payload.data.reviews.filter((review) =>
-          review.book.author.fullName.toLowerCase().includes(state.search)
+          review.book?.author.fullName.toLowerCase().includes(state.search)
         );
       } else if (state.search && state.searchValue === 'Book Author Email') {
         state.reviews = payload.data.reviews.filter((review) =>
-          review.book.author.email.toLowerCase().includes(state.search)
+          review.book?.author.email.toLowerCase().includes(state.search)
         );
       } else {
         state.reviews = payload.data.reviews;

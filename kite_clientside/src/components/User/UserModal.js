@@ -17,12 +17,10 @@ import { AiOutlineCar, AiOutlineUser } from 'react-icons/ai';
 import { Loading } from '../../components';
 import {
   clearAccount,
-  getUserAccount,
   setAccountRole,
 } from '../../features/allAccounts/allAccountsSlice';
 import moment from 'moment';
 import { FaUserLock, FaUserTag } from 'react-icons/fa';
-import { useEffect } from 'react';
 
 const UserModal = () => {
   const { ModalLoading, account, accountModal } = useSelector(
