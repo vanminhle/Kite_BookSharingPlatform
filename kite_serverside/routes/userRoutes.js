@@ -5,7 +5,50 @@ const userController = require('../controllers/userController');
 const router = express.Router();
 
 router.post('/register', authController.register);
+
+/**
+ * @openapi
+ * /http/api/users/login:
+ *   post:
+ *     summary: Login user to get the bearer token for authorization
+ *     tags:
+ *      - Authentication
+ *     parameters:
+ *      - in: header
+ *        name: Content-Type
+ *        required: true
+ *        schema:
+ *         type: string
+ *         default: application/json
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *            email:
+ *             type: string
+ *             format: email
+ *            password:
+ *             type: string
+ *             format: password
+ *          required:
+ *            - email
+ *            - password
+ *          example:
+ *            email: me@example.com
+ *            password: myPassword@123
+ *     responses:
+ *      200:
+ *        description: Success
+ *      500:
+ *        description: Internal Server Error
+ *      401:
+ *        description: Unauthorized
+ */
 router.post('/login', authController.login);
+
 router.post(
   '/googleLogin',
   authController.googleLoginAccount,
@@ -14,7 +57,6 @@ router.post(
 
 router.get('/logout', authController.protect, authController.logoutSession);
 
-//account information
 router.patch(
   '/updateMyInfo',
   authController.protect,
@@ -48,7 +90,6 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 router.post('/sendEmailVerification', authController.sendEmailVerification);
 router.get('/emailVerify/:verifyToken', authController.emailVerification);
 
-//user management
 router.get(
   '/',
   authController.protect,

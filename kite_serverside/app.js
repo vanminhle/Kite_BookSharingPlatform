@@ -1,7 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
-//const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 
 // const cors = require('cors');
 const AppError = require('./utils/appError');
@@ -24,12 +25,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Add headers before the routes are defined
-//app.use(cors());
 app.use((req, res, next) => {
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    process.env.CLIENT_URL_DEVELOPMENT
-  );
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -48,8 +45,50 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cookieParser());
 
-//ROUTES
+//swagger
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Kite - API Documentation',
+      version: '1.0.0',
+      description:
+        'This is a REST API documentation application made with Express, SwaggerUIExpress and SwaggerJsDoc.',
+      license: {
+        name: 'Licensed Under MIT',
+        url: 'https://spdx.org/licenses/MIT.html',
+      },
+      contact: {
+        name: 'Kite - Github Repository',
+        url: 'https://github.com/vanminhle/Kite_BookSharingPlatform',
+      },
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          name: 'Authorization',
+          scheme: 'bearer',
+        },
+      },
+    },
+    servers: [
+      {
+        url: 'http://127.0.0.1:8000',
+        description: 'Development server',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+const openApiSpecification = swaggerJsdoc(options);
 
+//ROUTES
+app.use(
+  '/http/api-docs',
+  swaggerUI.serve,
+  swaggerUI.setup(openApiSpecification)
+);
 app.use('/http/api/users', userRouter);
 app.use('/http/api/tags', tagRouter);
 app.use('/http/api/books', bookRouter);
