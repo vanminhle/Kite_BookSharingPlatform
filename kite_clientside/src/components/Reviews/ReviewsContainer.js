@@ -56,7 +56,7 @@ const ReviewsContainer = ({ reviews }) => {
       toast.error('Please fill all the required fields');
       return;
     }
-    dispatch(createReview({ review, rating, book: bookId }));
+    dispatch(createReview({ review, rating, bookId }));
   };
 
   return (

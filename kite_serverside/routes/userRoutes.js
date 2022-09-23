@@ -10,7 +10,7 @@ router.post('/register', authController.register);
  * @openapi
  * /http/api/users/login:
  *   post:
- *     summary: Login user to get the bearer token for authorization
+ *     summary: Login user to get the cookie have token for authorization
  *     tags:
  *      - Authentication
  *     parameters:
@@ -44,8 +44,6 @@ router.post('/register', authController.register);
  *        description: Success
  *      500:
  *        description: Internal Server Error
- *      401:
- *        description: Unauthorized
  */
 router.post('/login', authController.login);
 
@@ -55,6 +53,21 @@ router.post(
   authController.googleLoginSession
 );
 
+/**
+ * @openapi
+ * /http/api/users/logout:
+ *   get:
+ *     summary: Logout user to remove the cookie have token for authorization
+ *     tags:
+ *      - Authentication
+ *     responses:
+ *      200:
+ *        description: Success
+ *      500:
+ *        description: Internal Server Error
+ *      401:
+ *        description: Unauthorized
+ */
 router.get('/logout', authController.protect, authController.logoutSession);
 
 router.patch(

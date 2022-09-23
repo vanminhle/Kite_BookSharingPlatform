@@ -19,32 +19,6 @@ const messageRouter = require('./routes/messageRoutes');
 
 const app = express();
 
-//critital middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
-
-// Add headers before the routes are defined
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-  );
-
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-Requested-With,content-type'
-  );
-
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  next();
-});
-app.use(express.json());
-app.use(cookieParser());
-
 //swagger
 const options = {
   definition: {
@@ -63,15 +37,6 @@ const options = {
         url: 'https://github.com/vanminhle/Kite_BookSharingPlatform',
       },
     },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          name: 'Authorization',
-          scheme: 'bearer',
-        },
-      },
-    },
     servers: [
       {
         url: 'http://127.0.0.1:8000',
@@ -82,6 +47,32 @@ const options = {
   apis: ['./routes/*.js'],
 };
 const openApiSpecification = swaggerJsdoc(options);
+
+//critital middleware
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+// Add headers before the routes are defined
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+  );
+
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With,content-type'
+  );
+
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  next();
+});
+app.use(express.json());
+app.use(cookieParser());
 
 //ROUTES
 app.use(

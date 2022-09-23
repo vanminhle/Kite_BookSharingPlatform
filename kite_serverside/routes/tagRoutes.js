@@ -35,8 +35,6 @@ router.get('/', tagController.getAllTags);
  * /http/api/tags:
  *   post:
  *     summary: Create a new tag **ADMIN ONLY**
- *     security:
- *      - BearerAuth: []
  *     tags:
  *      - Tags
  *     requestBody:
@@ -112,8 +110,7 @@ router.get('/:id', tagController.getTag);
  * /http/api/tags/{id}:
  *   patch:
  *     summary: Update the specific tag **ADMIN ONLY**
- *     security:
- *      - BearerAuth: []
+
  *     tags:
  *      - Tags
  *     parameters:
@@ -174,8 +171,6 @@ router.patch(
  * /http/api/tags/{id}:
  *   delete:
  *     summary: Delete the specific tag have been created on the system **ADMIN ONLY**
- *     security:
- *      - BearerAuth: []
  *     tags:
  *      - Tags
  *     parameters:

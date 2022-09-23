@@ -38,7 +38,7 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
 exports.createReview = catchAsync(async (req, res, next) => {
   const userTransaction = await Transaction.find({
     user: req.user._id,
-    book: req.body.book,
+    book: req.params.bookId,
   });
   if (userTransaction.length === 0) {
     return next(
@@ -48,13 +48,17 @@ exports.createReview = catchAsync(async (req, res, next) => {
 
   const userReview = await Review.find({
     user: req.user._id,
-    book: req.body.book,
+    book: req.params.bookId,
   });
   if (userReview.length !== 0) {
-    return next(new AppError('You have already reviewed this book!', 404));
+    return next(new AppError('You have already reviewed this book!', 409));
   }
 
-  const newReview = await Review.create({ ...req.body, user: req.user._id });
+  const newReview = await Review.create({
+    ...req.body,
+    user: req.user._id,
+    book: req.params.bookId,
+  });
 
   res.status(201).json({ status: 'success', data: newReview });
 });
@@ -78,5 +82,20 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  });
+});
+
+exports.getReview = catchAsync(async (req, res, next) => {
+  const review = await Review.findById(req.params.id);
+
+  if (!review) {
+    return next(new AppError('No review found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      review,
+    },
   });
 });

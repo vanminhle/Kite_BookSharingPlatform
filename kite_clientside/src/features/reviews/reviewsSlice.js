@@ -38,7 +38,7 @@ const initialState = {
 export const createReview = createAsyncThunk(
   'reviews/createReview',
   async (data, thunkAPI) => {
-    return createReviewThunk(`http/api/reviews`, data, thunkAPI);
+    return createReviewThunk(`http/api/reviews/${data.bookId}`, data, thunkAPI);
   }
 );
 
