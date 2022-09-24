@@ -10,6 +10,7 @@ const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
 const filterObj = require('../utils/apiObjectFilter');
 const Email = require('../utils/email');
+const Transaction = require('../models/transactionModel');
 
 //file buffer
 const multerFilter = (req, file, cb) => {
@@ -223,6 +224,16 @@ exports.getBook = catchAsync(async (req, res, next) => {
 exports.getBookFile = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) return next(new AppError('No book found with that ID!', 404));
+
+  if (req.user.role === 'customer' && !req.user._id.equals(book.author._id)) {
+    const transaction = await Transaction.find({
+      book: req.params.id,
+      user: req.user._id,
+    });
+
+    if (transaction.length === 0)
+      return next(new AppError('No book found with that ID!', 404));
+  }
 
   await fs.readFile(`public/booksDocument/${book.bookFile}`, (err, data) => {
     res.set({

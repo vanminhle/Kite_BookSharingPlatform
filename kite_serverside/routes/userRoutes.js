@@ -13,13 +13,6 @@ router.post('/register', authController.register);
  *     summary: Login user to get the cookie have token for authorization
  *     tags:
  *      - Authentication
- *     parameters:
- *      - in: header
- *        name: Content-Type
- *        required: true
- *        schema:
- *         type: string
- *         default: application/json
  *     requestBody:
  *      required: true
  *      content:

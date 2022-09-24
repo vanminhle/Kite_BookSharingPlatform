@@ -49,7 +49,6 @@ router.get('/', tagController.getAllTags);
  *                  maxLength: 30
  *                group:
  *                  type: string
- *                  maxLength: 30
  *                  enum: [format, genre, theme]
  *                description:
  *                  type: string
@@ -71,6 +70,8 @@ router.get('/', tagController.getAllTags);
  *        description: Conflict
  *      403:
  *        description: Forbidden
+ *      401:
+ *        description: Unauthorized
  */
 router.post(
   '/',
@@ -110,7 +111,6 @@ router.get('/:id', tagController.getTag);
  * /http/api/tags/{id}:
  *   patch:
  *     summary: Update the specific tag **ADMIN ONLY**
-
  *     tags:
  *      - Tags
  *     parameters:
@@ -134,7 +134,6 @@ router.get('/:id', tagController.getTag);
  *                  maxLength: 30
  *                group:
  *                  type: string
- *                  maxLength: 30
  *                  enum: [format, genre, theme]
  *                description:
  *                  type: string
@@ -158,6 +157,8 @@ router.get('/:id', tagController.getTag);
  *        description: Forbidden
  *      404:
  *        description: Not Found
+ *      401:
+ *        description: Unauthorized
  */
 router.patch(
   '/:id',
@@ -193,6 +194,8 @@ router.patch(
  *        description: Forbidden
  *      404:
  *        description: Not Found
+ *      401:
+ *        description: Unauthorized
  */
 router.delete(
   '/:id',
