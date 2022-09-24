@@ -5,7 +5,7 @@
 }
 
 /* fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap');
 
 html {
   font-size: 100%;
@@ -25,7 +25,11 @@ html {
   --primary-900: #1e3a8a;
 
   /* grey */
+  --grey-5: #fbfcfd;
+  --grey-10: #f7f9fb;
+  --grey-30: #f6f8fa;
   --grey-50: #f0f4f8;
+  --grey-70: #ebedef;
   --grey-100: #d9e2ec;
   --grey-200: #bcccdc;
   --grey-300: #9fb3c8;
@@ -45,11 +49,11 @@ html {
 
   /* fonts  */
   --headingFont: 'Roboto Condensed', Sans-Serif;
-  --bodyFont: 'Cabin', Sans-Serif;
+  --bodyFont: 'Roboto', Sans-Serif;
   --small-text: 0.875rem;
   --extra-small-text: 0.7em;
   /* rest of the vars */
-  --backgroundColor: var(--grey-50);
+  --backgroundColor: var(--grey-30);
   --textColor: var(--grey-900);
   --borderRadius: 0.25rem;
   --letterSpacing: 1px;
@@ -148,7 +152,6 @@ ul {
 .btn {
   cursor: pointer;
   color: var(--white);
-  background: var(--primary-500);
   border: transparent;
   border-radius: var(--borderRadius);
   letter-spacing: var(--letterSpacing);
@@ -159,32 +162,25 @@ ul {
   display: inline-block;
 }
 .btn:hover {
-  background: var(--primary-700);
   box-shadow: var(--shadow-3);
+  color: var(--white);
 }
 .btn-hipster {
   color: var(--primary-500);
-  background: var(--primary-200);
 }
 .btn-hipster:hover {
   color: var(--primary-200);
-  background: var(--primary-700);
 }
 .btn-block {
   width: 100%;
 }
 .btn-hero {
-  font-size: 1.25rem;
-  padding: 0.5rem 1.25rem;
-}
-.btn-danger {
-  background: var(--red-light);
-  color: var(--red-dark);
-}
-.btn-danger:hover {
-  background: var(--red-dark);
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
   color: var(--white);
+  padding: 0.4rem 1rem;
 }
+
 /* alerts */
 .alert {
   padding: 0.375rem 0.75rem;
@@ -211,13 +207,14 @@ ul {
   max-width: var(--fixed-width);
   background: var(--white);
   border-radius: var(--borderRadius);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--shadow-1);
   padding: 2rem 2.5rem;
-  margin: 3rem auto;
+  margin: 1rem auto;
+  margin-bottom: 2rem;
   transition: var(--transition);
 }
 .form:hover {
-  box-shadow: var(--shadow-4);
+  box-shadow: var(--shadow-2);
 }
 .form-label {
   display: block;
@@ -232,13 +229,15 @@ ul {
   width: 100%;
   padding: 0.375rem 0.75rem;
   border-radius: var(--borderRadius);
-  background: var(--backgroundColor);
+  /* background: var(--backgroundColor); */
   border: 1px solid var(--grey-200);
 }
 .form-input,
-.form-select,
 .btn-block {
   height: 35px;
+}
+.form-select {
+  height: 38px;
 }
 .form-row {
   margin-bottom: 1rem;
@@ -273,7 +272,7 @@ ul {
   animation: spinner 2s linear infinite;
 }
 .loading-center {
-  margin: 0 auto;
+  margin: 7rem auto;
 }
 /* title */
 
@@ -321,6 +320,196 @@ ul {
   }
 }
 
+/* toastify */
+
 .Toastify__toast {
-  text-transform: capitalize;
+  text-transform: none;
+  width: 700px;
+  text-align: center;
+  right: 62%;
+}
+
+/* Modal */
+
+.modal-header {
+  align-self: center;
+  border-bottom: 0;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.modal-body {
+  text-align: center;
+}
+
+.modal-footer {
+  align-self: center;
+  border-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* Modal user information */
+
+.user-modal .modal-content {
+  display: flex;
+  flex-direction: row;
+  width: 50rem;
+  right: 9rem;
+  color: var(--bs-modal-color);
+  pointer-events: auto;
+  background-color: var(--bs-modal-bg);
+  background-clip: padding-box;
+  border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+  border-radius: var(--bs-modal-border-radius);
+  outline: 0;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.user-modal .modal-content .user-modal-profile {
+  width: 9rem;
+  border-radius: 50%;
+  border: 0.1px solid var(--grey-100);
+}
+
+.user-modal .modal-content .user-modal-content {
+  width: 100%;
+}
+
+.user-modal .modal-content .user-modal-content .modal-header {
+  margin-top: 0;
+  padding: 0;
+}
+
+.user-modal .modal-content .user-modal-content .modal-body {
+  margin-bottom: 1rem;
+  padding: 0;
+  text-align: left;
+}
+
+.user-modal .modal-content .user-modal-content .modal-footer {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.modal-title {
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.modal-body p {
+  margin-top: 0.3rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.user-modal-icon {
+  font-size: 3rem;
+  padding: 0.4rem;
+  border-radius: 50%;
+  border: 0.1px solid var(--grey-100);
+}
+
+/* Alert */
+.banner-alert {
+  padding: 0.9rem;
+  border-radius: 1rem;
+  margin: 2rem 1rem 0 1rem;
+  margin-bottom: -1.5rem;
+  width: 80%;
+  right: -7rem;
+}
+
+/* Sidebar Modal */
+.sidebar-modal .modal-content {
+  height: 100%;
+  width: 45%;
+  left: 55%;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.sidebar-modal .modal-header {
+  align-self: normal;
+  padding-bottom: 0.5rem;
+}
+
+.sidebar-modal .modal-title {
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  margin-left: 0.2rem;
+  font-size: 1.4rem;
+}
+
+.sidebar-modal .modal-body {
+  align-self: normal;
+  padding-top: 0;
+  text-align: left;
+}
+
+.sidebar-modal .modal-body p {
+  font-size: 1rem;
+  margin-bottom: 1.7rem;
+  overflow: hidden;
+}
+
+.sidebar-modal .modal-footer {
+  align-self: flex-end;
+  margin-top: 0.3rem;
+}
+
+.sidebar-modal .modal-body .validation-popup {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: red;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.sidebar-modal .modal-body .checkbox-input {
+  margin-bottom: 0.5rem;
+  display: grid;
+  grid-template-columns: 13rem 13rem 13rem;
+}
+
+.sidebar-modal .modal-body .form-label {
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+/* elements */
+.page-title {
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  margin-left: 0.2rem;
+  font-size: 1.4rem;
+}
+
+.table {
+  border: 1px solid var(--grey-70);
+  margin-bottom: 0rem;
+}
+
+thead tr {
+  background-color: var(--grey-30);
+}
+
+tr {
+  background-color: var(--grey-5);
+}
+
+td {
+  vertical-align: middle;
+}
+
+.actions-div {
+  font-size: 1.3rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
 }
