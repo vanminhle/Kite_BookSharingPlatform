@@ -90,7 +90,7 @@ exports.deleteTransaction = catchAsync(async (req, res, next) => {
 
 exports.getTransactionOfBook = catchAsync(async (req, res, next) => {
   const transaction = await Transaction.find({
-    book: req.params.id,
+    book: req.params.bookId,
     user: req.user._id,
   });
 

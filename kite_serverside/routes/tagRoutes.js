@@ -85,6 +85,7 @@ router.post(
  * /http/api/tags/{id}:
  *   get:
  *     summary: Get the specific tag have been created on the system
+ *     description: Provide id of the tag need to get
  *     tags:
  *      - Tags
  *     parameters:
@@ -93,7 +94,6 @@ router.post(
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the tag
  *        required:
  *          - id
  *     responses:
@@ -111,6 +111,7 @@ router.get('/:id', tagController.getTag);
  * /http/api/tags/{id}:
  *   patch:
  *     summary: Update the specific tag **ADMIN ONLY**
+ *     description: Provide id of the tag need to update
  *     tags:
  *      - Tags
  *     parameters:
@@ -119,7 +120,6 @@ router.get('/:id', tagController.getTag);
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the tag need to update
  *        required:
  *          - id
  *     requestBody:
@@ -172,6 +172,7 @@ router.patch(
  * /http/api/tags/{id}:
  *   delete:
  *     summary: Delete the specific tag have been created on the system **ADMIN ONLY**
+ *     description: Provide id of the tag need to delete
  *     tags:
  *      - Tags
  *     parameters:
@@ -180,7 +181,6 @@ router.patch(
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the tag
  *        required:
  *          - id
  *     responses:

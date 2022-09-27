@@ -35,6 +35,7 @@ router.get('/', reviewController.getAllReviews);
  * /http/api/reviews/{bookId}:
  *   post:
  *     summary: Create a new review on Book **CUSTOMER ONLY**
+ *     description: Provide id of the book to be review, then the review content
  *     tags:
  *      - Reviews
  *     parameters:
@@ -43,7 +44,6 @@ router.get('/', reviewController.getAllReviews);
  *        schema:
  *         type: string
  *         default: 630d799e8357beaf95fad746
- *         description: Id of the book to be review
  *        required:
  *          - bookId
  *     requestBody:
@@ -90,6 +90,7 @@ router.post(
  * /http/api/reviews/{id}:
  *   get:
  *     summary: Get the specific review have been given on the book
+ *     description: Provide id of review need to get
  *     tags:
  *      - Reviews
  *     parameters:
@@ -98,7 +99,6 @@ router.post(
  *        schema:
  *         type: string
  *         default: 63181d05b6deed98a6c797e2
- *         description: Id of the review
  *        required:
  *          - id
  *     responses:
@@ -116,6 +116,7 @@ router.get('/:id', reviewController.getReview);
  * /http/api/reviews/{id}:
  *   delete:
  *     summary: Delete the specific review have been given on the book **MANAGER, CUSTOMER ONLY**
+ *     description: Provide id of review need to delete
  *     tags:
  *      - Reviews
  *     parameters:
@@ -124,7 +125,6 @@ router.get('/:id', reviewController.getReview);
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the review
  *        required:
  *          - id
  *     responses:

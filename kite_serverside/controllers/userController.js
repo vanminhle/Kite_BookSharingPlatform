@@ -32,7 +32,7 @@ exports.handlingUploadFile = multer({
 //upload photos
 exports.uploadUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
-  req.file.filename = `user-${req.user.id}-${req.user.email}`;
+  req.file.filename = `user-${req.user.id}`;
 
   const uploadResult = await photoToCloudinary(
     req.file.buffer,
@@ -162,12 +162,9 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 //admin disable or reactivate account
 exports.setAccountStatus = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, {
+  await User.findByIdAndUpdate(req.params.id, {
     active: req.body.active,
   });
-
-  if (!user || user.role === 'admin')
-    return next(new AppError('No user found with that ID!', 404));
 
   res.status(200).json({
     status: 'success',
@@ -176,12 +173,9 @@ exports.setAccountStatus = catchAsync(async (req, res, next) => {
 });
 
 exports.setAccountRole = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, {
+  await User.findByIdAndUpdate(req.params.id, {
     role: req.body.role,
   });
-
-  if (!user || user.role === 'admin')
-    return next(new AppError('No user found with that ID!', 404));
 
   res.status(200).json({
     status: 'success',

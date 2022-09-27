@@ -47,35 +47,28 @@ router.get('/', authController.protect, bookController.getAllBooks);
  *         properties:
  *          bookTitle:
  *            type: string
- *            required: true
  *            description: Title of the book
  *            maxLength: 70
  *          price:
  *            type: number
- *            required: true
  *            description: Price of the book
  *          summary:
  *            type: string
- *            required: true
  *            description: Short summary about the book
  *            maxLength: 150
  *          description:
  *            type: string
- *            required: true
  *            description: Description about the book
  *            maxLength: 600
  *          tags:
  *            type: string
- *            required: true
  *            description: Tag of the book (provide tagId)
  *          bookFile:
  *            type: string
- *            required: true
  *            format: binary
  *            description: Document file of the book
  *          bookCover:
  *            type: string
- *            required: true
  *            format: binary
  *            description: Image cover of the book
  *         required:
@@ -94,7 +87,7 @@ router.get('/', authController.protect, bookController.getAllBooks);
  *          tags: 6304470b8492077f82c19d8a
  *      encoding:
  *       bookCover:
- *        content-type: image/jpg, image/jpeg, image/png application/pdf
+ *        content-type: image/jpg, image/jpeg, image/png
  *       bookFile:
  *        content-type: application/pdf
  *     responses:
@@ -123,6 +116,7 @@ router.post(
  * /http/api/books/{id}:
  *   get:
  *     summary: Get the specific book have been uploaded on the system
+ *     description: Provide id of book need to get
  *     tags:
  *      - Books
  *     parameters:
@@ -131,7 +125,6 @@ router.post(
  *        schema:
  *         type: string
  *         default: 630d799e8357beaf95fad734
- *         description: Id of the book
  *        required:
  *          - id
  *     responses:
@@ -151,6 +144,7 @@ router.get('/:id', authController.protect, bookController.getBook);
  * /http/api/books/reading/{id}:
  *   get:
  *     summary: Get the specific document file of book have been uploaded on the system
+ *     description: Provide id of book need to get document file for reading
  *     tags:
  *      - Books
  *     parameters:
@@ -179,6 +173,7 @@ router.get('/reading/:id', authController.protect, bookController.getBookFile);
  * /http/api/books/{id}:
  *   patch:
  *     summary: Update specific book has been uploaded **ADMIN, CUSTOMER ONLY**
+ *     description: Provide id of book need to update, then the updated data
  *     tags:
  *      - Books
  *     parameters:
@@ -187,7 +182,6 @@ router.get('/reading/:id', authController.protect, bookController.getBookFile);
  *        schema:
  *         type: string
  *         default: 63196a4e5a17de3cc0469b9d
- *         description: Id of the book need to update
  *        required:
  *          - id
  *     requestBody:
@@ -198,35 +192,28 @@ router.get('/reading/:id', authController.protect, bookController.getBookFile);
  *         properties:
  *          bookTitle:
  *            type: string
- *            required: true
  *            description: Title of the book
  *            maxLength: 70
  *          price:
  *            type: number
- *            required: true
  *            description: Price of the book
  *          summary:
  *            type: string
- *            required: true
  *            description: Short summary about the book
  *            maxLength: 150
  *          description:
  *            type: string
- *            required: true
  *            description: Description about the book
  *            maxLength: 600
  *          tags:
  *            type: string
- *            required: true
  *            description: Tag of the book (provide tagId)
  *          bookFile:
  *            type: string
- *            required: true
  *            format: binary
  *            description: Document file of the book
  *          bookCover:
  *            type: string
- *            required: true
  *            format: binary
  *            description: Image cover of the book
  *         required:
@@ -277,6 +264,7 @@ router.patch(
  * /http/api/books/{id}:
  *   delete:
  *     summary: Delete the specific book have been uploaded on the system **ADMIN, CUSTOMER ONLY**
+ *     description: Provide id of book need to delete
  *     tags:
  *      - Books
  *     parameters:
@@ -285,7 +273,6 @@ router.patch(
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the book
  *        required:
  *          - id
  *     responses:
@@ -314,6 +301,7 @@ router.delete(
  * /http/api/books/setBookStatus/{id}:
  *   patch:
  *     summary: Update the approving status of uploaded book **MANAGER ONLY**
+ *     description: Provide id of book need to update status, then the updated type and reason
  *     tags:
  *      - Books
  *     parameters:
@@ -322,7 +310,6 @@ router.delete(
  *        schema:
  *         type: string
  *         default: 632c633bdccdaf2b0841400c
- *         description: Id of the book need to update
  *        required:
  *          - id
  *     requestBody:
