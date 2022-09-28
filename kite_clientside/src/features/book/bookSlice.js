@@ -28,7 +28,7 @@ export const buyBook = createAsyncThunk(
   'book/buyBook',
   async (id, thunkAPI) => {
     return buyBookThunk(
-      `http/api/transactions/checkout-session/${id}`,
+      `http/api/transactions/checkoutSession/${id}`,
       thunkAPI
     );
   }

@@ -4,16 +4,40 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /http/api/transactions/checkoutSession/{bookId}:
+ *   get:
+ *     summary: From the book data, starting checkout session for purchasing the book
+ *     description: Provide id of the book
+ *     tags:
+ *      - Transactions
+ *     parameters:
+ *      - in: path
+ *        name: bookId
+ *        schema:
+ *         type: string
+ *         default: 630d799e8357beaf95fad784
+ *         description: Id of the book
+ *        required:
+ *          - bookId
+ *     responses:
+ *      200:
+ *        description: Success
+ *      500:
+ *        description: Internal Server Error
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not Found
+ */
 router.get(
-  '/checkout-session/:bookId',
+  '/checkoutSession/:bookId',
   authController.protect,
   transactionController.getCheckoutSession
 );
 
-router.get(
-  '/checkout-success',
-  transactionController.createTransactionCheckout
-);
+router.get('/checkoutSuccess', transactionController.createTransactionCheckout);
 
 /**
  * @openapi
@@ -108,8 +132,6 @@ router.delete(
  *        description: Success
  *      500:
  *        description: Internal Server Error
- *      403:
- *        description: Forbidden
  *      401:
  *        description: Unauthorized
  */
@@ -141,6 +163,8 @@ router.get(
  *        description: Success
  *      500:
  *        description: Internal Server Error
+ *      401:
+ *        description: Unauthorized
  */
 router.get(
   '/isOwnBook/:bookId',

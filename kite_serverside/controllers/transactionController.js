@@ -7,13 +7,16 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.bookId);
+  if (!book) {
+    return next(new AppError('No book found with that ID', 404));
+  }
 
   //2) Create checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get(
       'host'
-    )}/http/api/transactions/checkout-success/?book=${book._id}&user=${
+    )}/http/api/transactions/checkoutSuccess/?book=${book._id}&user=${
       req.user._id
     }&price=${book.price}`,
     cancel_url: `${process.env.CLIENT_URL_DEVELOPMENT}/book/${book._id}`,
