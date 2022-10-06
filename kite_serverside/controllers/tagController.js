@@ -6,13 +6,17 @@ const APIFeatures = require('../utils/apiFeatures');
 const Book = require('../models/bookModel');
 
 exports.createTag = catchAsync(async (req, res, next) => {
-  const tag = await Tag.findOne({ name: req.body.name });
+  const tag = await Tag.findOne({
+    name: req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1),
+  });
   if (tag) return next(new AppError('Tag is already exists!', 409));
 
   const newTag = await Tag.create({
-    name: req.body.name,
+    name: req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1),
     group: req.body.group,
-    description: req.body.description,
+    description:
+      req.body.description.charAt(0).toUpperCase() +
+      req.body.description.slice(1),
   });
 
   res.status(201).json({
@@ -66,16 +70,28 @@ exports.getTag = catchAsync(async (req, res, next) => {
 });
 
 exports.updateTag = catchAsync(async (req, res, next) => {
-  const tag = await Tag.findOne({ name: req.body.name });
+  const tag = await Tag.findOne({
+    name: req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1),
+  });
   if (tag)
     return next(
       new AppError('That tag name is already used by another tag', 409)
     );
 
-  const tagUpdated = await Tag.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const tagUpdated = await Tag.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1),
+      group: req.body.group,
+      description:
+        req.body.description.charAt(0).toUpperCase() +
+        req.body.description.slice(1),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   if (!tagUpdated) {
     return next(new AppError('No tag found with that ID', 404));
