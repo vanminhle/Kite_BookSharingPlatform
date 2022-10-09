@@ -6,16 +6,26 @@ const Tag = require('../models/tagModel');
 
 //npm run start:test tag.test.js
 
-let token;
+let adminToken;
+let userToken;
 beforeAll(async () => {
-  const res = await request(server)
+  const resAdmin = await request(server)
     .post('/http/api/users/login')
     .send({
       email: process.env.TEST_ACCOUNT_ADMIN_EMAIL,
       password: process.env.TEST_ACCOUNT_ADMIN_PASSWORD,
     })
     .set('Accept', 'application/json');
-  token = res.body.token;
+  adminToken = resAdmin.body.token;
+
+  const resUser = await request(server)
+    .post('/http/api/users/login')
+    .send({
+      email: process.env.TEST_ACCOUNT_CUSTOMER_EMAIL,
+      password: process.env.TEST_ACCOUNT_CUSTOMER_PASSWORD,
+    })
+    .set('Accept', 'application/json');
+  userToken = resUser.body.token;
 }, 5000);
 
 describe('Tags', () => {
@@ -67,7 +77,7 @@ describe('Tags', () => {
       };
       await request(server)
         .post('/http/api/tags')
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(tag)
         .expect(201)
         .then(async (res) => {
@@ -104,7 +114,7 @@ describe('Tags', () => {
       };
       await request(server)
         .post('/http/api/tags')
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(tagTwo)
         .expect(409)
         .then(async (res) => {
@@ -124,7 +134,7 @@ describe('Tags', () => {
       };
       await request(server)
         .post('/http/api/tags')
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(tag)
         .expect(400)
         .then((res) => {
@@ -133,6 +143,47 @@ describe('Tags', () => {
           expect(res._body.status).toEqual('fail');
           expect(res._body.message).toEqual(
             'Invalid input data. Tag Group is required'
+          );
+        });
+    });
+
+    test('It should PUSH AN ERROR when non logged in user POST a new tag', async () => {
+      const tag = {
+        name: 'UnitTest Test Permission',
+        group: 'theme',
+        description: 'UnitTest Test Permission',
+      };
+      await request(server)
+        .post('/http/api/tags')
+        .send(tag)
+        .expect(401)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
+
+    test(`It should PUSH AN ERROR when user whom don't have permission POST a new tag`, async () => {
+      const tag = {
+        name: 'UnitTest Test Permission',
+        group: 'theme',
+        description: 'UnitTest Test Permission',
+      };
+      await request(server)
+        .post('/http/api/tags')
+        .set({ Authorization: `Bearer ${userToken}` })
+        .send(tag)
+        .expect(403)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You do not have permission to perform this action'
           );
         });
     });
@@ -152,7 +203,7 @@ describe('Tags', () => {
       };
       await request(server)
         .patch(`/http/api/tags/${tag._id}`)
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(newTagData)
         .expect(200)
         .then(async (res) => {
@@ -191,7 +242,7 @@ describe('Tags', () => {
       };
       await request(server)
         .patch(`/http/api/tags/${tag._id}`)
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(newTagData)
         .expect(409)
         .then(async (res) => {
@@ -214,7 +265,7 @@ describe('Tags', () => {
       };
       await request(server)
         .patch(`/http/api/tags/${tagId}`)
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .send(newTagData)
         .expect(404)
         .then((res) => {
@@ -222,6 +273,49 @@ describe('Tags', () => {
           expect(typeof res._body === 'object').toBeTruthy();
           expect(res._body.status).toEqual('fail');
           expect(res._body.message).toEqual('No tag found with that ID');
+        });
+    });
+
+    test('It should PUSH AN ERROR when non logged in user PATCH an existing tag', async () => {
+      const tagId = '63424bb1409a441fb1d17459';
+      const newTagData = {
+        name: 'UnitTest Patch Not Exists',
+        group: 'genre',
+        description: 'UnitTest Not Exists',
+      };
+      await request(server)
+        .patch(`/http/api/tags/${tagId}`)
+        .send(newTagData)
+        .expect(401)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
+
+    test(`It should PUSH AN ERROR when user whom don't have permission PATCH an existing tag`, async () => {
+      const tagId = '63424bb1409a441fb1d17459';
+      const newTagData = {
+        name: 'UnitTest Patch Not Exists',
+        group: 'genre',
+        description: 'UnitTest Not Exists',
+      };
+      await request(server)
+        .patch(`/http/api/tags/${tagId}`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .send(newTagData)
+        .expect(403)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You do not have permission to perform this action'
+          );
         });
     });
   });
@@ -236,16 +330,15 @@ describe('Tags', () => {
 
       await request(server)
         .delete(`/http/api/tags/${tag._id}`)
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .expect(204);
     });
 
     test('It should PUSH AN ERROR when DELETE a tag that not existing on the database based on the given id', async () => {
       const tagId = '630446f28492077f82c19d8b';
-
       await request(server)
         .delete(`/http/api/tags/${tagId}`)
-        .set({ Authorization: `Bearer ${token}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .expect(404)
         .then((res) => {
           expect(res.type).toEqual('application/json');
@@ -254,10 +347,41 @@ describe('Tags', () => {
           expect(res._body.message).toEqual('No tag found with that ID');
         });
     });
-  });
 
-  afterAll(async () => {
-    await server.close();
-    await mongoose.disconnect();
+    test('It should PUSH AN ERROR when non logged in user DELETE an existing tag', async () => {
+      const tagId = '630446f28492077f82c19d8b';
+      await request(server)
+        .delete(`/http/api/tags/${tagId}`)
+        .expect(401)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
+
+    test(`It should PUSH AN ERROR when user whom don't have permission DELETE an existing tag`, async () => {
+      const tagId = '630446f28492077f82c19d8b';
+      await request(server)
+        .delete(`/http/api/tags/${tagId}`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .expect(403)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You do not have permission to perform this action'
+          );
+        });
+    });
   });
+});
+
+afterAll(async () => {
+  await server.close();
+  await mongoose.disconnect();
 });
