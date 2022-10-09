@@ -41,10 +41,15 @@ const sortFilter = (value) => {
 export const getTransactions = createAsyncThunk(
   'transactions/getTransactions',
   async (_, thunkAPI) => {
-    const { page, sort } = thunkAPI.getState().transactions;
+    const { search, page, sort } = thunkAPI.getState().transactions;
     const sortQuery = sortFilter(sort);
 
-    let url = `http/api/transactions?${sortQuery}&page=${page}&limit=30`;
+    let url;
+    if (search !== '') {
+      url = `http/api/transactions?${sortQuery}`;
+    } else {
+      url = `http/api/transactions?${sortQuery}&page=${page}&limit=30`;
+    }
     return getTransactionsThunk(url, thunkAPI);
   }
 );

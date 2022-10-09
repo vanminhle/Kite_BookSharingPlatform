@@ -108,7 +108,7 @@ const TableTransactionsContainer = () => {
                         className="profile-circle"
                         src={
                           transaction.user.photo
-                            ? transaction.photo
+                            ? transaction.user.photo
                             : noProfilePicture
                         }
                         alt={transaction.user.fullName}

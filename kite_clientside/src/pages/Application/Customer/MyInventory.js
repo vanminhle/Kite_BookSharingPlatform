@@ -1,4 +1,3 @@
-import Wrapper from '../../../assets/wrappers/MyBooks';
 import { InventoryBooksContainer } from '../../../components';
 import { useSelector } from 'react-redux';
 
@@ -6,7 +5,7 @@ const MyInventory = () => {
   const { userInventory, totalBooks } = useSelector((store) => store.book);
 
   return (
-    <Wrapper>
+    <>
       <div
         style={{
           display: 'flex',
@@ -20,7 +19,7 @@ const MyInventory = () => {
         </h5>
       </div>
       <InventoryBooksContainer />
-    </Wrapper>
+    </>
   );
 };
 

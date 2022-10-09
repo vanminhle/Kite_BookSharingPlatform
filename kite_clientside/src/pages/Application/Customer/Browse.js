@@ -1,4 +1,3 @@
-import Wrapper from '../../../assets/wrappers/MyBooks';
 import {
   BrowseBooksContainer,
   QueryBrowseBooksContainer,
@@ -6,10 +5,10 @@ import {
 
 const Browse = () => {
   return (
-    <Wrapper>
+    <>
       <QueryBrowseBooksContainer />
       <BrowseBooksContainer />
-    </Wrapper>
+    </>
   );
 };
 

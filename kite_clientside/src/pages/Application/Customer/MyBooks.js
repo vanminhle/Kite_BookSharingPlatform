@@ -1,4 +1,3 @@
-import Wrapper from '../../../assets/wrappers/MyBooks';
 import {
   SubmitBookForm,
   MyBooksContainer,
@@ -11,7 +10,7 @@ const MyBooks = () => {
   const { myBooks, totalMyBooks } = useSelector((store) => store.myBooks);
 
   return (
-    <Wrapper>
+    <>
       <div
         style={{
           display: 'flex',
@@ -27,7 +26,7 @@ const MyBooks = () => {
       <SubmitBookForm />
       <EditBookForm />
       <MyBooksContainer />
-    </Wrapper>
+    </>
   );
 };
 
