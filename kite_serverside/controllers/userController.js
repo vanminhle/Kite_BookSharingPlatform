@@ -150,7 +150,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user || user.role === 'admin')
-    return next(new AppError('No user found with that ID!', 404));
+    return next(new AppError('No user found with that ID', 404));
 
   res.status(200).json({
     status: 'success',
@@ -162,9 +162,11 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
 //admin disable or reactivate account
 exports.setAccountStatus = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.params.id, {
+  const user = await User.findByIdAndUpdate(req.params.id, {
     active: req.body.active,
   });
+
+  if (!user) return next(new AppError('No user found with that ID', 404));
 
   res.status(200).json({
     status: 'success',
@@ -173,9 +175,11 @@ exports.setAccountStatus = catchAsync(async (req, res, next) => {
 });
 
 exports.setAccountRole = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.params.id, {
+  const user = await User.findByIdAndUpdate(req.params.id, {
     role: req.body.role,
   });
+
+  if (!user) return next(new AppError('No user found with that ID', 404));
 
   res.status(200).json({
     status: 'success',

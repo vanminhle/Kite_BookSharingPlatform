@@ -89,7 +89,7 @@ describe('Transaction', () => {
         });
     });
 
-    test('It should PUSH AN ERROR when non logged in user get all the transactions on the database', async () => {
+    test('It should PUSH AN ERROR when non logged in user GET all the transactions on the database', async () => {
       await request(server)
         .get('/http/api/transactions')
         .expect(401)
@@ -103,7 +103,7 @@ describe('Transaction', () => {
         });
     });
 
-    test(`It should PUSH AN ERROR when user whom don't have permission get all the transactions on the database`, async () => {
+    test(`It should PUSH AN ERROR when user whom don't have permission GET all the transactions on the database`, async () => {
       await request(server)
         .post('/http/api/tags')
         .set({ Authorization: `Bearer ${userToken}` })
@@ -223,6 +223,53 @@ describe('Transaction', () => {
           expect(typeof res.body === 'object').toBeTruthy();
           expect(res.body.status).toEqual('success');
           expect(Array.isArray(res.body.data.transaction)).toBeTruthy();
+        });
+    });
+
+    test(`It should return EMPTY ARRAY when user haven't bought the book GET the transaction of that book`, async () => {
+      const bookId = '630d799e8357beaf95fad7fa';
+      await request(server)
+        .get(`/http/api/transactions/isOwnBook/${bookId}`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .expect(200)
+        .then((res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('success');
+          expect(Array.isArray(res.body.data.transaction)).toBeTruthy();
+          expect(res.body.data.transaction.length).toEqual(0);
+        });
+    });
+
+    test('It should PUSH AN ERROR when non logged in user try to GET the transaction of book', async () => {
+      const bookId = '630d799e8357beaf95fad7b3';
+      await request(server)
+        .get(`/http/api/transactions/isOwnBook/${bookId}`)
+        .expect(401)
+        .then((res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
+  });
+
+  describe('/GET Transaction IsOwnBook', () => {
+    test('It should GET the transaction of user who has successfully purchased the book based on provided book id', async () => {
+      const bookId = '630d799e8357beaf95fad7b3';
+      await request(server)
+        .get(`/http/api/transactions/isOwnBook/${bookId}`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .expect(200)
+        .then((res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('success');
+          expect(Array.isArray(res.body.data.transaction)).toBeTruthy();
+          expect(res.body.data.transaction.length).toEqual(0);
         });
     });
 

@@ -6,7 +6,7 @@ const Review = require('../models/reviewModel');
 
 //npm run start:test review.test.js
 
-let AdminToken;
+let adminToken;
 let managerToken;
 let userToken;
 beforeAll(async () => {
@@ -17,7 +17,7 @@ beforeAll(async () => {
       password: process.env.TEST_ACCOUNT_ADMIN_PASSWORD,
     })
     .set('Accept', 'application/json');
-  AdminToken = resAdmin.body.token;
+  adminToken = resAdmin.body.token;
 
   const resManager = await request(server)
     .post('/http/api/users/login')
@@ -313,7 +313,7 @@ describe('Review', () => {
       const reviewId = '630446f28492077f82c19d8b';
       await request(server)
         .delete(`/http/api/reviews/${reviewId}`)
-        .set({ Authorization: `Bearer ${AdminToken}` })
+        .set({ Authorization: `Bearer ${adminToken}` })
         .expect(403)
         .then(async (res) => {
           expect(res.type).toEqual('application/json');

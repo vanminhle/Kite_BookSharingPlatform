@@ -480,6 +480,8 @@ router.get(
  *     responses:
  *      200:
  *        description: Success
+ *      403:
+ *        description: Forbidden
  *      500:
  *        description: Internal Server Error
  *      404:
