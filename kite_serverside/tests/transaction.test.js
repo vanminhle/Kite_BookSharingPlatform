@@ -28,7 +28,7 @@ beforeAll(async () => {
   userToken = resUser.body.token;
 }, 5000);
 
-describe('Transactions', () => {
+describe('Transaction', () => {
   describe('/GET Checkout Session', () => {
     test('It should GET a checkout session for purchasing the book', async () => {
       const bookId = '630d799e8357beaf95fad784';
@@ -45,7 +45,7 @@ describe('Transactions', () => {
         });
     });
 
-    test('It should PUSH AN ERROR when user GET checkout session for purchasing the book with book that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when user GET checkout session for purchasing the book with book that not existing on the database based on the provided id', async () => {
       const bookId = '633f8df4094422a9d21e7344';
       await request(server)
         .get(`/http/api/transactions/checkoutSession/${bookId}`)
@@ -59,7 +59,7 @@ describe('Transactions', () => {
         });
     });
 
-    test('It should PUSH AN ERROR when non logged in user GET checkout session for purchasing the book', async () => {
+    test('It should PUSH AN ERROR when non logged in user GET checkout session for purchasing the book based on provided book id', async () => {
       const bookId = '633f8df4094422a9d21e7344';
       await request(server)
         .get(`/http/api/transactions/checkoutSession/${bookId}`)
@@ -134,7 +134,7 @@ describe('Transactions', () => {
         .expect(204);
     });
 
-    test('It should PUSH AN ERROR when DELETE a transaction that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when DELETE a transaction that not existing on the database based on the provided id', async () => {
       const transactionsId = '633f8df4094422a9d21e7344';
       await request(server)
         .delete(`/http/api/transactions/${transactionsId}`)
@@ -211,8 +211,8 @@ describe('Transactions', () => {
     });
   });
 
-  describe('/GET Transactions IsOwnBook', () => {
-    test('It should GET the transaction of user who has successfully purchased the specific book', async () => {
+  describe('/GET Transaction IsOwnBook', () => {
+    test('It should GET the transaction of user who has successfully purchased the book based on provided book id', async () => {
       const bookId = '630d799e8357beaf95fad7b3';
       await request(server)
         .get(`/http/api/transactions/isOwnBook/${bookId}`)

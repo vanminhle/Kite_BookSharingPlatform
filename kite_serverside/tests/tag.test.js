@@ -28,7 +28,7 @@ beforeAll(async () => {
   userToken = resUser.body.token;
 }, 5000);
 
-describe('Tags', () => {
+describe('Tag', () => {
   describe('/GET Tags', () => {
     test('It should GET all the tags on the database', async () => {
       await request(server)
@@ -44,7 +44,7 @@ describe('Tags', () => {
   });
 
   describe('/GET Tag', () => {
-    test('It should GET a tag on the database based on the given id', async () => {
+    test('It should GET a tag on the database based on the provided id', async () => {
       const tagId = '630446f28492077f82c19d86';
       const res = await request(server).get(`/http/api/tags/${tagId}`);
       expect(res.statusCode).toEqual(200);
@@ -54,7 +54,7 @@ describe('Tags', () => {
       expect(res.body.data.tag._id).toEqual(tagId);
     });
 
-    test('It should PUSH AN ERROR when GET a tag that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when GET a tag that not existing on the database based on the provided id', async () => {
       const tagId = '630446f28492077f82c19d8b';
       await request(server)
         .get(`/http/api/tags/${tagId}`)
@@ -256,7 +256,7 @@ describe('Tags', () => {
         });
     });
 
-    test('It should PUSH AN ERROR when PATCH a tag that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when PATCH a tag that not existing on the database based on the provided id', async () => {
       const tagId = '63424bb1409a441fb1d17459';
       const newTagData = {
         name: 'UnitTest Patch Not Exists',
@@ -334,7 +334,7 @@ describe('Tags', () => {
         .expect(204);
     });
 
-    test('It should PUSH AN ERROR when DELETE a tag that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when DELETE a tag that not existing on the database based on the provided id', async () => {
       const tagId = '630446f28492077f82c19d8b';
       await request(server)
         .delete(`/http/api/tags/${tagId}`)

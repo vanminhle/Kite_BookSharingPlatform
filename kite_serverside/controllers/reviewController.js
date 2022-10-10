@@ -70,7 +70,7 @@ exports.deleteReview = catchAsync(async (req, res, next) => {
     (req.user.role === 'customer' &&
       req.user._id.equals(review.user._id) === false)
   )
-    return next(new AppError('Review does not exist! Please try again', 404));
+    return next(new AppError('No review found with that ID', 404));
 
   if (
     req.user.role === 'manager' ||
