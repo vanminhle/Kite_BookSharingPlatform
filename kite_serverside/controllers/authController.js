@@ -264,6 +264,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetExpires: { $gt: Date.now() },
   });
 
+  console.log(user);
+
   // Check reset token, set new password
   if (!user) {
     return next(
@@ -290,7 +292,7 @@ exports.sendEmailVerification = catchAsync(async (req, res, next) => {
   if (!user || user.socialProvider || user.isConfirmed) {
     return next(
       new AppError(
-        'Password reset token have been sent to your email address!',
+        'Verification email have been sent to your email address!',
         404
       )
     );

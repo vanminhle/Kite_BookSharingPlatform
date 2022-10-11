@@ -226,6 +226,8 @@ router.patch(
  *        description: Success
  *      500:
  *        description: Internal Server Error
+ *      400:
+ *        description: Bad Request
  *      401:
  *        description: Unauthorized
  */
