@@ -101,6 +101,8 @@ router.get('/', authController.protect, bookController.getAllBooks);
  *        description: Forbidden
  *      401:
  *        description: Unauthorized
+ *      400:
+ *        description: Bad Request
  */
 router.post(
   '/',
@@ -248,6 +250,8 @@ router.get('/reading/:id', authController.protect, bookController.getBookFile);
  *        description: Not Found
  *      401:
  *        description: Unauthorized
+ *      400:
+ *        description: Bad Request
  */
 router.patch(
   '/:id',

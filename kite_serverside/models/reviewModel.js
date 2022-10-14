@@ -59,6 +59,7 @@ reviewSchema.statics.calcAverageRatings = async function (bookId) {
     },
   ]);
 
+  /* istanbul ignore else */
   if (stats.length > 0) {
     await Book.findByIdAndUpdate(bookId, {
       ratingsQuantity: stats[0].numRatings,

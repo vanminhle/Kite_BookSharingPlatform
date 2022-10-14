@@ -243,6 +243,21 @@ describe('Authentication', () => {
           );
         });
     });
+
+    test('It should PUSH AN ERROR when non logged in user PATCH account information', async () => {
+      await request(server)
+        .patch(`/http/api/users/updateMyInfo`)
+        .field('fullName', 'Testing User fullName')
+        .expect(401)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
   });
 
   describe('/PATCH Password Update', () => {

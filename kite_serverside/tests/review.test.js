@@ -54,7 +54,7 @@ describe('Review', () => {
   });
 
   describe('/GET Review', () => {
-    test('It should GET a review on the database based on the given id', async () => {
+    test('It should GET a review on the database based on the provided id', async () => {
       const reviewId = '63181d05b6deed98a6c797f9';
       await request(server)
         .get(`/http/api/reviews/${reviewId}`)
@@ -67,7 +67,7 @@ describe('Review', () => {
         });
     });
 
-    test('It should PUSH AN ERROR when GET a review that not existing on the database based on the given id', async () => {
+    test('It should PUSH AN ERROR when GET a review that not existing on the database based on the provided id', async () => {
       const reviewId = '63181d05b6deed98a6c797a3';
       await request(server)
         .get(`/http/api/reviews/${reviewId}`)

@@ -48,6 +48,7 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book)
     return next(new AppError('Book does not exist! Please try again', 404));
+
   if (req.user.role !== 'admin' && book.approvingStatus === 'approved')
     return next(
       new AppError(
@@ -55,14 +56,31 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
         403
       )
     );
+
+  if (
+    !req.body.bookTitle ||
+    !req.body.summary ||
+    !req.body.description ||
+    !req.body.tags ||
+    !req.body.price
+  )
+    return next(
+      new AppError(
+        'You must specify all required field! (Title, Summary, Description, Tags, Price)',
+        400
+      )
+    );
+
   if (!req.files.bookCover || !req.files.bookFile)
-    next(new AppError('Book cover and Book Document File is Required!', 400));
+    return next(
+      new AppError('Book cover and Book Document File is Required!', 400)
+    );
 
   if (req.files.bookCover && req.files.bookFile) {
     await deleteFromCloudinary(book.bookCoverPublicId);
     await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
       if (err)
-        next(
+        return next(
           new AppError(
             'Problem when try to editing Book. Please try again!',
             409
@@ -79,17 +97,31 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
 //upload and save book file
 exports.uploadAndSave = catchAsync(async (req, res, next) => {
   if (!req.files.bookCover && !req.files.bookFile)
-    next(new AppError('Book cover and Book Document File is Required!', 400));
-  if (!req.files.bookCover && !req.files.bookFile)
-    next(new AppError('Book cover and Book Document File is Required!', 400));
+    return next(
+      new AppError('Book cover and Book Document File is Required!', 400)
+    );
+
+  if (
+    !req.body.bookTitle ||
+    !req.body.summary ||
+    !req.body.description ||
+    !req.body.tags ||
+    !req.body.price
+  )
+    return next(
+      new AppError(
+        'You must specify all required field! (Title, Summary, Description, Tags, Price)',
+        400
+      )
+    );
 
   const book = await Book.findOne({
     bookTitle: req.body.bookTitle,
     author: req.bookEdited ? req.bookAuthor : req.user._id,
   });
   if (book)
-    next(
-      new AppError('Name of the book is duplicate with your another book!', 400)
+    return next(
+      new AppError('Name of the book is duplicate with your another book!', 409)
     );
 
   //
@@ -117,7 +149,9 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
     req.files.bookFile[0].buffer,
     (err) => {
       if (err)
-        next(new AppError(`Problem when upload book! Please try again`, 400));
+        return next(
+          new AppError(`Problem when upload book! Please try again`, 400)
+        );
     }
   );
   req.bookFileString = `${req.files.bookFile[0].filename}.pdf`;
@@ -284,16 +318,18 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     !book ||
     (req.user.role === 'customer' &&
       req.user._id.equals(book.author._id) === false)
-  )
-    return next(new AppError('Book does not exist! Please try again', 404));
+  ) {
+    return next(new AppError('No book found with that ID', 404));
+  }
 
-  if (book.approvingStatus === 'approved' && req.user.role !== 'admin')
+  if (book.approvingStatus === 'approved' && req.user.role !== 'admin') {
     return next(
       new AppError(
         `Book has been published can't be deleted! Submit a ticket for more information!`,
         403
       )
     );
+  }
 
   if (
     req.user.role === 'admin' ||
@@ -303,7 +339,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     await deleteFromCloudinary(book.bookCoverPublicId);
     await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
       if (err)
-        next(
+        return next(
           new AppError(
             'Problem when try to deleting Book. Please try again!',
             409
@@ -331,11 +367,11 @@ exports.setBookStatus = catchAsync(async (req, res, next) => {
     }
   );
 
-  const url = `http://localhost:3000/my-book`;
-  await new Email(book.author, url, book).sendBookApprovingStatus();
-
   if (!book)
     return next(new AppError('Book does not exist! Please try again', 404));
+
+  const url = `http://localhost:3000/my-book`;
+  await new Email(book.author, url, book).sendBookApprovingStatus();
 
   res.status(200).json({
     status: 'success',
