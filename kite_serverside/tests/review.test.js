@@ -252,6 +252,20 @@ describe('Review', () => {
         .expect(204);
     });
 
+    test('It should DELETE a specific review on the database when logged in user is the author of that review', async () => {
+      const review = await Review.create({
+        book: '630d799e8357beaf95fad79b',
+        user: '62f5cfc3d2a9b8a2d2f0d262',
+        rating: 2,
+        review: 'Unit Test Delete Review',
+      });
+
+      await request(server)
+        .delete(`/http/api/reviews/${review._id}`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .expect(204);
+    });
+
     test('It should DELETE a review of logged in customer user on the database', async () => {
       const review = await Review.create({
         book: '630d799e8357beaf95fad749',

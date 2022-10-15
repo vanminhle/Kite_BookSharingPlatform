@@ -214,6 +214,50 @@ describe('Statistics', () => {
     });
   });
 
+  describe('/GET Books Sold Statistics by each Month', () => {
+    test('It should GET all the books sold statistics specified by each month on the database', async () => {
+      await request(server)
+        .get('/http/api/statistics/booksSoldMonthly')
+        .set({ Authorization: `Bearer ${adminToken}` })
+        .expect(200)
+        .then((res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('success');
+          expect(typeof res.body.data === 'object').toBeTruthy();
+        });
+    });
+
+    test('It should PUSH AN ERROR when non logged in user GET all the books sold statistics specified by each month', async () => {
+      await request(server)
+        .get('/http/api/statistics/booksSoldMonthly')
+        .expect(401)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'You are not logged in or cookies has been disabled. Please try to login again!'
+          );
+        });
+    });
+
+    test(`It should PUSH AN ERROR when user whom don't have permission GET all the books sold statistics by each month`, async () => {
+      await request(server)
+        .get('/http/api/statistics/booksSoldMonthly')
+        .set({ Authorization: `Bearer ${userToken}` })
+        .expect(403)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            'You do not have permission to perform this action'
+          );
+        });
+    });
+  });
+
   describe('/GET Top Books Highest Sales', () => {
     test('It should GET the top five books have highest sales on the database', async () => {
       await request(server)

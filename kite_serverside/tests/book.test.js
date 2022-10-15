@@ -256,6 +256,23 @@ describe('Book', () => {
         });
     });
 
+    test('It should PUSH AN ERROR when POST a new book with wrong cover and document file', async () => {
+      await request(server)
+        .post(`/http/api/books`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .attach('bookFile', 'tests/files/TEST.txt')
+        .attach('bookCover', 'tests/files/TEST.txt')
+        .expect(400)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'Not valid files! Please upload images for Book Cover and pdf for Book'
+          );
+        });
+    });
+
     test('It should PUSH AN ERROR when POST a new book to the database but have not defined one required field', async () => {
       await request(server)
         .post(`/http/api/books`)

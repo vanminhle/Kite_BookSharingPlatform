@@ -54,9 +54,9 @@ const ManagerSupportBox = () => {
     dispatch(getConversations(user._id));
   }, [user._id]);
 
-  useEffect(() => {
-    setCurrentChat(conversations[0]);
-  }, [conversations]);
+  // useEffect(() => {
+  //   setCurrentChat(conversations[0]);
+  // }, [conversations]);
 
   useEffect(() => {
     dispatch(getMessages(currentChat?._id));
@@ -105,7 +105,7 @@ const ManagerSupportBox = () => {
         </div>
         <div className="chat-box">
           <div className="chatBoxWrapper">
-            {currentChat && (
+            {currentChat ? (
               <>
                 <h5 className="chat-title">Chat with Customer</h5>
                 <div className="chatBoxTop">
@@ -135,6 +135,12 @@ const ManagerSupportBox = () => {
                   </Button>
                 </div>
               </>
+            ) : (
+              <h3
+                style={{ textAlign: 'center', margin: 'auto 0', color: 'gray' }}
+              >
+                Select conversation to chat
+              </h3>
             )}
           </div>
         </div>

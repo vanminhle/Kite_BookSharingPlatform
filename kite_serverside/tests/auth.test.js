@@ -244,6 +244,54 @@ describe('Authentication', () => {
         });
     });
 
+    test('It should PUSH AN ERROR when PATCH information of logged in user account with wrong image file', async () => {
+      await request(server)
+        .patch(`/http/api/users/updateMyInfo`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .attach('photo', 'tests/files/bookFileTesting.pdf')
+        .expect(400)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'Not an valid image! Please upload only images.'
+          );
+        });
+    });
+
+    test('It should PUSH AN ERROR when user PATCH password in account information update route', async () => {
+      await request(server)
+        .patch(`/http/api/users/updateMyInfo`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .field('password', 'NOTUPDATEHERE')
+        .expect(400)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'This route is not for password updates. Please use /updateMyPassword.'
+          );
+        });
+    });
+
+    test('It should PUSH AN ERROR when user PATCH email in account information update route', async () => {
+      await request(server)
+        .patch(`/http/api/users/updateMyInfo`)
+        .set({ Authorization: `Bearer ${userToken}` })
+        .field('email', 'NOTUPDATEHERE@mail.com')
+        .expect(400)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res.body === 'object').toBeTruthy();
+          expect(res.body.status).toEqual('fail');
+          expect(res.body.message).toEqual(
+            'This route is not for email updates. Please use /updateMyEmail.'
+          );
+        });
+    });
+
     test('It should PUSH AN ERROR when non logged in user PATCH account information', async () => {
       await request(server)
         .patch(`/http/api/users/updateMyInfo`)

@@ -45,6 +45,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
+/* istanbul ignore next */
 exports.createTransactionCheckout = catchAsync(async (req, res, next) => {
   const { book, user, price } = req.query;
 

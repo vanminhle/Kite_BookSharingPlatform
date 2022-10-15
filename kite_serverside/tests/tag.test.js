@@ -348,6 +348,22 @@ describe('Tag', () => {
         });
     });
 
+    test('It should PUSH AN ERROR when DELETE a tag that has been assigned to book', async () => {
+      const tagId = '6304489b8492077f82c19ddd';
+      await request(server)
+        .delete(`/http/api/tags/${tagId}`)
+        .set({ Authorization: `Bearer ${adminToken}` })
+        .expect(409)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            `Tag has been assigned to book can't be deleted`
+          );
+        });
+    });
+
     test('It should PUSH AN ERROR when non logged in user DELETE an existing tag', async () => {
       const tagId = '630446f28492077f82c19d8b';
       await request(server)

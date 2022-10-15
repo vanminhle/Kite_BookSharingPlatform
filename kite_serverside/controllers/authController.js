@@ -364,6 +364,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 //googleLogin
+/* istanbul ignore next */
 exports.googleLoginAccount = catchAsync(async (req, res, next) => {
   //decode credential
   const base64Url = req.body.credential.split('.')[1];
@@ -399,6 +400,7 @@ exports.googleLoginAccount = catchAsync(async (req, res, next) => {
   }
 });
 
+/* istanbul ignore next */
 exports.googleLoginSession = catchAsync(async (req, res, next) => {
   const { user } = req;
   const token = createToken(user._id);
