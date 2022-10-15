@@ -27,12 +27,14 @@ const router = express.Router();
  *     responses:
  *      201:
  *        description: Created
- *      500:
- *        description: Internal Server Error
- *      403:
- *        description: Forbidden
  *      401:
  *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Internal Server Error
  */
 router.post(
   '/',
@@ -60,12 +62,14 @@ router.post(
  *     responses:
  *      200:
  *        description: Success
- *      500:
- *        description: Internal Server Error
- *      403:
- *        description: Forbidden
  *      401:
  *        description: Unauthorized
+ *      403:
+ *        description: Forbidden
+ *      409:
+ *        description: Conflict
+ *      500:
+ *        description: Internal Server Error
  */
 router.get(
   '/:userId',
