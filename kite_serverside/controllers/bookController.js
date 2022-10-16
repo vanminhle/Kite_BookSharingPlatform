@@ -71,16 +71,16 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
       )
     );
 
+  /* istanbul ignore next */
   if (!req.files.bookCover || !req.files.bookFile)
-    /* istanbul ignore next */
     return next(
       new AppError('Book cover and Book Document File is Required!', 400)
     );
 
+  /* istanbul ignore next */
   if (req.files.bookCover && req.files.bookFile) {
     await deleteFromCloudinary(book.bookCoverPublicId);
     await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
-      /* istanbul ignore next */
       if (err)
         return next(
           new AppError(
@@ -97,8 +97,8 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
 });
 
 //upload and save book file
-/* istanbul ignore next */
 exports.uploadAndSave = catchAsync(async (req, res, next) => {
+  /* istanbul ignore next */
   if (!req.files.bookCover && !req.files.bookFile)
     return next(
       new AppError('Book cover and Book Document File is Required!', 400)
@@ -151,6 +151,7 @@ exports.uploadAndSave = catchAsync(async (req, res, next) => {
     `public/booksDocument/${req.files.bookFile[0].filename}.pdf`,
     req.files.bookFile[0].buffer,
     (err) => {
+      /* istanbul ignore next */
       if (err)
         return next(
           new AppError(`Problem when upload book! Please try again`, 400)
@@ -271,6 +272,7 @@ exports.getBookFile = catchAsync(async (req, res, next) => {
       user: req.user._id,
     });
 
+    /* istanbul ignore next */
     if (transaction.length === 0)
       return next(new AppError('No book found with that ID!', 404));
   }
@@ -337,6 +339,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     );
   }
 
+  /* istanbul ignore next */
   if (
     req.user.role === 'admin' ||
     (req.user.role === 'customer' && req.user._id.equals(book.author._id))
@@ -344,8 +347,8 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     await Book.findByIdAndDelete(req.params.id);
     await deleteFromCloudinary(book.bookCoverPublicId);
     await fs.unlink(`public/booksDocument/${book.bookFile}`, (err) => {
-      /* istanbul ignore next */
       if (err)
+        /* istanbul ignore next */
         return next(
           new AppError(
             'Problem when try to deleting Book. Please try again!',

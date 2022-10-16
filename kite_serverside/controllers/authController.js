@@ -27,6 +27,7 @@ const createSendVerificationRequest = async (req, res, next, user) => {
   const verifyToken = user.createEmailVerificationToken();
   await user.save({ validateBeforeSave: false });
 
+  /* istanbul ignore next */
   try {
     const verifyURL = `${req.protocol}://${req.get(
       'host'
@@ -41,6 +42,7 @@ const createSendVerificationRequest = async (req, res, next, user) => {
     user.emailVerificationToken = undefined;
     await user.save({ validateBeforeSave: false });
 
+    /* istanbul ignore next */
     return next(
       new AppError(
         'There was an error when sending the verification email. Try again later!'
@@ -102,9 +104,9 @@ exports.login = catchAsync(async (req, res, next) => {
   if (user.active === false) {
     return next(
       new AppError(
-        'Your account have been deactivated! please sent an email to support@kite.io for reactivate your account'
-      ),
-      403
+        'Your account have been deactivated! please sent an email to support@kite.io for reactivate your account',
+        403
+      )
     );
   }
 
@@ -136,8 +138,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 //protected routes
 exports.protect = catchAsync(async (req, res, next) => {
-  //check token
   let token;
+  /* istanbul ignore next */
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -164,6 +166,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //Check user
   const currentUser = await User.findById(decoded.id);
+  /* istanbul ignore next */
   if (!currentUser) {
     return next(
       new AppError(
@@ -173,6 +176,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
+  /* istanbul ignore next */
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
       new AppError('User recently changed password! Please log in again.', 401)
@@ -220,17 +224,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   let resetURL = '';
-  if (process.env.NODE_ENV === 'development') {
-    resetURL = `http://localhost:3000/reset-password/${resetToken}`;
-  } else if (process.env.NODE_ENV === 'production') {
-    resetURL = `http://localhost:3000/reset-password/${resetToken}`;
-  }
+  resetURL = `http://localhost:3000/reset-password/${resetToken}`;
 
+  /* istanbul ignore next */
   try {
-    // const resetURLLocal = `${req.protocol}://${req.get(
-    //   'host'
-    // )}/http/api/users/resetPassword/${resetToken}`;
-
     await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
@@ -252,6 +249,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 //reset password
+/* istanbul ignore next */
 exports.resetPassword = catchAsync(async (req, res, next) => {
   //Encrypt, get user
   const hashedToken = crypto
@@ -304,6 +302,7 @@ exports.sendEmailVerification = catchAsync(async (req, res, next) => {
 });
 
 //email verification
+/* istanbul ignore next */
 exports.emailVerification = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash('sha256')
@@ -336,6 +335,7 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
+  /* istanbul ignore next */
   if (user.socialProvider) {
     return next(
       new AppError(
@@ -427,6 +427,7 @@ exports.googleLoginSession = catchAsync(async (req, res, next) => {
 
 //update user email
 exports.UpdateEmail = catchAsync(async (req, res, next) => {
+  /* istanbul ignore next */
   if (req.user.socialProvider) {
     return next(
       new AppError(

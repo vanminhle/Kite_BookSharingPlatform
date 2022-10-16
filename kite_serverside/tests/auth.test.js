@@ -128,6 +128,25 @@ describe('Authentication', () => {
         });
     });
 
+    test('It should PUSH AN ERROR when POST information to get account login information from the database but the account of the provided information is deactivated', async () => {
+      const account = {
+        email: 'rviger1c@microsoft.com',
+        password: 'Linhnguyen0123@',
+      };
+      await request(server)
+        .post(`/http/api/users/login`)
+        .send(account)
+        .expect(403)
+        .then(async (res) => {
+          expect(res.type).toEqual('application/json');
+          expect(typeof res._body === 'object').toBeTruthy();
+          expect(res._body.status).toEqual('fail');
+          expect(res._body.message).toEqual(
+            `Your account have been deactivated! please sent an email to support@kite.io for reactivate your account`
+          );
+        });
+    });
+
     test('It should PUSH AN ERROR when POST information to get account login information from the database but have not defined one required field', async () => {
       const account = {
         password: 'Emckissack0@123',
