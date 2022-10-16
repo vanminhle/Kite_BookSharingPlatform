@@ -9,6 +9,8 @@ kite_serverside/node_modules
 
 # testing
 kite_clientside/coverage
+kite_serverside/coverage
+
 
 # production
 kite_clientside/build
@@ -26,3 +28,11 @@ kite_serverside/.cache/
 kite_clientside/npm-debug.log*
 kite_clientside/yarn-debug.log*
 kite_clientside/yarn-error.log*
+kite_clientside/.env.development
+kite_clientside/.env.production
+
+# userData
+kite_serverside/public/booksDocument
+
+# socketServer
+kite_socketserver/node_modules
