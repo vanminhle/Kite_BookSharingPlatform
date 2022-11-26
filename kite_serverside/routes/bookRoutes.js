@@ -174,7 +174,7 @@ router.get('/reading/:id', authController.protect, bookController.getBookFile);
  * @openapi
  * /http/api/books/{id}:
  *   patch:
- *     summary: Update specific book has been uploaded **ADMIN, CUSTOMER ONLY**
+ *     summary: Update the specific book has been uploaded on the system **ADMIN, CUSTOMER ONLY**
  *     description: Provide id of book need to update, then the updated data
  *     tags:
  *      - Books

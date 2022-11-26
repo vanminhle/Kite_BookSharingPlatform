@@ -8,7 +8,7 @@ const router = express.Router();
  * @openapi
  * /http/api/support/conversation:
  *   post:
- *     summary: Create a new conversation **CUSTOMER ONLY**
+ *     summary: Create a new support conversation **CUSTOMER ONLY**
  *     tags:
  *      - Conversation
  *     requestBody:
@@ -47,7 +47,7 @@ router.post(
  * @openapi
  * /http/api/support/conversation/{userId}:
  *   get:
- *     summary: Get all conversation of user have been created on the system **MANAGER, CUSTOMER ONLY**
+ *     summary: Get all conversation of specified user have been created on the system **MANAGER, CUSTOMER ONLY**
  *     description: Provide id of user to get all conversation
  *     tags:
  *      - Conversation

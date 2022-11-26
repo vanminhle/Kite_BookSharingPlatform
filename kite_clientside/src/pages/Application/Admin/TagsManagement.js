@@ -18,7 +18,7 @@ const TagsManagement = () => {
       >
         <h4 className="page-title">Tags Management</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalTags} tag{tags.length > 1 && 's'} found
+          {totalTags} tag{tags?.length > 1 && 's'} found
         </h5>
       </div>
       <QueryTagsContainer />

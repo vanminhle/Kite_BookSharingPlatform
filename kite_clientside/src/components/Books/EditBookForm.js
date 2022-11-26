@@ -219,14 +219,8 @@ const EditBookForm = () => {
           <Loading center />
         ) : (
           <>
-            <ModalHeader>SUBMIT A NEW BOOK</ModalHeader>
+            <ModalHeader>EDIT AN EXISTING BOOK</ModalHeader>
             <ModalBody>
-              <p>
-                ( You can submit a new book to sharing with everyone, you need
-                specify all information also provide the cover image and book
-                document file. New book after submitted need to be review before
-                approved before publication )
-              </p>
               <Form onSubmit={handleSubmit(onSubmit)}>
                 <Row>
                   <Col md={9}>
