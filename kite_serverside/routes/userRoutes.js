@@ -54,7 +54,7 @@ router.post('/register', authController.register);
  * @openapi
  * /http/api/users/login:
  *   post:
- *     summary: Login user to get the cookie have token for authorization
+ *     summary: Login user to get the token cookie for authorization
  *     tags:
  *      - Authentication
  *     requestBody:
@@ -94,7 +94,7 @@ router.post(
  * @openapi
  * /http/api/users/logout:
  *   get:
- *     summary: Logout user to remove the cookie have token for authorization
+ *     summary: Logout user to remove the token cookie for authorization
  *     tags:
  *      - Authentication
  *     responses:

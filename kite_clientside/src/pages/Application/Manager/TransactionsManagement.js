@@ -19,7 +19,7 @@ const TransactionsManagement = () => {
       >
         <h4 className="page-title">Transactions Management</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalTransactions} Transaction{transactions.length > 1 && 's'} found
+          {totalTransactions} Transaction{transactions?.length > 1 && 's'} found
         </h5>
       </div>
       <QueryTransactionsContainer />

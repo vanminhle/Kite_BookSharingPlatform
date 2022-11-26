@@ -17,7 +17,7 @@ const AccountManagement = () => {
       >
         <h4 className="page-title">Account Management</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalAccounts} account{accounts.length > 1 && 's'} found
+          {totalAccounts} account{accounts?.length > 1 && 's'} found
         </h5>
       </div>
       <QueryAccountContainer />

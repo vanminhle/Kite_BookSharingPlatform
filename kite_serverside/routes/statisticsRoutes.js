@@ -128,7 +128,7 @@ router.get(
  * @openapi
  * /http/api/statistics/topFiveBooksSales:
  *   get:
- *     summary: Get data about top five books sales on the system **MANAGER ONLY**
+ *     summary: Get data about top five books have highest sales on the system **MANAGER ONLY**
  *     tags:
  *      - Statistics
  *     responses:

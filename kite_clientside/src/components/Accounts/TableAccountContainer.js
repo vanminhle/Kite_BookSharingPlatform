@@ -130,7 +130,7 @@ const TableAccountContainer = () => {
                 {sort === '-fullName' && <BiSortUp />}
               </th>
               <th onClick={() => handleChangeSort('city')}>
-                Account {sort === 'city' && <BiSortDown />}
+                Phone / City {sort === 'city' && <BiSortDown />}
                 {sort === '-city' && <BiSortUp />}
               </th>
               <th onClick={() => handleChangeSort('createdAt')}>

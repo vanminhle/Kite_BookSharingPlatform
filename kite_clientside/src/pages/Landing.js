@@ -27,7 +27,7 @@ const Landing = () => {
           <div className="info">
             <h1>Kite</h1>
             <h2>
-              A <span>Book Sharing</span> Platform
+              A <span>Books Sharing</span> Platform
             </h2>
             <p>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed

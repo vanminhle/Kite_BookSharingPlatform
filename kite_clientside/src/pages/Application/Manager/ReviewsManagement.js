@@ -17,7 +17,7 @@ const ReviewsManagement = () => {
       >
         <h4 className="page-title">Reviews Management</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalReviews} Review{reviews.length > 1 && 's'} found
+          {totalReviews} Review{reviews?.length > 1 && 's'} found
         </h5>
       </div>
       <QueryReviewsContainer />

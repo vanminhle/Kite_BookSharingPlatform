@@ -19,7 +19,7 @@ const MyBooks = () => {
       >
         <h4 className="page-title">MY BOOK LIST</h4>
         <h5 style={{ fontWeight: '500' }}>
-          {totalMyBooks} book{myBooks.length > 1 && 's'} found
+          {totalMyBooks} book{myBooks?.length > 1 && 's'} found
         </h5>
       </div>
       <QueryMyBooksContainer />

@@ -40,7 +40,7 @@ export const linksManager = [
   { id: 2, text: 'Books', path: '/manager/manage-books', icon: <BsBox /> },
   {
     id: 3,
-    text: 'Translations',
+    text: 'Transactions',
     path: '/manager/transactions-management',
     icon: <MdPayment />,
   },
