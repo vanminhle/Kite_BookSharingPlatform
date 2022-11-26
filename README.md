@@ -36,7 +36,7 @@ Of course Kite itself is open source with a [public repository](https://github.c
 
 ## Installation
 
-Dillinger requires [Node.js](https://nodejs.org/) v18+ to run.
+requires [Node.js](https://nodejs.org/) v18+ to run.
 
 Install the dependencies and devDependencies for both Front-end, Back-end,
 Socket-server and start the server.
