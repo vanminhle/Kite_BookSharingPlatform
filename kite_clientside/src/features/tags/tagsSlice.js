@@ -160,6 +160,7 @@ const tagsSlice = createSlice({
     [updateTag.fulfilled]: (state) => {
       state.isUpdate = false;
       state.isForm = false;
+      state.tagModal = false;
       state.tags = [];
       toast.success(`Tag updated successfully!!`);
     },
