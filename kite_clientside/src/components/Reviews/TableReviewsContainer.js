@@ -142,7 +142,7 @@ const TableReviewsContainer = () => {
                   <td>
                     <div className="actions-div">
                       <RiDeleteBin6Line
-                        title="Delete Transaction"
+                        title="Delete Review"
                         onClick={() => dispatch(openDeleteModal(review._id))}
                       />
                     </div>

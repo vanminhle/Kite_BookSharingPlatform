@@ -57,6 +57,16 @@ exports.handingBookEdited = catchAsync(async (req, res, next) => {
       )
     );
 
+  const relatedBook = await Book.findOne({
+    bookTitle: req.body.bookTitle,
+    author: book.author._id,
+  });
+  if (relatedBook) {
+    return next(
+      new AppError('Name of the book is duplicate with your another book!', 409)
+    );
+  }
+
   if (
     !req.body.bookTitle ||
     !req.body.summary ||
